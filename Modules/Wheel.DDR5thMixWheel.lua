@@ -247,6 +247,8 @@ local function MoveSelection(self,offset,Songs)
 		-- For every difficulty do.
 		for i = 1,#Songs[CurSong]-1 do
 
+			if i > 6 then break end
+
 			-- Check if P1 is active.
 			if Joined[PLAYER_1] then
 				
@@ -334,24 +336,31 @@ local function MoveSelection(self,offset,Songs)
 			end
 		end
 	end		
+
+	local Difficulties = #Songs[CurSong]-1
+	if Difficulties > 6 then Difficulties = 6 end
 	
 	-- Check if it has more difficulties than 3, If it does, zoom them to make space for the other ones.
 	if #Songs[CurSong]-1 > 3 then
-		self:GetChild("Diffs"):zoomy(3/(#Songs[CurSong]-1)):y(SCREEN_CENTER_Y-45+#Songs[CurSong]-1)
+		self:GetChild("Diffs"):zoomy(3/Difficulties):y(-45+Difficulties)
 	else
-		self:GetChild("Diffs"):zoomy(1):y(SCREEN_CENTER_Y-45)
+		self:GetChild("Diffs"):zoomy(1):y(-45)
 	end
 	
 	-- Check if its a song.
 	if type(Songs[CurSong]) ~= "string" then
 		-- Do a counting up or counting down effect on the BPM display.
-		TF_WHEEL.CountingNumbers(self:GetChild("BPM_AFT"):GetChild("BPM"),self:GetChild("BPM_AFT"):GetChild("BPM"):GetText(),string.format("%.0f",Songs[CurSong][1]:GetDisplayBpms()[2]),.1)
+		TF_WHEEL.CountingNumbers(self:GetChild("BPM"),self:GetChild("BPM"):GetText(),string.format("%.0f",Songs[CurSong][1]:GetDisplayBpms()[2]),.1)
 	else
-		TF_WHEEL.CountingNumbers(self:GetChild("BPM_AFT"):GetChild("BPM"),self:GetChild("BPM_AFT"):GetChild("BPM"):GetText(),0,.1)
+		TF_WHEEL.CountingNumbers(self:GetChild("BPM"),self:GetChild("BPM"):GetText(),0,.1)
 	end
 	
+
 	-- Check if offset is not 0.
 	if offset ~= 0 then
+		
+		self:GetChild("Slider"):linear(.1):y(-180+(350*(CurSong/#Songs)))
+
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
@@ -360,6 +369,8 @@ local function MoveSelection(self,offset,Songs)
 			-- Play Current selected Song Music.
 			SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
 		end
+	else
+		self:GetChild("Slider"):y(-180+(350*(CurSong/#Songs)))
 	end
 end
 
@@ -435,7 +446,9 @@ return function(Style)
 					end
 
 					-- Set the size of the text and the location.
-					self:zoom(.4):halign(0):y(-12):maxwidth(640):diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
+					self:zoom(.4):halign(0):y(-12):maxwidth(640)
+						:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
+						:skewx(-.2)
 
 					-- Check if it's a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -465,7 +478,9 @@ return function(Style)
 					end
 					
 					-- Set size and colour.
-					self:zoom(.3):halign(0):maxwidth(650):diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])				
+					self:zoom(.3):halign(0):maxwidth(650)
+						:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
+						:skewx(-.2)			
 				end
 			},
 			Def.BitmapText{
@@ -479,7 +494,9 @@ return function(Style)
 					end
 					
 					-- Set size and colour.
-					self:zoom(.3):halign(0):y(10):maxwidth(650):diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
+					self:zoom(.3):halign(0):y(10):maxwidth(650)
+						:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
+						:skewx(-.2)
 				end
 			}		
 		}	
@@ -562,6 +579,7 @@ return function(Style)
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
 		OnCommand=function(self) 
+			self:Center():zoom(SCREEN_HEIGHT/480)
 			-- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.
@@ -710,7 +728,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("DDR/Info","Display"),
 			OnCommand=function(self) 
-				self:zoom(.5):xy(SCREEN_CENTER_X-200, SCREEN_CENTER_Y-60) 
+				self:zoom(.5):xy(-200,-60) 
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
@@ -719,7 +737,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-160, SCREEN_CENTER_Y-172):zoom(.05)
+				self:xy(-160,-172):zoom(.05)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
@@ -729,109 +747,35 @@ return function(Style)
 			Font="_open sans 40px",
 			Text="BPM",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-165, SCREEN_CENTER_Y-172):zoom(.2):zoomx(.3)
+				self:xy(-165,-172):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
 		
 		-- The BPM numbers.
-		Def.ActorFrameTexture{
-			Name="BPM_AFT",
-			InitCommand=function(self)
-				-- We put it in an aft so we can clip stuff and do fancy effects..
-				self:SetTextureName("Italic_BPM"):SetWidth(280):SetHeight(60):EnableAlphaBuffer(true):Create()
-			end,
+		Def.BitmapText{
+			Name="BPM",
+			Font="_open sans 40px",
+			Text="0",
+			OnCommand=function(self) 
+				-- Check if its a song.
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					-- It is, Display BPM of current song.
+					self:settext(string.format("%.0f",GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
+				end	
 
-			-- Actual bpm numbers inside the aft.
-			Def.BitmapText{
-				Name="BPM",
-				Font="_open sans 40px",
-				Text="0",
-				OnCommand=function(self) 
-					-- Check if its a song.
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						-- It is, Display BPM of current song.
-						self:settext(string.format("%.0f",GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
-					end
-					
-					self:xy(140,30)
-				end
-			}
-		},
-		
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		-- This is the shadow part.
-		Def.Sprite{
-			Texture="Italic_BPM",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-172, SCREEN_CENTER_Y-142)
-					:SetCustomPosCoords(10,0,0,0,0,0,10,0)
-					:zoom(.7):zoomx(1.4):diffuse(0,0,0,.5):fadetop(1)
-				
-			end
-		},
-	
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		-- This is the back colour part.
-		Def.Sprite{
-			Texture="Italic_BPM",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-175, SCREEN_CENTER_Y-145)
-					:SetCustomPosCoords(10,0,0,0,0,0,10,0)
-					:zoom(.7):zoomx(1.4):diffuse(1,1,0,1)
-				
-			end
-		},
-
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		-- This is the front colour part.
-		Def.Sprite{
-			Texture="Italic_BPM",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-175, SCREEN_CENTER_Y-145)
-					:SetCustomPosCoords(10,0,0,0,0,0,10,0)
-					:zoom(.7):zoomx(1.4):diffuse(1,.5,0,1):fadetop(1)
-				
-			end
-		},
-
-		-- An aft to display the BPM text next to the numbers.
-		Def.ActorFrameTexture{
-			InitCommand=function(self)
-				self:SetTextureName("Italic_bpm"):SetWidth(280):SetHeight(60):EnableAlphaBuffer(true):Create()
-			end,
-			Def.BitmapText{
-				Text="bpm",
-				Font="_open sans 40px",
-				OnCommand=function(self) 
-					self:xy(140,30)
-				end
-			}
-		},
-		
-		
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		-- This is the shadow part.
-		Def.Sprite{
-			Texture="Italic_bpm",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-105, SCREEN_CENTER_Y-140)
-					:SetCustomPosCoords(20,0,0,0,0,0,20,0)
-					:zoom(.3):diffuse(0,0,0,.5):fadetop(1)
-				
+				self:xy(-160,-146)
+					:zoomy(.6):diffusebottomedge(1,.5,0,1)
+					:diffusetopedge(1,1,0,1):skewx(-.2)
 			end
 		},
 		
-		
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		-- This is the front part.
-		Def.Sprite{
-			Texture="Italic_bpm",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-107, SCREEN_CENTER_Y-142)
-					:SetCustomPosCoords(20,0,0,0,0,0,20,0)
-					:zoom(.3):diffuse(1,1,0,1)
-				
+		Def.BitmapText{
+			Text="bpm",
+			Font="_open sans 40px",
+			OnCommand=function(self) 
+				self:xy(-110,-140):zoom(.2)
+					:diffuse(1,1,0,1):skewx(-.3)
 			end
 		},
 		
@@ -839,7 +783,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-300, SCREEN_CENTER_Y-164):zoom(.05):zoomx(.07)
+				self:xy(-300,-164):zoom(.05):zoomx(.07)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
@@ -849,40 +793,27 @@ return function(Style)
 			Font="_open sans 40px",
 			Text="STAGE",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-305, SCREEN_CENTER_Y-164):zoom(.2):zoomx(.3)
+				self:xy(-305,-164):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
 		
-		-- The event text inside an aft
-		Def.ActorFrameTexture{
-			InitCommand=function(self)
-				self:SetTextureName("Italic_Stage"):SetWidth(280):SetHeight(60):EnableAlphaBuffer(true):Create()
-			end,
-			-- The actual event text.
-			Def.BitmapText{
-				Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-				Font="_open sans 40px",
-				OnCommand=function(self) 
-					self:diffuse(0,.5,0,1):strokecolor(0,.5,0,1):xy(140,30)
-				end
-			}
-		},
-		
-		-- Load the aft, and display it, also do effects on it to make it look pretty, and italic.
-		Def.Sprite{
-			Texture="Italic_Stage",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-300, SCREEN_CENTER_Y-145):SetCustomPosCoords(10,0,0,0,0,0,10,0):zoom(.3):zoomx(.5)		
+		-- The actual event text.
+		Def.BitmapText{
+			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
+			Font="_open sans 40px",
+			OnCommand=function(self) 
+				self:diffuse(0,.5,0,1):strokecolor(0,.5,0,1):zoom(.3)
+					:xy(-290,-146):skewx(-.2)
 			end
 		},
-		
+				
 		-- Load the dancing character.
 		Def.Sprite{
 			Name="Dance",
 			Texture=THEME:GetPathG("","DDR/Dance"),
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-68, SCREEN_CENTER_Y-150):zoom(.15)
+				self:xy(-68,-150):zoom(.15)
 			end
 		},
 		
@@ -891,7 +822,7 @@ return function(Style)
 			Name="BannerUnderlay",
 			InitCommand=function(self)
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(SCREEN_CENTER_X-200, SCREEN_CENTER_Y-90)
+					:xy(-200,-90)
 			end
 		},
 		
@@ -912,7 +843,7 @@ return function(Style)
 				end
 					
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(SCREEN_CENTER_X-200, SCREEN_CENTER_Y-90)
+					:xy(-200,-90)
 			end,
 			LoadCommand=function(self) 
 				-- Check if its a song.
@@ -944,7 +875,7 @@ return function(Style)
 				end
 
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),60,60))
-					:xy(SCREEN_CENTER_X-100, SCREEN_CENTER_Y-100)
+					:xy(-100,-100)
 			end,
 			LoadCommand=function(self) 
 				-- Check if its a song.
@@ -965,7 +896,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-235, SCREEN_CENTER_Y-40):zoom(.038):zoomx(-.08)
+				self:xy(-235,-40):zoom(.038):zoomx(-.08)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
@@ -974,82 +905,70 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-175, SCREEN_CENTER_Y-40):zoom(.038):zoomx(.08)
+				self:xy(-175,-40):zoom(.038):zoomx(.08)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
 		
-		-- Make an aft to make the P1 text italic.
-		Def.ActorFrameTexture{
-			InitCommand=function(self)
-				self:SetTextureName("Italic_P1"):SetWidth(60):SetHeight(60):EnableAlphaBuffer(true):Create()
-			end,
 			-- Actual P1 text.
-			Def.BitmapText{
-				Text="1P",
-				Font="_open sans 40px",
-				OnCommand=function(self) 
-					self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
-					:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4]):xy(30,30)
-				end
-			}
-		},
-		
-		-- Load the aft to make it italic.
-		Def.Sprite{
-			Texture="Italic_P1",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-335, SCREEN_CENTER_Y-37):SetCustomPosCoords(10,0,0,0,0,0,10,0):zoom(.2):zoomx(.3)		
+		Def.BitmapText{
+			Text="1P",
+			Font="_open sans 40px",
+			OnCommand=function(self) 
+				self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
+				:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
+				:xy(-330,-38):zoomy(.25):zoomx(.35):skewx(-.25)
 			end
 		},
 		
-		-- Make an aft to make the P2 text italic.
-		Def.ActorFrameTexture{
-			InitCommand=function(self)
-				self:SetTextureName("Italic_P2"):SetWidth(60):SetHeight(60):EnableAlphaBuffer(true):Create()
-			end,
-			-- Actual P2 text.
-			Def.BitmapText{
-				Text="2P",
-				Font="_open sans 40px",
-				OnCommand=function(self) 
-					self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
-					:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4]):xy(30,30)
-				end
-			}
-		},
-		
-		-- Load the aft to make it italic.
-		Def.Sprite{
-			Texture="Italic_P2",
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-80, SCREEN_CENTER_Y-37):SetCustomPosCoords(10,0,0,0,0,0,10,0):zoom(.2):zoomx(.3)		
+		Def.BitmapText{
+			Text="2P",
+			Font="_open sans 40px",
+			OnCommand=function(self) 
+				self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
+				:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
+				:xy(-80,-38):zoomy(.25):zoomx(.35):skewx(-.25)
 			end
 		},
-		
+				
 		-- The difficulty text.
 		Def.BitmapText{
 			Font="_open sans 40px",
 			Text="DIFFICULTY",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-205, SCREEN_CENTER_Y-40):zoom(.2):zoomx(.3)
+				self:xy(-205,-40):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
 		
 		-- Load the difficulties selector.
-		Diffs..{OnCommand=function(self) self:x(SCREEN_CENTER_X-280):valign(0) end},
-				
+		Diffs..{OnCommand=function(self) self:x(-280):valign(0) end},
+		
 		-- Load the wheel.
-		Wheel..{OnCommand=function(self) self:Center() end},
+		Wheel,
 		
 		-- Add the glowing selector part on the top of the wheel.
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/Selector"),
 			OnCommand=function(self) 
-				self:zoom(.65):xy(SCREEN_CENTER_X+140, SCREEN_CENTER_Y-2):faderight(1)
+				self:zoom(.65):xy(140,-2):faderight(1)
 					:diffuseshift():effectcolor1(1,1,1,.9)
 					:effectcolor2(DisplayColor[1],DisplayColor[2],DisplayColor[3],.5)
+			end
+		},
+
+		Def.Sprite{
+			Texture=THEME:GetPathG("","DDR/Slider"),
+			OnCommand=function(self)
+				self:zoom(.35):diffuse(.8,.8,0,1):x(300)
+			end
+		},
+
+		Def.Sprite{
+			Name="Slider",
+			Texture=THEME:GetPathG("","DDR/SlidSelect"),
+			OnCommand=function(self)
+				self:zoom(.35):diffuse(1,0,0,1):xy(300,-180+(350*(CurSong/#GroupsAndSongs)))
 			end
 		}
 	}

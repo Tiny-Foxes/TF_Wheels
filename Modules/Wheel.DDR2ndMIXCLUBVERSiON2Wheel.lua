@@ -75,10 +75,10 @@ local function MoveSelection(self,offset,Songs)
 
 	-- For every CD on the wheel, Rotate it by 360/37, 37 being the amount of CDs.
 	for i = 1,37 do
-		self:GetChild("CDCon"):GetChild("CD"..i):linear(.1):addrotationz(((360/37)*offset)*-1):y(SCREEN_CENTER_Y-80)
+		self:GetChild("CDCon"):GetChild("CD"..i):linear(.1):addrotationz(((360/37)*offset)*-1):y(-80)
 		-- Do a diffrent effect for the front most CD.
 		if i == CDSwitch then
-			self:GetChild("CDCon"):GetChild("CD"..i):y(SCREEN_CENTER_Y-60)
+			self:GetChild("CDCon"):GetChild("CD"..i):y(-60)
 		end
 	end
 	
@@ -313,7 +313,7 @@ return function(Style)
 				end
 				
 				-- Resize the Banner to the size of the slice.
-				self:setsize(512,160):SetCustomPosCoords(self:GetWidth()/2-23,0,self:GetWidth()/2-9,-80,-self:GetWidth()/2+9,-80,-self:GetWidth()/2+23,0):zoom(.4):y(-20)
+				self:setsize(512,160):SetCustomPosCoords(self:GetWidth()/2-23,0,self:GetWidth()/2-9,-80,-self:GetWidth()/2+9,-80,-self:GetWidth()/2+23,0):zoom(.4):y(-20):visible(false)
 			end
 		}
 				
@@ -348,9 +348,9 @@ return function(Style)
 			Name="CD"..i,
 			OnCommand=function(self)
 				-- We set FOV/Field Of Vision to get a dept effect.
-				self:rotationz((180-((360/37)*(i-19)))*-1):CenterX():y(SCREEN_CENTER_Y-80):rotationx(-52):SetFOV(80)
+				self:rotationz((180-((360/37)*(i-19)))*-1):y(-80):rotationx(-52):SetFOV(80)
 				if CDSwitch == i then 
-					self:y(SCREEN_CENTER_Y-60)
+					self:y(-60)
 				end
 			end,
 			-- The Container of the Slices.
@@ -388,6 +388,7 @@ return function(Style)
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
 		OnCommand=function(self) 
+			self:Center():zoom(SCREEN_HEIGHT/480)
 			-- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.
@@ -584,7 +585,7 @@ return function(Style)
 					end
 				end
 			
-				self:CenterX():y(SCREEN_CENTER_Y-80):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
+				self:y(-80):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
 			end				
 		},
 
@@ -607,7 +608,7 @@ return function(Style)
 					end
 				end
 
-				self:CenterX():y(SCREEN_CENTER_Y-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		},
 
@@ -625,7 +626,7 @@ return function(Style)
 					self:visible(false)
 				end
 				
-				self:xy(SCREEN_CENTER_X+80,SCREEN_CENTER_Y+30):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
+				self:xy(80,30):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
 			end
 		},
 		
@@ -634,7 +635,7 @@ return function(Style)
 			Text="HARD",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-120,SCREEN_CENTER_Y-140):strokecolor(0,0,1,1):zoom(.3):zoomx(.4)
+				self:xy(-120,-140):strokecolor(0,0,1,1):zoom(.3):zoomx(.4)
 			end			
 		},
 		
@@ -643,7 +644,7 @@ return function(Style)
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X+50,SCREEN_CENTER_Y-140):diffuse(1,0,0,1):strokecolor(1,1,1,1):zoom(.5)
+				self:xy(50,-140):diffuse(1,0,0,1):strokecolor(1,1,1,1):zoom(.5)
 			end			
 		},
 		
@@ -652,26 +653,26 @@ return function(Style)
 			Text="STAGE",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X+120,SCREEN_CENTER_Y-140):strokecolor(0,0,0,1):zoom(.4):zoomx(.5)
+				self:xy(120,-140):strokecolor(0,0,0,1):zoom(.4):zoomx(.5)
 			end			
 		},
 		
 		-- Load the arrow for the Left size
 		TriSel..{
 			Name="Left", 
-			OnCommand=function(self) self:xy(SCREEN_CENTER_X-110,SCREEN_CENTER_Y+110):rotationz(-90):diffuse(1,0,0,1) end,
+			OnCommand=function(self) self:xy(-110,110):rotationz(-90):diffuse(1,0,0,1) end,
 			ColourCommand=function(self) self:sleep(0.02):diffuse(0,0,1,1):sleep(0.02):diffuse(1,1,1,1):sleep(0.02):diffuse(1,0,0,1) end
 		},
 		
 		-- Load the arrow for the Right size.
 		TriSel..{
 			Name="Right", 
-			OnCommand=function(self) self:xy(SCREEN_CENTER_X+110,SCREEN_CENTER_Y+110):rotationz(90):diffuse(1,0,0,1) end,
+			OnCommand=function(self) self:xy(110,110):rotationz(90):diffuse(1,0,0,1) end,
 			ColourCommand=function(self) self:sleep(0.02):diffuse(0,0,1,1):sleep(0.02):diffuse(1,1,1,1):sleep(0.02):diffuse(1,0,0,1) end
 		},
 		
 		-- The Difficulty Feet Meter.
-		Diff..{OnCommand=function(self) self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+150) end},
+		Diff..{OnCommand=function(self) self:y(150) end},
 		
 		
 		-- The Difficulty Chart Names based on Meter.
@@ -679,7 +680,7 @@ return function(Style)
 			Name="DiffChart",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+180):strokecolor(0,0,0,1):zoom(.7):zoomy(.5)
+				self:y(180):strokecolor(0,0,0,1):zoom(.7):zoomy(.5)
 			end
 		},
 		
@@ -689,7 +690,7 @@ return function(Style)
 			Text="SINGLE",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+220):diffuse(1,0,0,1):strokecolor(1,1,0,1):zoom(.8)
+				self:y(220):diffuse(1,0,0,1):strokecolor(1,1,0,1):zoom(.8)
 			end
 		}
 	}

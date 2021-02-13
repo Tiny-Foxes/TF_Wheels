@@ -458,7 +458,7 @@ return function(Style)
                 else
                     self:visible(false):zoomto(0,0)
                 end
-                self:xy(60,128*i):MaskDest():z(-200)
+                self:xy(60,128*i):MaskDest()
             end
         }
     end
@@ -509,7 +509,7 @@ return function(Style)
     -- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
         OnCommand=function(self)
-            self:Center()
+            self:Center():zoom(SCREEN_HEIGHT/480)
             -- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.

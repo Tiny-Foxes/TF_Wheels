@@ -300,7 +300,7 @@ return function(Style)
 				end
 				
 				-- Resize the Banner to the size of the slice.
-				self:setsize(512,160):SetCustomPosCoords(self:GetWidth()/2-23,0,self:GetWidth()/2-9,-80,-self:GetWidth()/2+9,-80,-self:GetWidth()/2+23,0):zoom(.4):y(-20)
+				self:setsize(512,160):SetCustomPosCoords(self:GetWidth()/2-23,0,self:GetWidth()/2-9,-80,-self:GetWidth()/2+9,-80,-self:GetWidth()/2+23,0):zoom(.4):y(-20):visible(false)
 			end
 		}
 		
@@ -335,7 +335,7 @@ return function(Style)
 			Name="CD"..i,
 			OnCommand=function(self)
 				-- We set FOV/Field Of Vision to get a dept effect.
-				self:rotationz((180-(360/9)*(i-5))*-1):CenterX():y(SCREEN_CENTER_Y-80):rotationx(-52):SetFOV(80)
+				self:rotationz((180-(360/9)*(i-5))*-1):y(-80):rotationx(-52):SetFOV(80)
 			end,
 			-- The Container of the Slices.
 			Def.ActorFrame{
@@ -372,6 +372,7 @@ return function(Style)
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
 		OnCommand=function(self) 
+			self:Center():zoom(SCREEN_HEIGHT/480)
 			-- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.
@@ -568,7 +569,7 @@ return function(Style)
 					end
 				end
 			
-				self:CenterX():y(SCREEN_CENTER_Y-80):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
+				self:y(-80):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
 			end				
 		},
 		
@@ -591,7 +592,7 @@ return function(Style)
 					end
 				end
 
-				self:CenterX():y(SCREEN_CENTER_Y-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		},
 		
@@ -609,7 +610,7 @@ return function(Style)
 					self:visible(false)
 				end
 				
-				self:xy(SCREEN_CENTER_X+220,SCREEN_CENTER_Y+120):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
+				self:xy(220,120):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
 			end
 		},
 		
@@ -618,7 +619,7 @@ return function(Style)
 			Name="Difficulty",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-220,SCREEN_CENTER_Y+110):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:xy(-220,110):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		},
 		
@@ -628,33 +629,33 @@ return function(Style)
 			Text="SINGLE",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-220,SCREEN_CENTER_Y+130):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:xy(-220,130):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		},
 		
 		-- Load the arrow for the Left size.
 		TriSel..{
 			Name="Left", 
-			OnCommand=function(self) self:xy(SCREEN_CENTER_X-120,SCREEN_CENTER_Y+50):rotationz(-90):diffuse(1,0,0,1) end,
+			OnCommand=function(self) self:xy(-120,50):rotationz(-90):diffuse(1,0,0,1) end,
 			ColourCommand=function(self) self:sleep(0.02):diffuse(0,0,1,1):sleep(0.02):diffuse(1,1,1,1):sleep(0.02):diffuse(1,0,0,1) end
 		},
 		
 		-- Load the arrow for the Right size.
 		TriSel..{
 			Name="Right", 
-			OnCommand=function(self) self:xy(SCREEN_CENTER_X+120,SCREEN_CENTER_Y+50):rotationz(90):diffuse(1,0,0,1) end,
+			OnCommand=function(self) self:xy(120,50):rotationz(90):diffuse(1,0,0,1) end,
 			ColourCommand=function(self) self:sleep(0.02):diffuse(0,0,1,1):sleep(0.02):diffuse(1,1,1,1):sleep(0.02):diffuse(1,0,0,1) end
 		},
 				
 		-- The Difficulty Feet Meter.
-		Diff..{OnCommand=function(self) self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+130) end},
+		Diff..{OnCommand=function(self) self:y(130) end},
 		
 		-- The Difficulty Chart Names based on Meter.
 		Def.BitmapText{
 			Name="DiffChart",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+150):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(150):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		}
 	}

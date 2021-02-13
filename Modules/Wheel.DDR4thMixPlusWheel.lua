@@ -128,7 +128,7 @@ local function ChangeSelection(self,offset,Songs)
 		self:GetChild("Banners"):GetChild(OldRow..i):GetChild("BannerCon"):sleep((sleep/8)+.4):x(1280)
 		
 		-- Grab the slider thats above the wheel and move it ofscreen.
-		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(0.2):x(SCREEN_CENTER_X+(1280*(offset*-1))):sleep(0.00001):diffusealpha(0):x(SCREEN_CENTER_X+(1280*offset)):diffusealpha(1)
+		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(0.2):x((1280*(offset*-1))):sleep(0.00001):diffusealpha(0):x((1280*offset)):diffusealpha(1)
 		
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
@@ -202,7 +202,7 @@ local function MoveSelection(self,offset,Songs)
 	
 	-- Change the slider position.
 	for i = 1,7 do
-		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(.1):x(SCREEN_CENTER_X+(256*((i-3)+(SongPos*-1))))
+		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(.1):x((256*((i-3)+(SongPos*-1))))
 	end
 		
 	-- Change the active banner selector.	
@@ -314,7 +314,7 @@ local function UpdateSelection(self,Songs)
 		self:GetChild("Banners"):GetChild(OldRow..i):GetChild("BannerCon"):sleep((sleep/8)+.4):x(1280)
 		
 		-- Grab the slider thats above the wheel and move it ofscreen.
-		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(.1):diffusealpha(0):sleep((7/8)+.3):x(SCREEN_CENTER_X+(256*((i-3)+(-2*-1)))):linear(.2):diffusealpha(1)
+		self:GetChild("SliderCon"):GetChild("Slider"..i):linear(.1):diffusealpha(0):sleep((7/8)+.3):x((256*((i-3)+(-2*-1)))):linear(.2):diffusealpha(1)
 		
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
@@ -556,7 +556,7 @@ return function(Style)
 		Slider[#Slider+1] = Def.ActorFrame{
 			Name="Slider"..i,
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X+(256*(i-4)),SCREEN_CENTER_Y-56):diffusealpha(0):linear(.5):diffusealpha(1)
+				self:xy((256*(i-4)),-56):diffusealpha(0):linear(.5):diffusealpha(1)
 			end,
 			-- The banner on the slider.
 			Def.Sprite{
@@ -604,7 +604,7 @@ return function(Style)
 			Banners[#Banners+1] = Def.ActorFrame{
 				-- i2 is row, i is banner.
 				Name=i2..i,
-				InitCommand=function(self) self:rotationz(-45):xy(SCREEN_CENTER_X+(64*(i-4)),SCREEN_CENTER_Y+80) end,
+				InitCommand=function(self) self:rotationz(-45):xy((64*(i-4)),80) end,
 				
 				-- Setting the banner locations.
 				Def.ActorFrame{
@@ -693,7 +693,7 @@ return function(Style)
 					Name="DiffCon",
 					Texture=THEME:GetPathG("","DDR/DiffCon.png"),
 					OnCommand=function(self)
-						self:zoom(.5):y(SCREEN_CENTER_Y+(i*32)):x(SCREEN_CENTER_X+((i2-1.5)*224)):diffusealpha(0)
+						self:zoom(.5):y((i*32)):x(((i2-1.5)*224)):diffusealpha(0)
 					end
 				},
 				
@@ -703,7 +703,7 @@ return function(Style)
 					Name="DiffName",
 					Text="Practice",
 					OnCommand=function(self)
-						self:maxwidth(60):zoom(.5):zoomy(.25):y(SCREEN_CENTER_Y+(i*32)):x(SCREEN_CENTER_X+((i2-1.5)*224)):diffusealpha(0)
+						self:maxwidth(60):zoom(.5):zoomy(.25):y((i*32)):x(((i2-1.5)*224)):diffusealpha(0)
 					end
 				}
 			}
@@ -715,7 +715,7 @@ return function(Style)
 				Name="Feet"..i..i2,
 				Texture=THEME:GetPathG("","DDR/Feet.png"),
 				OnCommand=function(self)
-					self:zoom(.125):y(SCREEN_CENTER_Y+(i*32)):x(SCREEN_CENTER_X+((i2-5)*16)):diffusealpha(0)
+					self:zoom(.125):y((i*32)):x(((i2-5)*16)):diffusealpha(0)
 				end
 			}
 		end
@@ -724,6 +724,7 @@ return function(Style)
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
 		OnCommand=function(self)
+			self:Center():zoom(SCREEN_HEIGHT/480)
 			-- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.		
@@ -932,7 +933,7 @@ return function(Style)
 						self:settext(GroupsAndSongs[CurSong])
 					end
 				end
-				self:Center():diffuse(color("#88ff88")):strokecolor(0,0,0,1):zoom(.25)
+				self:diffuse(color("#88ff88")):strokecolor(0,0,0,1):zoom(.25)
 			end
 		},
 		
@@ -946,7 +947,7 @@ return function(Style)
 						self:settext(GroupsAndSongs[CurSong][1]:GetDisplaySubTitle())
 					end
 				end 
-				self:CenterX():y(SCREEN_CENTER_Y+10):diffuse(color("#88ff88")):strokecolor(0,0,0,1):zoom(.25)
+				self:y(10):diffuse(color("#88ff88")):strokecolor(0,0,0,1):zoom(.25)
 			end
 		}
 	}

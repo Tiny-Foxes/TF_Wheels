@@ -86,7 +86,7 @@ local function MoveSelection(self,offset,Songs)
 		
 	-- For every CD on the wheel, Rotate it by 360/21, 21 being the amount of CDs.
 	for i = 1,21 do
-			self:GetChild("CDCon"):GetChild("CD"..i):linear(.1):addrotationz(((WheelOffset/21)*offset)*-1):y(SCREEN_CENTER_Y-80):diffusealpha(1)
+			self:GetChild("CDCon"):GetChild("CD"..i):linear(.1):addrotationz(((WheelOffset/21)*offset)*-1):y(-80):diffusealpha(1)
 		-- Do a diffrent effect for the front most CD.
 		-- This includes an extra offset, Because we move the CD to the center.
 		if i == CDSwitch then
@@ -398,7 +398,7 @@ return function(Style)
 			Name="CD"..i,
 			OnCommand=function(self)
 				-- We set FOV/Field Of Vision to get a dept effect.
-				self:rotationz(180-(((WheelOffset/21)*(i-11)))*-1):CenterX():y(SCREEN_CENTER_Y-80):rotationx(-52):SetFOV(80)
+				self:rotationz(180-(((WheelOffset/21)*(i-11)))*-1):y(-80):rotationx(-52):SetFOV(80)
 				
 				-- Offset the wheel before and after the font most CD.
 				if CDSwitch < i then self:addrotationz((WheelOffset/21)*2) end
@@ -471,6 +471,7 @@ return function(Style)
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame{
 		OnCommand=function(self)
+			self:Center():zoom(SCREEN_HEIGHT/480)
 			-- We use a Input function from the Scripts folder.
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.		
@@ -651,7 +652,7 @@ return function(Style)
 		
 		CDslice..{OnCommand=function(self) self:zoom(0) end}, -- Load CD Slices.
 		CDs, -- Load CDs.
-		CDSel..{OnCommand=function(self) self:zoom(6):CenterX():y(SCREEN_CENTER_Y+80) end}, -- Load front most CD.
+		CDSel..{OnCommand=function(self) self:zoom(6):y(80) end}, -- Load front most CD.
 		
 		-- Load the Global Centered Banner.
 		Def.Sprite{
@@ -671,7 +672,7 @@ return function(Style)
 					end
 				end
 			
-				self:CenterX():y(SCREEN_CENTER_Y-60):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
+				self:y(-60):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),(512/8)*5,(160/8)*5))
 			end				
 		},
 		
@@ -694,7 +695,7 @@ return function(Style)
 					end
 				end
 
-				self:CenterX():y(SCREEN_CENTER_Y-60):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(-60):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
 		},
 
@@ -712,7 +713,7 @@ return function(Style)
 					self:visible(false)
 				end
 				
-				self:xy(SCREEN_CENTER_X+70,SCREEN_CENTER_Y+30):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
+				self:xy(70,30):zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),80,80))
 			end
 		},
 		
@@ -721,7 +722,7 @@ return function(Style)
 			Text="NORMAL",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y-120):diffuse(.5,.5,1,1):strokecolor(0,0,1,1):zoom(.5):zoomy(.4)
+				self:y(-120):diffuse(.5,.5,1,1):strokecolor(0,0,1,1):zoom(.5):zoomy(.4)
 			end			
 		},
 		
@@ -730,7 +731,7 @@ return function(Style)
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-120,SCREEN_CENTER_Y):diffuse(.5,1,.5,1):strokecolor(0,.8,0,1):zoom(.4):zoomx(.5)
+				self:x(-120):diffuse(.5,1,.5,1):strokecolor(0,.8,0,1):zoom(.4):zoomx(.5)
 			end			
 		},
 		
@@ -739,7 +740,7 @@ return function(Style)
 			Text="STAGE",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X-30,SCREEN_CENTER_Y):strokecolor(0.5,0.5,1,1):zoom(.4):zoomx(.5)
+				self:x(-30):strokecolor(0.5,0.5,1,1):zoom(.4):zoomx(.5)
 			end			
 		},
 		
@@ -748,29 +749,29 @@ return function(Style)
 			Name="Difficulty",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y-110):zoom(.5)
+				self:y(-110):zoom(.5)
 			end
 		},
 		
 		-- Load the arrow for the Left size.
 		ArSel..{Name="Left", OnCommand=function(self) 
-			self:xy(SCREEN_CENTER_X-160,SCREEN_CENTER_Y+50):rotationz(25):rotationx(-50):SetFOV(80):zoom(.2):GetChild("Inside"):diffuse(1,0,0,.5)
+			self:xy(-160,50):rotationz(25):rotationx(-50):SetFOV(80):zoom(.2):GetChild("Inside"):diffuse(1,0,0,.5)
 		end},
 		
 		-- Load the arrow for the Right size.
 		ArSel..{Name="Right", OnCommand=function(self) 
-			self:xy(SCREEN_CENTER_X+160,SCREEN_CENTER_Y+50):rotationz(-25):rotationx(-50):SetFOV(80):zoom(.2):zoomx(-.2):GetChild("Inside"):diffuse(1,0,0,.5)
+			self:xy(160,50):rotationz(-25):rotationx(-50):SetFOV(80):zoom(.2):zoomx(-.2):GetChild("Inside"):diffuse(1,0,0,.5)
 		end},
 		
 		-- The Difficulty Feet Meter.
-		Diff..{OnCommand=function(self) self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+150) end},
+		Diff..{OnCommand=function(self) self:y(150) end},
 		
 		-- The Difficulty Chart Names Shadows.
 		Def.BitmapText{
 			Name="DiffChartShadow",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X+2,SCREEN_CENTER_Y+182):zoom(.7):zoomy(.5):diffuse(0,0,0,.5):strokecolor(0,0,0,.5)
+				self:xy(2,182):zoom(.7):zoomy(.5):diffuse(0,0,0,.5):strokecolor(0,0,0,.5)
 			end
 		},
 		
@@ -779,7 +780,7 @@ return function(Style)
 			Name="DiffChart",
 			Font="_open sans 40px",
 			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+180):zoom(.7):zoomy(.5)
+				self:y(180):zoom(.7):zoomy(.5)
 			end
 		}
 	}
