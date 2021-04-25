@@ -4,9 +4,11 @@ if not LoadModule then
 	
 		local Path = THEME:GetCurrentThemeDirectory().."Modules/"..ModuleName
 	
-		for _,theme in pairs(THEME:get_theme_fallback_list()) do
-			if not FILEMAN:DoesFileExist(Path) then
-				Path = "Appearance/Themes/"..theme.."/Modules/"..ModuleName
+		if THEME.get_theme_fallback_list then -- pre-5.1 support.
+			for _,theme in pairs(THEME:get_theme_fallback_list()) do
+				if not FILEMAN:DoesFileExist(Path) then
+					Path = "Appearance/Themes/"..theme.."/Modules/"..ModuleName
+				end
 			end
 		end
 	
@@ -63,11 +65,13 @@ function TF_WHEEL.Resize(width,height,setwidth,sethight)
 end
 
 -- TO WRITE DOC.
-function TF_WHEEL.CountingNumbers(self,NumStart,NumEnd,Duration)
+function TF_WHEEL.CountingNumbers(self,NumStart,NumEnd,Duration,format)
 	self:stoptweening()
 
 	TF_WHEEL.Cur = 1
 	TF_WHEEL.Count = {}
+
+	if format == nil then format = "%.0f" end
 		
 	local Length = (NumEnd - NumStart)/10
 	if string.format("%.0f",Length) == "0" then Length = 1 end
@@ -81,10 +85,10 @@ function TF_WHEEL.CountingNumbers(self,NumStart,NumEnd,Duration)
 	end
 	
 	for n = NumStart,NumEnd,string.format("%.0f",Length) do	
-		TF_WHEEL.Count[#TF_WHEEL.Count+1] = string.format("%.0f",n)
+		TF_WHEEL.Count[#TF_WHEEL.Count+1] = string.format(format,n)
 		self:sleep(Duration/10):queuecommand("Count")
 	end
-	TF_WHEEL.Count[#TF_WHEEL.Count+1] = string.format("%.0f",NumEnd)
+	TF_WHEEL.Count[#TF_WHEEL.Count+1] = string.format(format,NumEnd)
 	self:sleep(Duration/10):queuecommand("Count")
 end
 

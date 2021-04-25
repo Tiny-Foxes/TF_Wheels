@@ -50,7 +50,7 @@ return function(Style)
 		for k in pairs(DiffCon) do table.insert(Keys, k) end
 		table.sort(Keys)
 		
-		-- Now we put the Difficulies inside the Temp Current Song Contrainer..
+		-- Now we put the Difficulies inside the Temp Current Song Contrainer.
 		for _, k in pairs(Keys) do
 			if DiffCon[k] then
 				CurSongCon[#CurSongCon+1] = DiffCon[k]

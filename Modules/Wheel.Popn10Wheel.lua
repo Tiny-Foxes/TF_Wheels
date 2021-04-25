@@ -175,7 +175,9 @@ local function MoveSelection(self,offset,Songs)
     SOUND:StopMusic()
     
     -- Play Current selected Song Music.
-	SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+    if Songs[CurSong][1]:GetMusicPath() then
+	    SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+    end
 end
 
 local function MoveGroup(self,offset,Group)
@@ -521,7 +523,9 @@ return function(Style)
 		
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand=function(self)
-			SOUND:PlayMusicPart(DiffSongs[CurSong][1]:GetMusicPath(),DiffSongs[CurSong][1]:GetSampleStart(),DiffSongs[CurSong][1]:GetSampleLength(),0,0,true)
+            if DiffSongs[CurSong][1]:GetMusicPath() then
+			    SOUND:PlayMusicPart(DiffSongs[CurSong][1]:GetMusicPath(),DiffSongs[CurSong][1]:GetSampleStart(),DiffSongs[CurSong][1]:GetSampleLength(),0,0,true)
+            end
         end,
         
         -- Do stuff when a user presses left on Pad or Menu buttons.

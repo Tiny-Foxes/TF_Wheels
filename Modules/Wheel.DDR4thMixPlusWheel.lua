@@ -220,7 +220,13 @@ local function MoveSelection(self,offset,Songs)
 		self:GetChild("Subtitle"):settext(Songs[CurSong][1]:GetDisplaySubTitle())
 
 		-- Play Current selected Song Music.
-		SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+		if Songs[CurSong][1]:GetMusicPath() then
+			SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+		end
+
+		if Songs[CurSong][1]:HasBanner() then
+			self:GetChild("Banners"):GetChild(CurRow..SongPos+3):GetChild("BannerCon"):GetChild("Banner"):position(0)
+		end
 	else
 		-- Change the current song title.
 		self:GetChild("Title"):settext(Songs[CurSong])
@@ -736,7 +742,7 @@ return function(Style)
 		
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand=function(self)
-			if type(GroupsAndSongs[CurSong]) ~= "string" then
+			if type(GroupsAndSongs[CurSong]) ~= "string" and GroupsAndSongs[CurSong][1]:GetMusicPath() then
 				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),GroupsAndSongs[CurSong][1]:GetSampleStart(),GroupsAndSongs[CurSong][1]:GetSampleLength(),0,0,true)
 			end
 		end,

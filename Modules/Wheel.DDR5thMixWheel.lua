@@ -350,7 +350,7 @@ local function MoveSelection(self,offset,Songs)
 	-- Check if its a song.
 	if type(Songs[CurSong]) ~= "string" then
 		-- Do a counting up or counting down effect on the BPM display.
-		TF_WHEEL.CountingNumbers(self:GetChild("BPM"),self:GetChild("BPM"):GetText(),string.format("%.0f",Songs[CurSong][1]:GetDisplayBpms()[2]),.1)
+		TF_WHEEL.CountingNumbers(self:GetChild("BPM"),self:GetChild("BPM"):GetText(),Songs[CurSong][1]:GetDisplayBpms()[2],.1)
 	else
 		TF_WHEEL.CountingNumbers(self:GetChild("BPM"),self:GetChild("BPM"):GetText(),0,.1)
 	end
@@ -367,7 +367,9 @@ local function MoveSelection(self,offset,Songs)
 		-- Check if its a song.
 		if type(Songs[CurSong]) ~= "string" then
 			-- Play Current selected Song Music.
-			SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+			if Songs[CurSong][1]:GetMusicPath() then
+				SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+			end
 		end
 	else
 		self:GetChild("Slider"):y(-180+(350*(CurSong/#Songs)))
@@ -593,7 +595,7 @@ return function(Style)
 		
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand=function(self)
-			if type(GroupsAndSongs[CurSong]) ~= "string" then
+			if type(GroupsAndSongs[CurSong]) ~= "string" and GroupsAndSongs[CurSong][1]:GetMusicPath() then
 				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),GroupsAndSongs[CurSong][1]:GetSampleStart(),GroupsAndSongs[CurSong][1]:GetSampleLength(),0,0,true)
 			end
 		end,
