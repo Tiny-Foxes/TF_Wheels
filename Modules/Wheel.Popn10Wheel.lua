@@ -315,7 +315,9 @@ local function ChangeDiff(self,Songs)
     SOUND:StopMusic()
     
     -- Play Current selected Song Music.
-	SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+    if Songs[CurSong][1]:GetMusicPath() then
+	    SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
+    end
 end
 
 -- This is the main function, Its the function that contains the wheel.
