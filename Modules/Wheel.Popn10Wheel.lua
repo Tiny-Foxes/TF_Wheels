@@ -345,6 +345,12 @@ return function(Style)
         DiffSongs = DiffLoader[CurDiff]
     end
 
+    local function compare(a,b)
+        return a[2]:GetMeter() < b[2]:GetMeter()
+    end
+
+    table.sort(DiffSongs, compare)
+
     -- We define here is we load the Options menu when people double press,
 	-- Because they need to double press it starts at false.
 	local StartOptions = false
@@ -540,6 +546,8 @@ return function(Style)
                 DiffSongs = DiffLoader[CurDiff]
             end
 
+            table.sort(DiffSongs, compare)
+
             ChangeDiff(self,DiffSongs) end,
 		
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
@@ -553,6 +561,8 @@ return function(Style)
                 if CurDiff > 4 then CurDiff = 1 end
                 DiffSongs = DiffLoader[CurDiff]
             end
+
+            table.sort(DiffSongs, compare)
 
             ChangeDiff(self,DiffSongs) 
         end,
@@ -574,6 +584,8 @@ return function(Style)
                 if CurDiff > 4 then CurDiff = 1 end
                 DiffSongs = DiffLoader[CurDiff]
             end
+
+            table.sort(DiffSongs, compare)
             
             ChangeDiff(self,DiffSongs)
         end,
@@ -612,7 +624,7 @@ return function(Style)
 				if Joined[PLAYER_1] and Joined[PLAYER_2] then
 				
 					-- If they are, We will use Versus.
-					GAMESTATE:SetCurrentStyle('versus')
+					GAMESTATE:SetCurrentStyle('TwoPlayersTwoSides')
 					
 					-- Save Profiles.
 					PROFILEMAN:SaveProfile(PLAYER_1)
@@ -624,7 +636,7 @@ return function(Style)
 				else
 				
 					-- If we are single player, Use Single.
-					GAMESTATE:SetCurrentStyle('single')
+					GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 					
 					-- Save Profile.
 					PROFILEMAN:SaveProfile(self.pn)

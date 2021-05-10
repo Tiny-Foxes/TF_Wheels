@@ -831,7 +831,7 @@ return function(Style)
 					else
 				
 						-- If we are single player, Use Single.
-						GAMESTATE:SetCurrentStyle('single')
+						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 					
 						-- Save Profile.
 						PROFILEMAN:SaveProfile(self.pn)
