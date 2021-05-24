@@ -626,7 +626,7 @@ return function(Style)
 				if Joined[PLAYER_1] and Joined[PLAYER_2] then
 				
 					-- If they are, We will use Versus.
-					GAMESTATE:SetCurrentStyle('TwoPlayersTwoSides')
+					GAMESTATE:SetCurrentStyle('versus')
 					
 					-- Save Profiles.
 					PROFILEMAN:SaveProfile(PLAYER_1)
