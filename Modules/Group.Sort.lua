@@ -12,6 +12,12 @@ return function(Songs,CurGroup)
 			Groups[#Groups+1] = v[1]:GetGroupName()
 		end		
 	end	
+
+	local function compare(a,b)
+        return a < b
+    end
+	
+	table.sort(Groups, compare)
 	
 	local GroupsAndSongs = {}
 	
@@ -25,6 +31,6 @@ return function(Songs,CurGroup)
 			end		
 		end
 	end
-	
+
 	return GroupsAndSongs
 end

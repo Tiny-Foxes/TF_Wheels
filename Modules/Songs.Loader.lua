@@ -17,22 +17,20 @@ return function(Style)
 		-- For all the steps in Current looped Song.
 		for i, CurStep in ipairs(CurSong:GetAllSteps()) do
 			-- Find if Steps supports current selected Style.
+
 			if string.find(CurStep:GetStepsType():lower(), Style) then
 
 				-- Check the type of Steps 
-				local Type = 4
-				
-				-- Check if its Singles
-				if string.find(CurStep:GetStepsType():lower(), "single") then
-					Type = 1				
+				local Type = 1
+
 				-- Check if its HalfDoubles.
-				elseif string.find(CurStep:GetStepsType():lower(), "half") then
+				if string.find(CurStep:GetStepsType():lower(), "half") then
 					Type = 2
 				--Check if its Doubles.
 				elseif string.find(CurStep:GetStepsType():lower(), "double") then
 					Type = 3
 				end
-
+				
 				-- Check the step level.
 				local Meter = tonumber(CurStep:GetMeter())
 				-- If the step level is under 10, Add a 0 in front.
@@ -62,7 +60,13 @@ return function(Style)
 			AllCompSongs[#AllCompSongs+1] = CurSongCon
 		end
 	end	
+
+	local function compare(a,b)
+        return a[1]:GetDisplayMainTitle() < b[1]:GetDisplayMainTitle()
+    end
 	
+	table.sort(AllCompSongs, compare)
+
 	-- Return all the Songs, That support Current Style.
 	return AllCompSongs
 end
