@@ -7,7 +7,7 @@ local Wheels = {
 	"DDR5thMixWheel",
 	--"DDRMAXWheel",
 
-	"Popn10Wheel",
+	---"Popn10Wheel",
 }
 
 -- The Styles that are defined for the game mode.
@@ -24,6 +24,7 @@ local GameModeStyles = {
 	["gddm"] = "gddm_new",
 	["gdgf"] = "guitar_five",
 	["gh"] = "gh_solo",
+	["taiko"] = "taiko",
 	["lights"] = "lights_cabinet",
 	["kickbox"] = "kickbox_human"
 }
