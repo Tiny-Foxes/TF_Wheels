@@ -39,5 +39,11 @@ return Def.ActorFrame{
 				:effectclock("beat")
 				:SetAllStateDelays(.25)
 		end
+	},
+	Def.Quad {
+		InitCommand=function(self)
+			self:MaskSource(true)
+				:MaskDest()
+		end
 	}
 }

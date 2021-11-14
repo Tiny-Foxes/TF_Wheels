@@ -25,7 +25,7 @@ return Def.ActorFrame{
 	Def.Sprite {
 		Texture=NOTESKIN:GetPath( '_Down', 'Mask' ),
 		InitCommand=function(self)
-			self:MaskSource(true) 
+			self:MaskSource(true)
 		end
 	},
 	Def.Sprite {
@@ -44,6 +44,12 @@ return Def.ActorFrame{
 			self:set_use_effect_clock_for_texcoords(true)
 				:effectclock("beat")
 				:SetAllStateDelays(.25)
+		end
+	},
+	Def.Quad {
+		InitCommand=function(self)
+			self:MaskSource(true)
+				:MaskDest()
 		end
 	}
 }
