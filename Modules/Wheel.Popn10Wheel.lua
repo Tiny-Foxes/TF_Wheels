@@ -531,10 +531,12 @@ return function(Style)
 		
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand=function(self)
-            if DiffSongs[CurSong][1]:GetMusicPath() then
-			    SOUND:PlayMusicPart(DiffSongs[CurSong][1]:GetMusicPath(),DiffSongs[CurSong][1]:GetSampleStart(),DiffSongs[CurSong][1]:GetSampleLength(),0,0,true)
-            end
-        end,
+			if DiffSongs[CurSong][1].PlayPreviewMusic then
+				DiffSongs[CurSong][1]:PlayPreviewMusic()
+			elseif GroupDiffSongssAndSongs[CurSong][1]:GetMusicPath() then
+				SOUND:PlayMusicPart(DiffSongs[CurSong][1]:GetMusicPath(),DiffSongs[CurSong][1]:GetSampleStart(),DiffSongs[CurSong][1]:GetSampleLength(),0,0,true)
+			end
+		end,
         
         -- Do stuff when a user presses left on Pad or Menu buttons.
         MenuLeftCommand=function(self) 

@@ -172,7 +172,9 @@ local function MoveSelection(self,offset,Songs)
 		self:GetChild("CDTitle"):visible(true):Load(Songs[CurSong][1]:GetCDTitlePath())
 		
 		-- Play Current selected Song Music.
-		if Songs[CurSong][1]:GetMusicPath() then
+		if Songs[CurSong][1].PlayPreviewMusic then
+			Songs[CurSong][1]:PlayPreviewMusic()
+		elseif Songs[CurSong][1]:GetMusicPath() then
 			SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
 		end
 	
@@ -389,7 +391,9 @@ return function(Style)
 		
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand=function(self)
-			if type(GroupsAndSongs[CurSong]) ~= "string" and GroupsAndSongs[CurSong][1]:GetMusicPath() then
+			if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+				GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+			elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
 				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),GroupsAndSongs[CurSong][1]:GetSampleStart(),GroupsAndSongs[CurSong][1]:GetSampleLength(),0,0,true)
 			end
 		end,
