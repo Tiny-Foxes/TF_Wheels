@@ -636,7 +636,7 @@ return function(Style)
 		
 		-- Change to ScreenGameplay.
 		StartSongCommand=function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenGameplay"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
 		end,
 		
 		-- The extra command we have to add to change the original front most CD after a while.

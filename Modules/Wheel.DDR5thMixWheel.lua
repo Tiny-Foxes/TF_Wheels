@@ -727,7 +727,7 @@ return function(Style)
 		
 		-- Change to ScreenGameplay.
 		StartSongCommand=function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenGameplay"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
 		end,
 				
 		-- The Info display container.
