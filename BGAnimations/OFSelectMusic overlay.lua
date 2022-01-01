@@ -24,6 +24,7 @@ local GameModeStyles = {
 	["gddm"] = "gddm_new",
 	["gdgf"] = "guitar_five",
 	["gh"] = "gh_solo",
+	["kbx"] = "kb4_single",
 	["taiko"] = "taiko",
 	["lights"] = "lights_cabinet",
 	["kickbox"] = "kickbox_human"
