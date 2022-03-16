@@ -63,17 +63,17 @@ return Def.ActorFrame {
 		end
 	},
 	Def.BitmapText{
-		Font="_open sans",
+		Font="_noto sans 40px",
 		Text="SONG LOADING",
 		OnCommand=function(self)
 			self:y(-190):zoom(1.5):strokecolor(0,0,0,1):diffuse(0,.5,0,1)
 		end
 	},
 	Def.BitmapText{
-		Font="_open sans",
+		Font="_noto sans 40px",
 		Text="",
 		OnCommand=function(self)
-			self:xy(-80,-80):zoom(.4):strokecolor(0,0,0,1):halign(0)
+			self:xy(-80,-80):zoom(.4):strokecolor(0,0,0,1):halign(0):vertspacing(20)
 		end,
 		LoadingKeysoundMessageCommand=function(self,params)
 			self:settext("Loading... "..string.gsub(params.File, ".*/", "").."\n\n".."Please do not press any\nbutton while loading.")

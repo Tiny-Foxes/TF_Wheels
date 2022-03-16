@@ -155,7 +155,7 @@ local function MoveSelection(self,offset,Songs)
 		end
 
 		-- Now we resize the banner to the proper size we want.
-		self:GetChild("BannerUnderlay"):zoom(TF_WHEEL.Resize(self:GetChild("BannerUnderlay"):GetWidth(),self:GetChild("BannerUnderlay"):GetHeight(),256,80))
+		self:GetChild("BannerUnderlay"):zoom(TF_WHEEL.Resize(self:GetChild("BannerUnderlay"):GetWidth(),self:GetChild("BannerUnderlay"):GetHeight(),224,70))
 	
 		-- Load the top banner, This one shows when its done transitioning.
 		self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1):diffusealpha(0):sleep(0):queuecommand("Load"):diffusealpha(1)
@@ -359,7 +359,7 @@ local function MoveSelection(self,offset,Songs)
 	-- Check if offset is not 0.
 	if offset ~= 0 then
 		
-		self:GetChild("Slider"):linear(.1):y(-180+(350*(CurSong/#Songs)))
+		self:GetChild("Slider"):linear(.1):y(-176+(350*(CurSong/#Songs)))
 
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
@@ -374,7 +374,7 @@ local function MoveSelection(self,offset,Songs)
 			end
 		end
 	else
-		self:GetChild("Slider"):y(-180+(350*(CurSong/#Songs)))
+		self:GetChild("Slider"):y(-176+(350*(CurSong/#Songs)))
 	end
 end
 
@@ -437,7 +437,7 @@ return function(Style)
 			-- Song Title for on wheel.
 			Def.BitmapText{
 				Name="Title",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self) 
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) == "string" then
@@ -473,7 +473,7 @@ return function(Style)
 			-- The subtitle.
 			Def.BitmapText{
 				Name="SubTitle",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -489,7 +489,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Artist",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self) 
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -520,7 +520,7 @@ return function(Style)
 				Texture=THEME:GetPathG("","DDR/Feet"),
 				InitCommand=function(self) 
 					-- Set the colour to black.
-					self:zoom(.15):diffuse(0,0,0,0):xy(15*i2,25*i)
+					self:zoom(.125):diffuse(0,0,0,0):xy(14*i2,22*i)
 				end
 			}	
 		end
@@ -537,17 +537,17 @@ return function(Style)
 				Texture=THEME:GetPathG("","DDR/DiffSel"),
 				InitCommand=function(self) 
 					-- Resize and position.
-					self:zoom(.05):xy(-15,25*i)
+					self:zoom(.04):xy(-14,22*i)
 				end
 			},
 
 			-- Difficulty text.
 			Def.BitmapText{
 				Name="DiffText",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				InitCommand=function(self) 
 					-- Set size, colour, position and maxwidth.
-					self:zoom(.2):diffuse(0,0,0,1):xy(-17,25*i):maxwidth(140)
+					self:zoom(.18):diffuse(0,0,0,1):xy(-17,22*i):maxwidth(140)
 				end
 			}
 		}
@@ -562,17 +562,17 @@ return function(Style)
 				InitCommand=function(self) 
 					-- Resize and position.
 					-- We do minus on the zoom to flip the image.
-					self:zoom(-.05):xy(165,25*i)
+					self:zoom(-.04):xy(150.5,22*i)
 				end
 			},
 
 			-- Difficulty text.
 			Def.BitmapText{
 				Name="DiffText",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				InitCommand=function(self)
 					-- Set size, colour, position and maxwidth. 
-					self:zoom(.2):diffuse(0,0,0,1):xy(167,25*i):maxwidth(140)
+					self:zoom(.18):diffuse(0,0,0,1):xy(154,22*i):maxwidth(140)
 				end
 			}
 		}
@@ -734,7 +734,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("DDR/Info","Display"),
 			OnCommand=function(self) 
-				self:zoom(.5):xy(-200,-60) 
+				self:zoom(.45):xy(-SCREEN_CENTER_X,-60):halign(0)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
@@ -743,17 +743,17 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(-160,-172):zoom(.05)
+				self:xy(-SCREEN_CENTER_X+180,-162):zoom(.05)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
 		
 		-- The BPN Text.
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="BPM",
 			OnCommand=function(self)
-				self:xy(-165,-172):zoom(.2):zoomx(.3)
+				self:xy(-SCREEN_CENTER_X+178,-162):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
@@ -761,7 +761,7 @@ return function(Style)
 		-- The BPM numbers.
 		Def.BitmapText{
 			Name="BPM",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="0",
 			OnCommand=function(self) 
 				-- Check if its a song.
@@ -770,7 +770,7 @@ return function(Style)
 					self:settext(string.format("%.0f",GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
 				end	
 
-				self:xy(-160,-146)
+				self:xy(-SCREEN_CENTER_X+190,-134)
 					:zoomy(.6):diffusebottomedge(1,.5,0,1)
 					:diffusetopedge(1,1,0,1):skewx(-.2)
 			end
@@ -778,9 +778,9 @@ return function(Style)
 		
 		Def.BitmapText{
 			Text="bpm",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self) 
-				self:xy(-110,-140):zoom(.2)
+				self:xy(-SCREEN_CENTER_X+238,-130):zoom(.2)
 					:diffuse(1,1,0,1):skewx(-.3)
 			end
 		},
@@ -789,17 +789,17 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(-300,-164):zoom(.05):zoomx(.07)
+				self:xy(-SCREEN_CENTER_X+70,-154):zoom(.05):zoomx(.07)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
 		
 		-- Set the stage text.
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="STAGE",
 			OnCommand=function(self)
-				self:xy(-305,-164):zoom(.2):zoomx(.3)
+				self:xy(-SCREEN_CENTER_X+68,-154):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
@@ -807,10 +807,10 @@ return function(Style)
 		-- The actual event text.
 		Def.BitmapText{
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self) 
 				self:diffuse(0,.5,0,1):strokecolor(0,.5,0,1):zoom(.3)
-					:xy(-290,-146):skewx(-.2)
+					:xy(-SCREEN_CENTER_X+68,-136):skewx(-.2)
 			end
 		},
 				
@@ -819,7 +819,7 @@ return function(Style)
 			Name="Dance",
 			Texture=THEME:GetPathG("","DDR/Dance"),
 			OnCommand=function(self)
-				self:xy(-68,-150):zoom(.15)
+				self:xy(-SCREEN_CENTER_X+272,-140):zoom(.14)
 			end
 		},
 		
@@ -827,8 +827,8 @@ return function(Style)
 		Def.Sprite{
 			Name="BannerUnderlay",
 			InitCommand=function(self)
-				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(-200,-90)
+				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),224,70))
+					:xy(-SCREEN_CENTER_X+150,-84)
 			end
 		},
 		
@@ -848,8 +848,8 @@ return function(Style)
 					end
 				end
 					
-				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(-200,-90)
+				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),224,70))
+					:xy(-SCREEN_CENTER_X+150,-84)
 			end,
 			LoadCommand=function(self) 
 				-- Check if its a song.
@@ -867,7 +867,7 @@ return function(Style)
 					end
 				end
 				
-				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
+				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),224,70))
 			end
 		},
 		
@@ -880,8 +880,8 @@ return function(Style)
 					self:Load(GroupsAndSongs[CurSong][1]:GetCDTitlePath())
 				end
 
-				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),60,60))
-					:xy(-100,-100)
+				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),50,50))
+					:xy(-SCREEN_CENTER_X+240,-102)
 			end,
 			LoadCommand=function(self) 
 				-- Check if its a song.
@@ -902,7 +902,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(-235,-40):zoom(.038):zoomx(-.08)
+				self:xy(-SCREEN_CENTER_X+120,-42):zoom(.033):zoomx(-.08)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
@@ -911,7 +911,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/DiffSel"),
 			OnCommand=function(self)
-				self:xy(-175,-40):zoom(.038):zoomx(.08)
+				self:xy(-SCREEN_CENTER_X+174,-42):zoom(.033):zoomx(.08)
 					:diffuse(DisplayColor[1]/1.5,DisplayColor[2]/1.5,DisplayColor[3]/1.5,DisplayColor[4])
 			end
 		},
@@ -919,45 +919,47 @@ return function(Style)
 			-- Actual P1 text.
 		Def.BitmapText{
 			Text="1P",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self) 
 				self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
 				:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
-				:xy(-330,-38):zoomy(.25):zoomx(.35):skewx(-.25)
+				:xy(-SCREEN_CENTER_X+36,-40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 		
 		Def.BitmapText{
 			Text="2P",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self) 
 				self:diffuse(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
 				:strokecolor(DisplayColor[1]/4,DisplayColor[2]/4,DisplayColor[3]/4,DisplayColor[4])
-				:xy(-80,-38):zoomy(.25):zoomx(.35):skewx(-.25)
+				:xy(-SCREEN_CENTER_X+260,-40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 				
 		-- The difficulty text.
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="DIFFICULTY",
 			OnCommand=function(self)
-				self:xy(-205,-40):zoom(.2):zoomx(.3)
+				self:xy(-SCREEN_CENTER_X+148,-42):zoom(.18):zoomx(.3)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
 		
 		-- Load the difficulties selector.
-		Diffs..{OnCommand=function(self) self:x(-280):valign(0) end},
+		Diffs..{OnCommand=function(self) self:x(-SCREEN_CENTER_X+78):valign(0) end},
 		
 		-- Load the wheel.
-		Wheel,
+		Wheel..{
+			OnCommand=function(self) self:x(SCREEN_CENTER_X-320) end			
+		},
 		
 		-- Add the glowing selector part on the top of the wheel.
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/Selector"),
 			OnCommand=function(self) 
-				self:zoom(.65):xy(140,-2):faderight(1)
+				self:zoom(.65):xy(SCREEN_CENTER_X-180,-2):faderight(1)
 					:diffuseshift():effectcolor1(1,1,1,.9)
 					:effectcolor2(DisplayColor[1],DisplayColor[2],DisplayColor[3],.5)
 			end
@@ -966,7 +968,7 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/Slider"),
 			OnCommand=function(self)
-				self:zoom(.35):diffuse(.8,.8,0,1):x(300)
+				self:zoom(.35):diffuse(.8,.8,0,1):x(SCREEN_CENTER_X-20)
 			end
 		},
 
@@ -974,7 +976,7 @@ return function(Style)
 			Name="Slider",
 			Texture=THEME:GetPathG("","DDR/SlidSelect"),
 			OnCommand=function(self)
-				self:zoom(.35):diffuse(1,0,0,1):xy(300,-180+(350*(CurSong/#GroupsAndSongs)))
+				self:zoom(.35):diffuse(1,0,0,1):xy(SCREEN_CENTER_X-20,-176+(350*(CurSong/#GroupsAndSongs)))
 			end
 		}
 	}

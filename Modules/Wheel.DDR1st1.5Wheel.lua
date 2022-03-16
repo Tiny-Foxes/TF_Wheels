@@ -582,7 +582,7 @@ return function(Style)
 		-- Global Centered Banner Text, Incase there is no banner.
 		Def.BitmapText{
 			Name="BannerText",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				-- Check if we are on group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -623,7 +623,7 @@ return function(Style)
 		-- Load the Difficulty Text.
 		Def.BitmapText{
 			Name="Difficulty",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(-220,110):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
@@ -633,7 +633,7 @@ return function(Style)
 		Def.BitmapText{
 			Name="Style",
 			Text="SINGLE",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(-220,130):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end
@@ -659,7 +659,7 @@ return function(Style)
 		-- The Difficulty Chart Names based on Meter.
 		Def.BitmapText{
 			Name="DiffChart",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(150):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
 			end

@@ -73,7 +73,7 @@ return function(Style)
                 },
 
                 Def.BitmapText {
-                    Font="_open sans 40px",
+                    Font="_noto sans 40px",
                     OnCommand=function(self)
                         
                         if i < 3  then
@@ -99,7 +99,7 @@ return function(Style)
                 },
 
                 Def.BitmapText {
-                    Font="_open sans 40px",
+                    Font="_noto sans 40px",
                     OnCommand=function(self)
                     
                         if i == 4 then

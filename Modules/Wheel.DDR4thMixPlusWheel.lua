@@ -541,7 +541,7 @@ return function(Style)
 				-- The display meter level text for on the slider.
 				Def.BitmapText{
 					Name="level",
-					Font="_open sans 40px",
+					Font="_noto sans 40px",
 					OnCommand=function(self)
 					
 						-- Zoom the text to the right size.
@@ -595,7 +595,7 @@ return function(Style)
 			
 			-- The current song and amount of songs text.
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Name="CurSong",
 				Text=pos.."/"..#GroupsAndSongs,
 				OnCommand=function(self) 
@@ -707,7 +707,7 @@ return function(Style)
 				
 				-- The text.
 				Def.BitmapText{
-					Font="_open sans 40px",
+					Font="_noto sans 40px",
 					Name="DiffName",
 					Text="Practice",
 					OnCommand=function(self)
@@ -931,7 +931,7 @@ return function(Style)
 		
 		-- Current song title text.
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Name="Title",
 			OnCommand=function(self) 
 				if type(GroupsAndSongs[CurSong]) ~= "string" then
@@ -949,7 +949,7 @@ return function(Style)
 		
 		-- Current song subtitle text.
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Name="Subtitle",
 			OnCommand=function(self)
 				if type(GroupsAndSongs[CurSong]) ~= "string" then

@@ -686,7 +686,7 @@ return function(Style)
 		-- Global Centered Banner Text, Incase there is no banner.
 		Def.BitmapText{
 			Name="BannerText",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				-- Check if we are on group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -727,7 +727,7 @@ return function(Style)
 		-- Load the NORMAL text.
 		Def.BitmapText{
 			Text="NORMAL",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(-120):diffuse(.5,.5,1,1):strokecolor(0,0,1,1):zoom(.5):zoomy(.4)
 			end			
@@ -736,7 +736,7 @@ return function(Style)
 		-- Load the Current Stage (1ST, 2ND, FINAL, EVENT)
 		Def.BitmapText{
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:x(-120):diffuse(.5,1,.5,1):strokecolor(0,.8,0,1):zoom(.4):zoomx(.5)
 			end			
@@ -745,7 +745,7 @@ return function(Style)
 		-- Load the STAGE text.
 		Def.BitmapText{
 			Text="STAGE",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:x(-30):strokecolor(0.5,0.5,1,1):zoom(.4):zoomx(.5)
 			end			
@@ -754,7 +754,7 @@ return function(Style)
 		-- Load the Difficulty Text.
 		Def.BitmapText{
 			Name="Difficulty",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(-110):zoom(.5)
 			end
@@ -776,7 +776,7 @@ return function(Style)
 		-- The Difficulty Chart Names Shadows.
 		Def.BitmapText{
 			Name="DiffChartShadow",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(2,182):zoom(.7):zoomy(.5):diffuse(0,0,0,.5):strokecolor(0,0,0,.5)
 			end
@@ -785,7 +785,7 @@ return function(Style)
 		-- The Difficulty Chart Names based on Meter.
 		Def.BitmapText{
 			Name="DiffChart",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(180):zoom(.7):zoomy(.5)
 			end

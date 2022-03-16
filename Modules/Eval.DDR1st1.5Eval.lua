@@ -36,7 +36,7 @@ return function()
 		end,
 
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="DANCE LEVEL",
 			OnCommand=function(self)
 				self:zoom(1.25)
@@ -47,7 +47,7 @@ return function()
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text=string.format("%03d",GetStats('TapNoteScore_W1')+GetStats('TapNoteScore_W2')).."\n".. -- W1 and W2 are the same in DDR 1st.
 			string.format("%03d",GetStats('TapNoteScore_W3')).."\n"..
 			string.format("%03d",GetStats('TapNoteScore_W4')).."\n"..
@@ -57,26 +57,27 @@ return function()
 				self:halign(0)
 					:valign(0)
 					:xy(-180,70)
-					:zoom(.8)
-					:vertspacing(-20)
+					:zoom(.7)
+					:vertspacing(8)
 					:diffuse(color("#FF69B4"))
 					:strokecolor(1,1,0,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text=string.format("%03d",STATSMAN:GetCurStageStats():GetPlayerStageStats(PLAYER_1):GetHighScore():GetMaxCombo()),
 			OnCommand=function(self) 
 				self:halign(0)
 					:valign(0)
 					:xy(-180,220)
-					:zoom(.8)
+					:zoom(.7)
+					:vertspacing(8)
 					:diffuse(color("#FF69B4"))
 					:strokecolor(1,1,0,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text=string.format("%01.1f",GetPercent('TapNoteScore_W1')+GetPercent('TapNoteScore_W2')).."%\n".. -- W1 and W2 are the same in DDR 1st.
 			string.format("%01.1f",GetPercent('TapNoteScore_W3')).."%\n"..
 			string.format("%01.1f",GetPercent('TapNoteScore_W4')).."%\n"..
@@ -86,38 +87,38 @@ return function()
 				self:halign(1)
 					:valign(0)
 					:xy(-200,74)
-					:zoom(.6)
-					:vertspacing(-8)
+					:zoom(.47)
+					:vertspacing(28)
 					:diffuse(color("#FFFF00"))
 					:strokecolor(0,0,1,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="PERFECT\nGREAT\nGOOD\nBOO\nMISS",
 			OnCommand=function(self) 
 				self:valign(0)
 					:y(70)
-					:zoom(.8)
-					:vertspacing(-20)
+					:zoom(.7)
+					:vertspacing(8)
 					:diffuse(color("#FF69B4"))
 					:strokecolor(1,1,0,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="MAX COMBO\n\nRANK",
 			OnCommand=function(self) 
 				self:valign(0)
 					:y(220)
-					:zoom(.8)
-					:vertspacing(-20)
+					:zoom(.6)
+					:vertspacing(8)
 					:diffuse(color("#FF69B4"))
 					:strokecolor(1,1,0,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="D",
 			OnCommand=function(self)
 				self:valign(0)
@@ -128,26 +129,26 @@ return function()
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="STAGE  SCORE\n\nTOTAL  SCORE",
 			OnCommand=function(self) 
 				self:valign(0)
 					:y(356)
 					:zoom(.6)
-					:vertspacing(-10)
+					:vertspacing(8)
 					:diffuse(color("#FFFF00"))
 					:strokecolor(0,0,1,1)
 			end
 		},
 		Def.BitmapText{
-			Font="_open sans 40px",
-			Text=string.format("%09d",GetScore()).."\n\n000000000",
+			Font="_noto sans 40px",
+			Text=string.format("%09d",GetScore()).."\n000000000",
 			OnCommand=function(self) 
 				self:halign(1)
 					:valign(0)
 					:xy(-100,360)
 					:zoom(.8)
-					:vertspacing(-22)
+					:vertspacing(28)
 					:diffuse(color("#FF69B4"))
 					:strokecolor(1,1,0,1)
 			end

@@ -370,7 +370,7 @@ return function(Style)
 			-- Song Title for on wheel.
 			Def.BitmapText{
 				Name="Title",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self) 
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) == "string" then
@@ -406,7 +406,7 @@ return function(Style)
 			-- The subtitle.
 			Def.BitmapText{
 				Name="SubTitle",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -422,7 +422,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Artist",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self) 
 					-- Check if we are on group.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -516,16 +516,16 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="DiffText",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)	
-					self:zoom(4):xy(-60,-20):maxwidth(20)
+					self:zoom(2):xy(-60,0):maxwidth(40)
 					if type(GroupsAndSongs[CurSong]) ~= "string" then	
 						self:settext(DiffImage[TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[i == 0 and PLAYER_1 or PLAYER_2]+1]:GetDifficulty()]])
 					end
 				end
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text=(i+1).."P",
 				OnCommand=function(self)	
 					self:zoomy(1.5):zoomx(2):xy(70+(i*-260),-30)
@@ -571,7 +571,7 @@ return function(Style)
 	for i,v in ipairs(GrooveRadarNames) do
 		GRName[#GRName+1] = Def.BitmapText{
 			Text=v,
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:zoom(.25):xy(GRLocation[i][1],GRLocation[i][2])
 			end
@@ -735,7 +735,7 @@ return function(Style)
 
 		Def.Quad{
 			InitCommand=function(self)			
-				self:zoomto(256,80):xy(-200,-65)
+				self:zoomto(256,80):xy(-SCREEN_CENTER_X+14,-65):halign(0)
 					:diffuse(0,0,0,1)
 			end
 		},
@@ -745,7 +745,7 @@ return function(Style)
 			Name="BannerUnderlay",
 			InitCommand=function(self)
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(-200,-65)
+					:xy(-SCREEN_CENTER_X+142,-65)
 			end
 		},
 		
@@ -766,7 +766,7 @@ return function(Style)
 				end
 					
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(),self:GetHeight(),256,80))
-					:xy(-200,-65)
+					:xy(-SCREEN_CENTER_X+142,-65)
 			end,
 			LoadCommand=function(self) 
 				-- Check if its a song.
@@ -792,16 +792,16 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("DDR/InfoMAX","Display"),
 			OnCommand=function(self) 
-				self:zoom(.32):xy(-200,-80) 
+				self:zoom(.32):xy(-SCREEN_CENTER_X,-80):halign(0)
 					:diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],DisplayColor[4])
 			end
 		},
 
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="SPEED",
 			OnCommand=function(self)
-				self:zoomy(.2):zoomx(.25):xy(-214,-136) 
+				self:zoomy(.2):zoomx(.25):xy(-SCREEN_CENTER_X+160,-136) 
 					:diffuse(1,1,0,1):halign(0)
 			end
 		},
@@ -811,12 +811,12 @@ return function(Style)
 			end,
 			Def.Quad{
 				OnCommand=function(self)
-					self:zoomto(160,25):xy(-170,-95):MaskSource()
+					self:zoomto(160,25):xy(-SCREEN_CENTER_X+170,-95):MaskSource()
 				end
 			},
 			Def.Quad{
 				OnCommand=function(self)
-					self:zoomto(160,36):xy(-170,-150):MaskSource()
+					self:zoomto(160,36):xy(-SCREEN_CENTER_X+170,-150):MaskSource()
 				end
 			},
 		},
@@ -824,11 +824,11 @@ return function(Style)
 		Def.ActorFrame{
 			Name="BPM",
 			OnCommand=function(self)
-				self:xy(-220,-120):zbuffer(true)
+				self:xy(-SCREEN_CENTER_X+156,-120):zbuffer(true)
 			end,
 			Def.BitmapText{
 				Name="Num",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="ーーー",
 				OnCommand=function(self)
 					self:zoomy(.6):zoomx(.8):diffuse(1,1,0,1):halign(0)
@@ -862,7 +862,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Text",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="bpm",
 				OnCommand=function(self)
 					self:zoomy(.2):zoomx(.4):diffuse(1,1,0,1):halign(0):xy(58,4)
@@ -887,11 +887,11 @@ return function(Style)
 		Def.ActorFrame{
 			Name="BPMDummy",
 			OnCommand=function(self)
-				self:xy(-220,-95):zbuffer(true)
+				self:xy(-SCREEN_CENTER_X+156,-95):zbuffer(true)
 			end,
 			Def.BitmapText{
 				Name="Num",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="ーーー",
 				OnCommand=function(self)
 					self:zoomy(.6):zoomx(.8):diffuse(1,1,0,1):halign(0)
@@ -915,7 +915,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Text",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="bpm",
 				OnCommand=function(self)
 					self:zoomy(.2):zoomx(.4):diffuse(1,1,0,1):halign(0):xy(58,4)
@@ -938,20 +938,20 @@ return function(Style)
 		},
 
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text="STAGE",
 			OnCommand=function(self)
-				self:zoomy(.2):zoomx(.25):xy(-330,-136) 
+				self:zoomy(.2):zoomx(.25):xy(-SCREEN_CENTER_X+40,-136) 
 					:diffuse(1,1,0,1):halign(0)
 			end
 		},
 
 		Def.BitmapText{
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self) 
 				self:diffuse(.8,.8,1,1):zoom(.5)
-					:xy(-330,-120):halign(0)
+					:xy(-SCREEN_CENTER_X+40,-120):halign(0)
 			end
 		},
 
@@ -959,7 +959,7 @@ return function(Style)
 			Name="CDTitle",
 			OnCommand=function(self)
 				self:spin():effectmagnitude(0,-140,0)
-				:xy(-110,-90):z(400)
+				:xy(-SCREEN_CENTER_X+250,-90):z(400)
 			end,
 			LoadCommand=function(self)
 				for i = 1,self:GetNumChildren() do
@@ -1023,12 +1023,14 @@ return function(Style)
 		},
 
 		-- Load the wheel.
-		Wheel,
+		Wheel..{
+			OnCommand=function(self) self:x(SCREEN_CENTER_X-280) end			
+		},
 		
 		-- Add the glowing selector part on the top of the wheel.
 		Def.ActorFrame{
 			OnCommand=function(self) 
-				self:zoom(.35):x(136)
+				self:zoom(.35):x(SCREEN_CENTER_X-145)
 			end,
 			Def.Sprite{
 				Texture=THEME:GetPathG("","DDR/MAXSelector"),
@@ -1048,14 +1050,17 @@ return function(Style)
 		Def.Sprite{
 			Texture=THEME:GetPathG("","DDR/Radar"),
 			OnCommand=function(self)	
-				self:zoom(.35):xy(-200,120):diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],1)
+				self:zoom(.35):xy(-SCREEN_CENTER_X+140,120):diffuse(DisplayColor[1],DisplayColor[2],DisplayColor[3],1)
 			end
 		},
 
-		Diffs,
+		Diffs..{
+			OnCommand=function(self) self:x(-SCREEN_CENTER_X+340) end
+		},
+
 		GRName..{
 			OnCommand=function(self)
-				self:xy(-200,120)
+				self:xy(-SCREEN_CENTER_X+140,120)
 			end
 		}
 	}

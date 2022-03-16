@@ -416,7 +416,7 @@ return function(Style)
 
             Def.BitmapText{
                 Name="Title",
-                Font="_open sans 40px",
+                Font="_noto sans 40px",
                 Text=DiffSongs[pos][1]:GetDisplayMainTitle(),
                 OnCommand=function(self)
                     self:diffuse(0,0,0,1):maxwidth(320):x(60):strokecolor(0,0,0,1)
@@ -440,7 +440,7 @@ return function(Style)
                 },
                 Def.BitmapText{
                     Name="Diff",
-                    Font="_open sans 40px",
+                    Font="_noto sans 40px",
                     Text=DiffSongs[pos][2]:GetMeter(),
                     OnCommand=function(self)
                         self:diffuse(0,0,0,1):strokecolor(0,0,0,1):zoom(4):zoomy(3)
@@ -503,7 +503,7 @@ return function(Style)
             Def.BitmapText{
                 Name="Title",
                 Text=Groups[pos],
-                Font="_open sans 40px",
+                Font="_noto sans 40px",
                 OnCommand=function(self)
                     self:diffuse(0,0,0,1):maxwidth(420):strokecolor(0,0,0,1)
 
@@ -743,7 +743,7 @@ return function(Style)
 
             Def.BitmapText{
                 Name="Title",
-                Font="_open sans 40px",
+                Font="_noto sans 40px",
                 Text=DiffSongs[CurSong][1]:GetDisplayMainTitle(),
                 OnCommand=function(self)
                     self:diffuse(0,0,0,1):maxwidth(320):x(60):strokecolor(0,0,0,1)

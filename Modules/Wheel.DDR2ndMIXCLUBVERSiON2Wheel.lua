@@ -598,7 +598,7 @@ return function(Style)
 		-- Global Centered Banner Text, Incase there is no banner.
 		Def.BitmapText{
 			Name="BannerText",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				-- Check if we are on group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -639,7 +639,7 @@ return function(Style)
 		-- Load the HARD text.
 		Def.BitmapText{
 			Text="HARD",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(-120,-140):strokecolor(0,0,1,1):zoom(.3):zoomx(.4)
 			end			
@@ -648,7 +648,7 @@ return function(Style)
 		-- Load the Current Stage (1ST, 2ND, FINAL, EVENT)
 		Def.BitmapText{
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(50,-140):diffuse(1,0,0,1):strokecolor(1,1,1,1):zoom(.5)
 			end			
@@ -657,7 +657,7 @@ return function(Style)
 		-- Load the STAGE text.
 		Def.BitmapText{
 			Text="STAGE",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:xy(120,-140):strokecolor(0,0,0,1):zoom(.4):zoomx(.5)
 			end			
@@ -684,7 +684,7 @@ return function(Style)
 		-- The Difficulty Chart Names based on Meter.
 		Def.BitmapText{
 			Name="DiffChart",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(180):strokecolor(0,0,0,1):zoom(.7):zoomy(.5)
 			end
@@ -694,7 +694,7 @@ return function(Style)
 		Def.BitmapText{
 			Name="Style",
 			Text="SINGLE",
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			OnCommand=function(self)
 				self:y(220):diffuse(1,0,0,1):strokecolor(1,1,0,1):zoom(.8)
 			end

@@ -35,7 +35,7 @@ TF_WHEEL.StyleDB = {
 	["bm_single5"] = "single5", ["bm_double5"] = "double5", ["bm_single7"] = "single7", ["bm_double7"] = "double7",
 	["maniax_single"] = "single", ["maniax_double"] = "double",
 	["techno_single4"] = "single4", ["techno_single5"] = "single5", ["techno_single8"] = "single8", ["techno_single9"] = "single9", ["techno_double4"] = "double4", ["techno_double5"] = "double5", ["techno_double8"] = "double8", ["techno_double9"] = "double9",
-	["pnm_three"] = "popn-three", ["pnm_four"] = "pnm-four", ["pnm_five"] = "popn-five", ["pnm_seven"] = "popn-seven", ["pnm_nine"] = "popn-nine",
+	["pnm_three"] = "po-mu-three", ["pnm_four"] = "pnm-four", ["pnm_five"] = "po-mu-five", ["pnm_seven"] = "po-mu-seven", ["pnm_nine"] = "po-mu-nine",
 	["gddm_new"] = "gddm-new", ["gddm_old"] = "gddm-old",
 	["gdgf_five"] = "five-fret", ["gdgf_six"] = "six-fret", ["gdgf_three"] = "three-fret",
 	["gh_solo"] = "solo", ["gh_solo6"] = "solo6", ["gh_bass"] = "bass", ["gh_bass6"] = "bass6", ["gh_rhythm"] = "rhythm", ["gh_rhythm6"] = "rhythm6",
@@ -108,6 +108,23 @@ function TF_WHEEL.CountingNumbers(self,NumStart,NumEnd,Duration,format)
 	end
 	TF_WHEEL.Count[#TF_WHEEL.Count+1] = string.format(format,NumEnd)
 	self:sleep(Duration/10):queuecommand("Count")
+end
+
+function TF_WHEEL.FormatAddNewline(Text, Amount)
+	local Amount = Amount or 20
+	local count = 0
+	local out = ""
+
+	for char in string.gmatch(Text, ".") do 
+		if char == "\n" then char = " " end
+		if count > Amount and char == " " then
+			char = char.."\n"
+			count = 0
+		end
+		out = out..char
+		count = count+1
+	end
+	return out
 end
 
 -- Main Input Function.

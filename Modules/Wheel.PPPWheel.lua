@@ -314,7 +314,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="CDText",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					if type(GroupsAndSongs[pos]) ~= "string" then
 						if not GroupsAndSongs[pos][1]:HasJacket() and not GroupsAndSongs[pos][1]:HasBackground() then
@@ -555,7 +555,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Text="MUSIC INFORMATION",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.45):xy(70,74):diffuse(.5,.5,.5,1):strokecolor(.5,.5,.5,1):zoomy(.65)
 				end
@@ -590,14 +590,14 @@ return function(Style)
 				end
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="E",
 				OnCommand=function(self)
 					self:xy(30,30):zoom(.6)
 				end
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="D",
 				OnCommand=function(self)
 					self:xy(330,30):zoom(.6)
@@ -641,7 +641,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Text",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.6):diffuse(1,1,1,1):maxwidth(320)
 						:strokecolor(1,1,1,1)
@@ -698,7 +698,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Title",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:diffuse(1,1,1,1)
 						:y(-30)
@@ -713,7 +713,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="SubTitle",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.2):diffuse(1,1,1,1)
 						:y(-10)
@@ -727,7 +727,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="Artist",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.8):diffuse(1,1,1,1)
 						:y(20)
@@ -744,7 +744,7 @@ return function(Style)
 		Def.ActorFrame{
 			OnCommand=function(self) self:xy(-160,-94) end,
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Music Title", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.38):zoomx(.8):diffuse(1,1,1,.2)
@@ -752,7 +752,7 @@ return function(Style)
 				end
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Music Title", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.4):zoomx(.8):diffuse(1,1,1,1)
@@ -765,7 +765,7 @@ return function(Style)
 		Def.ActorFrame{
 			OnCommand=function(self) self:xy(-160,46) end,
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Dance Level", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.38):zoomx(.5):diffuse(1,1,1,.2)
@@ -773,7 +773,7 @@ return function(Style)
 				end
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Dance Level", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.4):zoomx(.5):diffuse(1,1,1,1)
@@ -802,7 +802,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="BPM",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.5):diffuse(1,1,1,1)
 						:halign(0)
@@ -817,7 +817,7 @@ return function(Style)
 			},
 			Def.BitmapText{
 				Name="ChartArtist",
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				OnCommand=function(self)
 					self:zoom(.5):diffuse(1,1,1,1)
 						:x(80)
@@ -832,7 +832,7 @@ return function(Style)
 		},
 
 		Def.BitmapText{
-			Font="_open sans 40px",
+			Font="_noto sans 40px",
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper().." STAGE",
 			OnCommand=function(self)
 				self:zoom(.7):diffuse(1,1,1,1)
@@ -903,7 +903,7 @@ return function(Style)
 				}
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Select", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.4):diffuse(1,1,1,1):x(-10)
@@ -942,7 +942,7 @@ return function(Style)
 				}
 			},
 			Def.BitmapText{
-				Font="_open sans 40px",
+				Font="_noto sans 40px",
 				Text="Decide", -- Thanks subo and paraph
 				OnCommand=function(self)
 					self:zoom(.4):diffuse(1,1,1,1):x(76)
