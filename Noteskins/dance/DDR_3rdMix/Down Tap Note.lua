@@ -19,7 +19,7 @@ return Def.ActorFrame{
 	Def.Sprite {
 		Texture=NOTESKIN:GetPath( '_Down', 'Mask' ),
 		InitCommand=function(self)
-			self:MaskSource(true) 
+			self:MaskSource(true)
 		end
 	},
 	Def.Sprite {
@@ -30,6 +30,7 @@ return Def.ActorFrame{
 				:effectclock("beat")
 				:texcoordvelocity(0,-1)
 				:MaskDest()
+				:ztestmode("ZTestMode_WriteOnFail")
 		end
 	},
 	Def.Sprite {
