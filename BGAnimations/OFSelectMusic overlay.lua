@@ -2,12 +2,14 @@
 local Wheels = {
 	"DDR1st1.5Wheel",
 	"DDR2ndMIXCLUBVERSiON2Wheel",
-	"DDR3rdMixPlusWheel",
-	"DDR4thMixPlusWheel",
-	"DDR5thMixWheel",
-	"DDRMAXWheel",
+	--"DDR3rdMixPlusWheel",
+	--"DDR4thMixPlusWheel",
+	--"DDR5thMixWheel",
+	--"DDRMAXWheel",
 
 	---"Popn10Wheel",
+	
+	--"PPPWheel"
 }
 
 -- The Styles that are defined for the game mode.
@@ -47,7 +49,7 @@ end
 GAMESTATE:DeleteKeysounds()
 
 --Return the Def table that contains all the stuff, Check the module folder for the wheels.
---return LoadModule("Wheel."..Wheels[RandButNotLast(#Wheels)]..".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+return LoadModule("Wheel."..Wheels[RandButNotLast(#Wheels)]..".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
 
 --Debugging.
-return LoadModule("Wheel.DDR5thMixWheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+--return LoadModule("Wheel.PUMPOF.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")

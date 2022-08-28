@@ -62,21 +62,29 @@ return Def.ActorFrame {
 			self:zoomto(SCREEN_WIDTH,12):y(-140):customtexturerect(0,0,SCREEN_WIDTH/20,1)
 		end
 	},
-	Def.BitmapText{
-		Font="_noto sans 40px",
+	Def.Text{
+		Font=THEME:GetPathF("","NotoSans-All.ttf"),
+		Size=60,
+		StrokeSize=2,
 		Text="SONG LOADING",
 		OnCommand=function(self)
-			self:y(-190):zoom(1.5):strokecolor(0,0,0,1):diffuse(0,.5,0,1)
+			self:y(-190)
+			self:MainActor():diffuse(0,.5,0,1)
+			self:StrokeActor():diffuse(0,0,0,1)
 		end
 	},
-	Def.BitmapText{
-		Font="_noto sans 40px",
-		Text="",
+	Def.Text{
+		Font=THEME:GetPathF("","NotoSans-All.ttf"),
+		Size=24,
+		StrokeSize=2,
 		OnCommand=function(self)
-			self:xy(-80,-80):zoom(.4):strokecolor(0,0,0,1):halign(0):vertspacing(20)
+			self:y(-40)
+				:halign(0)
+
+			self:StrokeActor():diffuse(0,0,0,1)
 		end,
 		LoadingKeysoundMessageCommand=function(self,params)
-			self:settext("Loading... "..string.gsub(params.File, ".*/", "").."\n\n".."Please do not press any\nbutton while loading.")
+			self:settext("Loading... "..string.gsub(params.File, ".*/", "").."\n\n".."Please do not press any\nbutton while loading."):Regen()
 		end
 	},
 	LoadingKeysoundMessageCommand=function(self,params)

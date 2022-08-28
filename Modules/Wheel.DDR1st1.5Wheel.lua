@@ -160,9 +160,9 @@ local function MoveSelection(self,offset,Songs)
 	
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
-			self:GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle())
+			self:GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):Regen():visible(true)
 		else
-			self:GetChild("BannerText"):settext("")
+			self:GetChild("BannerText"):visible(false)
 		end
 	
 		-- Set the Centered Banner.
@@ -184,12 +184,12 @@ local function MoveSelection(self,offset,Songs)
 		if SONGMAN:GetSongGroupBannerPath(Songs[CurSong]) ~= "" then
 			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[CurSong]))
 
-			self:GetChild("BannerText"):settext("")
+			self:GetChild("BannerText"):visible(false)
 		else
 			self:GetChild("Banner"):visible(false)
 
 			-- Set name to group.
-			self:GetChild("BannerText"):settext(Songs[CurSong])
+			self:GetChild("BannerText"):settext(Songs[CurSong]):Regen():visible(true)
 		end
 		self:GetChild("CDTitle"):visible(false)
 	end
@@ -249,10 +249,10 @@ local function MoveDifficulty(self,offset,Songs)
 		end
 	
 		-- We grab the Difficulty Text and and change them to the names from the Difficulty Names.
-		self:GetChild("Difficulty"):settext(DiffNames[TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]])
+		self:GetChild("Difficulty"):settext(DiffNames[TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):Regen()
 	
 		-- Set the name of the Chart Difficulty.
-		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount])
+		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount]):Regen()
 	end
 end
 
@@ -383,7 +383,9 @@ return function(Style)
 			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 			
 			-- Sleep for 0.2 sec, And then load the current song music.
-			self:sleep(0.2):queuecommand("PlayCurrentSong")
+			if type(GroupsAndSongs[CurSong]) ~= "string" then
+				self:sleep(0.2):queuecommand("PlayCurrentSong")
+			end
 			
 			-- Initalize the Difficulties.
 			MoveDifficulty(self,0,GroupsAndSongs)
@@ -432,7 +434,7 @@ return function(Style)
 					Joined[self.pn] = false
 					
 					-- A Player left, Change back to Single.
-					self:GetChild("Style"):settext("SINGLE")
+					self:GetChild("Style"):settext("SINGLE"):Regen()
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen") 
@@ -533,7 +535,7 @@ return function(Style)
 				
 				-- Set Style Text to VERSUS when 2 Players.
 				if Joined[PLAYER_1] and Joined[PLAYER_2] then
-					self:GetChild("Style"):settext("VERSUS")
+					self:GetChild("Style"):settext("VERSUS"):Regen()
 				end
 			end
 		end,
@@ -580,25 +582,33 @@ return function(Style)
 		},
 		
 		-- Global Centered Banner Text, Incase there is no banner.
-		Def.BitmapText{
+		Def.Text{
 			Name="BannerText",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
 				-- Check if we are on group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
 					-- Check if group has banner, If so, Set text to empty
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) == "" then
-						self:settext(GroupsAndSongs[CurSong])
+						self:settext(GroupsAndSongs[CurSong]):Regen()
 					end					
 				-- not group.
 				else
 					-- Check if we have banner, if not, set text to song title.
 					if not GroupsAndSongs[CurSong][1]:HasBanner() then
-						self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle())
+						self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):Regen()
 					end
 				end
 
-				self:y(-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(-80)
+				
+				self:MainActor()
+					:diffuse(1,1,0,1)
+					
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end
 		},
 		
@@ -621,21 +631,37 @@ return function(Style)
 		},
 		
 		-- Load the Difficulty Text.
-		Def.BitmapText{
+		Def.Text{
 			Name="Difficulty",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:xy(-220,110):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:xy(-220,110)
+				
+				self:MainActor()
+					:diffuse(1,1,0,1)
+				
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end
 		},
 		
 		-- Load the Syle Text.
-		Def.BitmapText{
+		Def.Text{
 			Name="Style",
 			Text="SINGLE",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:xy(-220,130):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:xy(-220,130)
+				
+				self:MainActor()
+					:diffuse(1,1,0,1)
+					
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end
 		},
 		
@@ -657,11 +683,19 @@ return function(Style)
 		Diff..{OnCommand=function(self) self:y(130) end},
 		
 		-- The Difficulty Chart Names based on Meter.
-		Def.BitmapText{
+		Def.Text{
 			Name="DiffChart",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:y(150):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(150)
+				
+				self:MainActor()
+					:diffuse(1,1,0,1)
+					
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end
 		}
 	}

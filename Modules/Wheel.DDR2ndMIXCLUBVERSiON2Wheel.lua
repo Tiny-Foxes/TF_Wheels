@@ -173,9 +173,9 @@ local function MoveSelection(self,offset,Songs)
 	
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
-			self:GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle())
+			self:GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):Regen():visible(true)
 		else
-			self:GetChild("BannerText"):settext("")
+			self:GetChild("BannerText"):visible(false)
 		end
 	
 		-- Set the Centered Banner.
@@ -197,12 +197,12 @@ local function MoveSelection(self,offset,Songs)
 		if SONGMAN:GetSongGroupBannerPath(Songs[CurSong]) ~= "" then
 			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[CurSong]))
 
-			self:GetChild("BannerText"):settext("")
+			self:GetChild("BannerText"):visible(false)
 		else
 			self:GetChild("Banner"):visible(false)
 
 			-- Set name to group.
-			self:GetChild("BannerText"):settext(Songs[CurSong])
+			self:GetChild("BannerText"):settext(Songs[CurSong]):Regen():visible(true)
 		end
 		self:GetChild("CDTitle"):visible(false)
 	end
@@ -267,7 +267,7 @@ local function MoveDifficulty(self,offset,Songs)
 		end
 	
 		-- Set the name of the Chart Difficulty.
-		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount]):diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]])
+		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount]):diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):Regen()
 	end
 end
 
@@ -448,7 +448,7 @@ return function(Style)
 					Joined[self.pn] = false
 					
 					-- A Player left, Change back to Single.
-					self:GetChild("Style"):settext("SINGLE")
+					self:GetChild("Style"):settext("SINGLE"):Regen()
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen") 
@@ -549,7 +549,7 @@ return function(Style)
 				
 				-- Set Style Text to VERSUS when 2 Players.
 				if Joined[PLAYER_1] and Joined[PLAYER_2] then
-					self:GetChild("Style"):settext("VERSUS")
+					self:GetChild("Style"):settext("VERSUS"):Regen()
 				end
 			end			
 		end,	
@@ -596,25 +596,33 @@ return function(Style)
 		},
 
 		-- Global Centered Banner Text, Incase there is no banner.
-		Def.BitmapText{
+		Def.Text{
 			Name="BannerText",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
 				-- Check if we are on group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
 					-- Check if group has banner, If so, Set text to empty
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) == "" then
-						self:settext(GroupsAndSongs[CurSong])
+						self:settext(GroupsAndSongs[CurSong]):Regen()
 					end					
 				-- not group.
 				else
 					-- Check if we have banner, if not, set text to song title.
 					if not GroupsAndSongs[CurSong][1]:HasBanner() then
-						self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle())
+						self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):Regen()
 					end
 				end
 
-				self:y(-80):diffuse(1,1,0,1):strokecolor(0,0,1,1):zoom(.5)
+				self:y(-80)
+				
+				self:MainActor()
+					:diffuse(1,1,0,1)
+					
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end
 		},
 
@@ -637,29 +645,47 @@ return function(Style)
 		},
 		
 		-- Load the HARD text.
-		Def.BitmapText{
+		Def.Text{
 			Text="HARD",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=14,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:xy(-120,-140):strokecolor(0,0,1,1):zoom(.3):zoomx(.4)
+				self:xy(-120,-140)
+				
+				self:StrokeActor()
+					:diffuse(0,0,1,1)
 			end			
 		},
 		
 		-- Load the Current Stage (1ST, 2ND, FINAL, EVENT)
-		Def.BitmapText{
+		Def.Text{
 			Text=ToEnumShortString(GAMESTATE:GetCurrentStage()):upper(),
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=20,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:xy(50,-140):diffuse(1,0,0,1):strokecolor(1,1,1,1):zoom(.5)
+				self:xy(50,-140)
+				
+				self:MainActor()
+					:diffuse(1,0,0,1)
+					
+				self:StrokeActor()
+					:diffuse(1,1,1,1)
 			end			
 		},
 		
 		-- Load the STAGE text.
-		Def.BitmapText{
+		Def.Text{
 			Text="STAGE",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=18,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:xy(120,-140):strokecolor(0,0,0,1):zoom(.4):zoomx(.5)
+				self:xy(120,-140)
+				
+				self:StrokeActor()
+					:diffuse(0,0,0,1)
 			end			
 		},
 		
@@ -682,21 +708,34 @@ return function(Style)
 		
 		
 		-- The Difficulty Chart Names based on Meter.
-		Def.BitmapText{
+		Def.Text{
 			Name="DiffChart",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=30,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:y(180):strokecolor(0,0,0,1):zoom(.7):zoomy(.5)
+				self:y(180)
+				
+				self:StrokeActor()
+					:diffuse(0,0,0,1)
 			end
 		},
 		
 		-- Load the Syle Text.
-		Def.BitmapText{
+		Def.Text{
 			Name="Style",
 			Text="SINGLE",
-			Font="_noto sans 40px",
+			Font=THEME:GetPathF("","NotoSans-All.ttf"),
+			Size=30,
+			StrokeSize=2,
 			OnCommand=function(self)
-				self:y(220):diffuse(1,0,0,1):strokecolor(1,1,0,1):zoom(.8)
+				self:y(220)
+				
+				self:MainActor()
+					:diffuse(1,0,0,1)
+				
+				self:StrokeActor()
+					:diffuse(1,1,0,1)
 			end
 		}
 	}
