@@ -135,10 +135,10 @@ function TF_WHEEL.Input(self)
 		if not event.PlayerNumber then return end
 		self.pn = event.PlayerNumber		
 		if ToEnumShortString(event.type) == "FirstPress" or ToEnumShortString(event.type) == "Repeat" then
-			self:queuecommand(event.GameButton)			
+			self:playcommand(event.GameButton)			
 		end
 		if ToEnumShortString(event.type) == "Release" then
-			self:queuecommand(event.GameButton.."Release")	
+			self:playcommand(event.GameButton.."Release")	
 		end
 	end
 end
