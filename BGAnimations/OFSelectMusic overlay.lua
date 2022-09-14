@@ -50,4 +50,4 @@ GAMESTATE:DeleteKeysounds()
 --return LoadModule("Wheel."..Wheels[RandButNotLast(#Wheels)]..".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
 
 --Debugging.
-return LoadModule("Wheel.DDR5thMixWheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+return LoadModule("Wheel.IdolMWheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")

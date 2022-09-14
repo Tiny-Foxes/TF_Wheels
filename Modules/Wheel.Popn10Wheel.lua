@@ -32,9 +32,6 @@ if not CurGroupNum then CurGroupNum = 1 end
 -- Set the standard Difficulty.
 if not CurDiff then CurDiff = 1 end
 
--- The player joined.
-if not Joined then Joined = {} end
-
 -- The increase offset for when we move with postive.
 local IncOffset = 1
 local BanIncOffset = 1
@@ -597,11 +594,10 @@ return function(Style)
         -- Do stuff when a user presses the Back on Pad or Menu buttons.
 		BackCommand=function(self) 
 			-- Check if User is joined.
-			if Joined[self.pn] then
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(self.pn) then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 					-- If both players are joined, We want to unjoin the player that pressed back.
 					GAMESTATE:UnjoinPlayer(self.pn)
-					Joined[self.pn] = false
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen") 
@@ -616,7 +612,7 @@ return function(Style)
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
-			if Joined[self.pn] then 
+			if GAMESTATE:IsSideJoined(self.pn) then 
 			
 				--We use PlayMode_Regular for now.
 				GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
@@ -625,7 +621,7 @@ return function(Style)
 				GAMESTATE:SetCurrentSong(DiffSongs[CurSong][1])
 				
 				-- Check if 2 players are joined.
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 				
 					-- If they are, We will use Versus.
 					GAMESTATE:SetCurrentStyle('versus')
@@ -661,9 +657,6 @@ return function(Style)
 				
 				-- Load the profles.
 				GAMESTATE:LoadProfiles()
-				
-				-- Add to joined list.
-				Joined[self.pn] = true
 			end
         end,
         

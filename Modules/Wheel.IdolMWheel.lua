@@ -4,11 +4,10 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
--- The player joined.
-if not Joined then Joined = {} end
-
 -- Position on the difficulty select that shows up after we picked a song.
 local DiffPos = {[PLAYER_1] = 1,[PLAYER_2] = 1}
+
+local CurConfirm = 1
 
 -- The increase offset for when we move with postive.
 local IncOffset = 1
@@ -18,6 +17,11 @@ local DecOffset = 9
 
 -- The center offset of the wheel.
 local XOffset = 5
+
+local gStyle
+
+-- We start on the wheel so dont start the difficulty select being active.
+local DiffSelection = false
 
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
@@ -210,25 +214,42 @@ local function MoveSelection(self,offset,Songs)
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
-		-- Check if its a song.
-		if type(Songs[CurSong]) ~= "string" then
-			-- Play Current selected Song Music.
-			if Songs[CurSong][1].PlayPreviewMusic then
-				Songs[CurSong][1]:PlayPreviewMusic()
-			elseif Songs[CurSong][1]:GetMusicPath() then
-				SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(),Songs[CurSong][1]:GetSampleStart(),Songs[CurSong][1]:GetSampleLength(),0,0,true)
-			end
-		end
+		self:GetChild("SoundCon"):stoptweening():sleep(.5):queuecommand("PlayChangedSong")
 	end
 end
 
--- Define the start difficulty to be the 2nd selection,
--- Because the first selection is the entire Song,
--- And the second and plus versions are all difficulties.
-local CurDiff = 2
+local function MoveConfirm(self,offset)
+
+	if GAMESTATE:IsSideJoined(self.pn) then
+	
+		CurConfirm = CurConfirm + offset
+
+		if CurConfirm > 2 then CurConfirm = 2 end
+		if CurConfirm < 1 then CurConfirm = 1 end
+
+		self:GetChild("DiffSel"):GetChild("Confirm"):stoptweening():linear(.1):x((SCREEN_WIDTH/16)*((CurConfirm-1.5)*2))
+
+	end
+end
+
+local function MoveDifficulty(self,offset,Songs)	
+
+	-- If player is joined, let them change the difficulty.
+	if GAMESTATE:IsSideJoined(self.pn) then
+
+		-- Change the difficulty position for the current player.
+		DiffPos[self.pn] = DiffPos[self.pn] + offset
+		
+		-- Check if its within limits.
+		if DiffPos[self.pn] < 1 then DiffPos[self.pn] = 1 end
+		if DiffPos[self.pn] > #Songs[CurSong]-1 then DiffPos[self.pn] = #Songs[CurSong]-1 end
+	end
+end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
+
+	gStyle = Style
 
     -- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
@@ -343,22 +364,26 @@ return function(Style)
 		end,
 		
 		-- Do stuff when a user presses left on Pad or Menu buttons.
-		MenuLeftCommand=function(self) MoveSelection(self,-1,GroupsAndSongs) end,
+		MenuLeftCommand=function(self) if DiffSelection then MoveConfirm(self,-1) else MoveSelection(self,-1,GroupsAndSongs) end end,
 		
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
-		MenuRightCommand=function(self) MoveSelection(self,1,GroupsAndSongs) end,
+		MenuRightCommand=function(self) if DiffSelection then MoveConfirm(self,1) else MoveSelection(self,1,GroupsAndSongs) end end,
+
+		-- Do stuff when a user presses Up on Pad or Menu buttons.
+		MenuUpCommand=function(self) if DiffSelection then MoveDifficulty(self,-1,GroupsAndSongs) end end,
+		
+		-- Do stuff when a user presses Down on Pad or Menu buttons.
+		MenuDownCommand=function(self) if DiffSelection then MoveDifficulty(self,1,GroupsAndSongs) end end,
 
 		-- Do stuff when a user presses the Back on Pad or Menu buttons.
 		BackCommand=function(self) 
 			-- Check if User is joined.
-			if Joined[self.pn] then
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(self.pn) then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 					-- If both players are joined, We want to unjoin the player that pressed back.
 					GAMESTATE:UnjoinPlayer(self.pn)
-					Joined[self.pn] = false
 					
 					MoveSelection(self,0,GroupsAndSongs)
-					MoveDifficulty(self,0,GroupsAndSongs)
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen") 
@@ -373,7 +398,7 @@ return function(Style)
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
-			if Joined[self.pn] then 
+			if GAMESTATE:IsSideJoined(self.pn) then 
 			
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -405,44 +430,57 @@ return function(Style)
 					
 				-- Not on a group, Start song.
 				else
+					if DiffSelection then	
+						-- We are on Yes, Continue to Song.
+						if CurConfirm == 1 then				
+							-- Check if 2 players are joined.
+							if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
+					
+								-- If they are, We will use Versus.
+								GAMESTATE:SetCurrentStyle('versus')
+						
+								-- Save Profiles.
+								PROFILEMAN:SaveProfile(PLAYER_1)
+								PROFILEMAN:SaveProfile(PLAYER_2)
+						
+								-- Set the Current Steps to use.
+								GAMESTATE:SetCurrentSteps(PLAYER_1,GroupsAndSongs[CurSong][DiffPos[PLAYER_1]+1])
+								GAMESTATE:SetCurrentSteps(PLAYER_2,GroupsAndSongs[CurSong][DiffPos[PLAYER_2]+1])
+							else
+					
+								-- If we are single player, Use Single.
+								GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
+						
+								-- Save Profile.
+								PROFILEMAN:SaveProfile(self.pn)
+						
+								-- Set the Current Step to use.
+								GAMESTATE:SetCurrentSteps(self.pn,GroupsAndSongs[CurSong][DiffPos[self.pn]+1])
+							end
+						
+							-- We want to go to player options when people doublepress, So we set the StartOptions to true,
+							-- So when the player presses Start again, It will go to player options.
+							StartOptions = true
 
-					--We use PlayMode_Regular for now.
-					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
-				
-					--Set the song we want to play.
-					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
-				
-					-- Check if 2 players are joined.
-					if Joined[PLAYER_1] and Joined[PLAYER_2] then
-				
-						-- If they are, We will use Versus.
-						GAMESTATE:SetCurrentStyle('versus')
-					
-						-- Save Profiles.
-						PROFILEMAN:SaveProfile(PLAYER_1)
-						PROFILEMAN:SaveProfile(PLAYER_2)
-					
-						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1,GroupsAndSongs[CurSong][DiffPos[PLAYER_1]+1])
-						GAMESTATE:SetCurrentSteps(PLAYER_2,GroupsAndSongs[CurSong][DiffPos[PLAYER_2]+1])
+							-- Wait 0.4 sec before we go to next screen.
+							self:sleep(0.4):queuecommand("StartSong")
+						else
+							-- We are on No, Return to Song select.
+							DiffSelection = false
+
+							self:GetChild("Filter"):sleep(.25):linear(.25):diffusealpha(0)
+							self:GetChild("DiffSel"):sleep(.25):queuecommand("Hide")
+							
+						end
 					else
+						--We use PlayMode_Regular for now.
+						GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 				
-						-- If we are single player, Use Single.
-						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
-					
-						-- Save Profile.
-						PROFILEMAN:SaveProfile(self.pn)
-					
-						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn,GroupsAndSongs[CurSong][DiffPos[self.pn]+1])
-					end
-				
-					-- We want to go to player options when people doublepress, So we set the StartOptions to true,
-					-- So when the player presses Start again, It will go to player options.
-					StartOptions = true
+						DiffSelection = true
 
-					-- Wait 0.4 sec before we go to next screen.
-					self:sleep(0.4):queuecommand("StartSong")
+						self:GetChild("Filter"):linear(.25):diffusealpha(.5)
+						self:GetChild("DiffSel"):sleep(.25):queuecommand("Show")
+					end
 				end
 			else
 				-- If no player is active Join.
@@ -450,9 +488,6 @@ return function(Style)
 				
 				-- Load the profles.
 				GAMESTATE:LoadProfiles()
-				
-				-- Add to joined list.
-				Joined[self.pn] = true
 				
 				MoveSelection(self,0,GroupsAndSongs)
 			end			
@@ -462,6 +497,20 @@ return function(Style)
 		StartSongCommand=function(self)
 			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
 		end,
+
+		Def.ActorFrame{
+			Name="SoundCon",
+			PlayChangedSongCommand=function(self)
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
+					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),GroupsAndSongs[CurSong][1]:GetSampleStart(),GroupsAndSongs[CurSong][1]:GetSampleLength(),0,0,true)
+					end
+				end
+			end
+		},
 
 		Def.Sprite{
 			Texture=THEME:GetPathG("","IDOL/IdolBG.png"),
@@ -906,5 +955,153 @@ return function(Style)
 				},
 			}
 		},
+
+		Def.Quad{
+			Name="Filter",
+			InitCommand=function(self)
+				self:stretchto(-SCREEN_WIDTH,-SCREEN_HEIGHT,SCREEN_WIDTH,SCREEN_HEIGHT):diffuse(0,0,0,0)
+			end
+		},
+
+		Def.ActorFrameTexture{
+			InitCommand=function(self)
+				self:SetTextureName("DiffAFT")
+					:SetWidth(SCREEN_WIDTH/2)
+					:SetHeight(180)
+					:EnableAlphaBuffer(true)
+					:Create()
+					:Draw()
+			end,
+			Def.ActorFrame{
+				InitCommand=function(self)
+					self:xy(SCREEN_CENTER_X/2,SCREEN_CENTER_Y/2+10)
+				end,
+				Def.Quad{
+					InitCommand=function(self)
+						self:diffuse(1,1,1,.85):y(-40):zoomto(SCREEN_WIDTH/2,180)
+					end
+				},
+
+				Def.Quad{
+					Name="Corner",
+					InitCommand=function(self)
+						self:y(-128):diffuse(1,1,1,1):zoomto(SCREEN_WIDTH/2,4)
+					end
+				},
+				Def.ActorProxy{
+					InitCommand=function(self)
+					self:y(-80):SetTarget(self:GetParent():GetChild("Corner")):zoomy(-1)
+					end
+				},
+
+				Def.ActorFrame{
+					Name="Slider",
+					InitCommand=function(self)
+						self:xy(-SCREEN_CENTER_X+214,-40)
+					end,
+					Def.Quad{
+						InitCommand=function(self)
+							self:diffuse(0,0,0,1):zoomto(4,180)
+						end
+					},
+					Def.Quad{
+						Name="Corner",
+						InitCommand=function(self)
+							self:xy(2,-88):diffuse(0,0,0,1):zoomto(8,4)
+						end
+					},
+					Def.ActorProxy{
+						InitCommand=function(self)
+							self:SetTarget(self:GetParent():GetChild("Corner")):zoomy(-1)
+						end
+					}
+				},
+			
+				Def.ActorProxy{
+					InitCommand=function(self)
+						self:SetTarget(self:GetParent():GetChild("Slider")):zoomx(-1)
+					end
+				}
+			}
+		},
+		Def.ActorFrame{
+			Name="DiffSel",
+			InitCommand=function(self)
+				self:diffusealpha(0)
+			end,
+			ShowCommand=function(self)
+				self:y(-20):linear(.25):y(10):diffusealpha(1)
+			end,
+			HideCommand=function(self)
+				self:y(10):linear(.25):y(-20):diffusealpha(0)
+			end,
+			Def.Sprite{
+				Texture="DiffAFT"				
+			},
+			Def.ActorFrame{
+				InitCommand=function(self)
+					self:y(30)
+				end,
+				Def.Quad{
+					InitCommand=function(self) 
+						self:y(20):zoomto(SCREEN_WIDTH/4,23)
+							:MaskSource(true)
+					end
+				},
+				Def.Quad{
+					InitCommand=function(self) 
+						self:xy(8,20):zoomto(SCREEN_WIDTH/9.5,40):halign(0)
+							:MaskSource()
+						end
+				},
+				Def.Quad{
+					InitCommand=function(self) 
+						self:xy(-8,20):zoomto(SCREEN_WIDTH/9.5,40):halign(1)
+							:MaskSource()
+					end
+				},
+				Def.Quad{
+					InitCommand=function(self) 
+						self:xy(2,20):zoomto(SCREEN_WIDTH/8.4,34):halign(0)
+							:MaskSource()
+					end
+				},
+				Def.Quad{
+					InitCommand=function(self) 
+						self:xy(-2,20):zoomto(SCREEN_WIDTH/8.4,34):halign(1)
+							:MaskSource()
+					end
+				},
+				Def.Sprite{
+					Texture=THEME:GetPathG("","IDOL/circle.png"),
+					InitCommand=function(self) 
+						self:y(20):zoomto(SCREEN_WIDTH/4,40)
+						:customtexturerect(0,0,SCREEN_WIDTH/4/3,42/3)
+						:diffuse(0,0,0,1)
+						:MaskDest()
+					end
+				},
+				Def.BitmapText{
+					Font="_noto sans 40px",
+					Text="Yes",
+					InitCommand=function(self)
+						self:xy(-SCREEN_WIDTH/16,20):zoom(.5):diffuse(0,0,0,1)
+					end
+				},
+				Def.BitmapText{
+					Font="_noto sans 40px",
+					Text="No",
+					InitCommand=function(self)
+						self:xy(SCREEN_WIDTH/16,20):zoom(.5):diffuse(0,0,0,1)
+					end
+				}
+			},
+			Def.Quad{
+				Name="Confirm",
+				InitCommand=function(self)
+					self:xy(-SCREEN_WIDTH/16,64):zoomto(SCREEN_WIDTH/9.5,4):rainbow():fadeleft(.2):faderight(.2)
+				end
+			}
+		}
 	}
 end
