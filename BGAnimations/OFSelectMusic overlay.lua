@@ -37,7 +37,7 @@ if not Last then Last = 0 end
 local function RandButNotLast(Amount)
 	local Now
 	while true do
-		Now = math.random(1,Amount)
+		Now = math.random(1, Amount)
 		if Now ~= Last then break end
 	end
 	Last = Now
@@ -45,7 +45,8 @@ local function RandButNotLast(Amount)
 end
 
 --Return the Def table that contains all the stuff, Check the module folder for the wheels.
-return LoadModule("Wheel."..Wheels[RandButNotLast(#Wheels)]..".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+return LoadModule("Wheel." .. Wheels[RandButNotLast(#Wheels)] .. ".lua")(GameModeStyles[
+	GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
 
 --Debugging.
 --return LoadModule("Wheel.Popn10Wheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
