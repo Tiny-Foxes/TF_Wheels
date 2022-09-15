@@ -28,9 +28,6 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
--- The player joined.
-if not Joined then Joined = {} end
-
 -- Position on the difficulty select that shows up after we picked a song.
 local DiffPos = {[PLAYER_1] = 1,[PLAYER_2] = 1}
 
@@ -250,7 +247,7 @@ local function MoveSelection(self,offset,Songs)
 			if i > 6 then break end
 
 			-- Check if P1 is active.
-			if Joined[PLAYER_1] then
+			if GAMESTATE:IsSideJoined(PLAYER_1) then
 				
 				-- Diffuse the background of the difficulty selector.
 				self:GetChild("Diffs"):GetChild("DiffName1P"..i):GetChild("DiffBG"):diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][i+1]:GetDifficulty()]])
@@ -260,7 +257,7 @@ local function MoveSelection(self,offset,Songs)
 			end
 		
 			-- Check if P2 is active.
-			if Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(PLAYER_2) then
 
 				-- Diffuse the background of the difficulty selector.
 				self:GetChild("Diffs"):GetChild("DiffName2P"..i):GetChild("DiffBG"):diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][i+1]:GetDifficulty()]])
@@ -288,12 +285,12 @@ local function MoveSelection(self,offset,Songs)
 			end
 		
 			-- Check if P1 is active, if P1 is active, show the difficulty selector.
-			if Joined[PLAYER_1] then
+			if GAMESTATE:IsSideJoined(PLAYER_1) then
 				self:GetChild("Diffs"):GetChild("DiffName1P"..i):diffusealpha(1)
 			end
 			
 			-- Check if P2 is active, if P2 is active, show the difficulty selector.
-			if Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(PLAYER_2) then
 				self:GetChild("Diffs"):GetChild("DiffName2P"..i):diffusealpha(1)
 			end
 		
@@ -382,7 +379,7 @@ end
 local function MoveDifficulty(self,offset,Songs)
 
 	-- check if player is joined.
-	if Joined[self.pn] then
+	if GAMESTATE:IsSideJoined(self.pn) then
 
 		-- Move cursor.
 		DiffPos[self.pn] = DiffPos[self.pn] + offset
@@ -619,11 +616,10 @@ return function(Style)
 		-- Do stuff when a user presses the Back on Pad or Menu buttons.
 		BackCommand=function(self) 
 			-- Check if User is joined.
-			if Joined[self.pn] then
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(self.pn) then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 					-- If both players are joined, We want to unjoin the player that pressed back.
 					GAMESTATE:UnjoinPlayer(self.pn)
-					Joined[self.pn] = false
 					
 					MoveSelection(self,0,GroupsAndSongs)
 				else
@@ -640,7 +636,7 @@ return function(Style)
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
-			if Joined[self.pn] then 
+			if GAMESTATE:IsSideJoined(self.pn) then 
 			
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -680,7 +676,7 @@ return function(Style)
 					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
 				
 					-- Check if 2 players are joined.
-					if Joined[PLAYER_1] and Joined[PLAYER_2] then
+					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 				
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle('versus')
@@ -717,9 +713,6 @@ return function(Style)
 				
 				-- Load the profles.
 				GAMESTATE:LoadProfiles()
-				
-				-- Add to joined list.
-				Joined[self.pn] = true
 				
 				MoveSelection(self,0,GroupsAndSongs)
 			end			

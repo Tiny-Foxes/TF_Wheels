@@ -4,9 +4,6 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
--- The player joined.
-if not Joined then Joined = {} end
-
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
 

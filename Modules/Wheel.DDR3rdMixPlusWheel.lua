@@ -42,9 +42,6 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
--- The player joined.
-if not Joined then Joined = {} end
-
 -- The Offset we use for the CD wheel.
 local CDOffset = 1
 
@@ -524,11 +521,10 @@ return function(Style)
 		-- Do stuff when a user presses the Back on Pad or Menu buttons.
 		BackCommand=function(self) 
 			-- Check if User is joined.
-			if Joined[self.pn] then
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+			if GAMESTATE:IsSideJoined(self.pn) then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 					-- If both players are joined, We want to unjoin the player that pressed back.
 					GAMESTATE:UnjoinPlayer(self.pn)
-					Joined[self.pn] = false
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen") 
@@ -543,7 +539,7 @@ return function(Style)
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
-			if Joined[self.pn] then 
+			if GAMESTATE:IsSideJoined(self.pn) then 
 			
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
@@ -583,7 +579,7 @@ return function(Style)
 					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
 				
 					-- Check if 2 players are joined.
-					if Joined[PLAYER_1] and Joined[PLAYER_2] then
+					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 				
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle('versus')
@@ -624,11 +620,8 @@ return function(Style)
 				-- Load the profles.
 				GAMESTATE:LoadProfiles()
 				
-				-- Add to joined list.
-				Joined[self.pn] = true
-				
 				-- Set Style Text to VERSUS when 2 Players.
-				if Joined[PLAYER_1] and Joined[PLAYER_2] then
+				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
 					self:GetChild("Style"):settext("VERSUS")
 				end
 			end			
