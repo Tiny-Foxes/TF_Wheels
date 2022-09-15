@@ -56,18 +56,7 @@ local function MoveSelection(self,offset,Songs)
 	if offset ~= 0 then
 
 		-- For every part on the wheel do.
-		for i = 1,9 do	
-
-			-- If the part is outside the decrease and increase value then transform it.
-			if DecOffset < i and DecOffset > XOffset then
-				transform =	((9 - i + XOffset)*(9 - i + XOffset))*3
-			end
-		
-			-- If the part is inside the decrease and increase value then transform it.
-			if IncOffset > i and DecOffset < XOffset then
-				transform =	((9 + i - XOffset)*(9 + i - XOffset))*3
-			end
-		
+		for i = 1,9 do			
 			-- Calculate current position based on song with a value to get center.
 			local pos = CurSong+(4*offset)
 		
@@ -131,7 +120,7 @@ local function MoveSelection(self,offset,Songs)
 		-- For every part on the wheel do.
 		for i = 1,9 do
 			-- Offset for the wheel items.
-			off = i + XOffset
+			local off = i + XOffset
 
 			-- Stay withing limits.
 			while off > 9 do off = off-9 end
