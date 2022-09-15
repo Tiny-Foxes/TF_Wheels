@@ -153,7 +153,7 @@ local function MoveSelection(self,offset,Songs)
 		for i = 1,10 do	
 
 			-- Offset for the wheel items.
-			off = i + XOffset
+			local off = i + XOffset
 
 			-- Stay withing limits.
 			while off > 10 do off = off-10 end
