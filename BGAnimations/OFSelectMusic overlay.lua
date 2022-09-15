@@ -5,7 +5,7 @@ local Wheels = {
 	"DDR3rdMixPlusWheel",
 	"DDR4thMixPlusWheel",
 	"DDR5thMixWheel",
-	"DDRMAXWheel",
+	--"DDRMAXWheel",
 
 	---"Popn10Wheel",
 }
@@ -17,12 +17,12 @@ local GameModeStyles = {
 	["ez2"] = "ez2_single",
 	["para"] = "para_single",
 	["ds3ddx"] = "ds3ddx_single",
-	["be-mu"] = "bm_single7",
+	["beat"] = "bm_single7",
 	["maniax"] = "maniax_single",
 	["techno"] = "techno_single4",
-	["po-mu"] = "pnm_nine",
+	["popn"] = "pnm_nine",
 	["gddm"] = "gddm_new",
-	["gdgf"] = "gdgf_five",
+	["gdgf"] = "guitar_five",
 	["gh"] = "gh_solo",
 	["kbx"] = "kb4_single",
 	["taiko"] = "taiko",
@@ -37,17 +37,16 @@ if not Last then Last = 0 end
 local function RandButNotLast(Amount)
 	local Now
 	while true do
-		Now = math.random(1,Amount)
+		Now = math.random(1, Amount)
 		if Now ~= Last then break end
 	end
 	Last = Now
 	return Now
 end
 
-GAMESTATE:DeleteKeysounds()
-
 --Return the Def table that contains all the stuff, Check the module folder for the wheels.
---return LoadModule("Wheel."..Wheels[RandButNotLast(#Wheels)]..".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+return LoadModule("Wheel." .. Wheels[RandButNotLast(#Wheels)] .. ".lua")(GameModeStyles[
+	GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
 
 --Debugging.
-return LoadModule("Wheel.IdolMWheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+--return LoadModule("Wheel.Popn10Wheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
