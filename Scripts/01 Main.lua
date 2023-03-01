@@ -241,7 +241,16 @@ TF_WHEEL.DiffTab = {
 	["Difficulty_Medium"] = 3,
 	["Difficulty_Hard"] = 4,
 	["Difficulty_Challenge"] = 5,
-	["Difficulty_Edit"] = 6
+	["Difficulty_Edit"] = 6,
+	["Difficulty_D7"] = 7,
+	["Difficulty_D8"] = 8,
+	["Difficulty_D9"] = 9,
+	["Difficulty_D10"] = 10,
+	["Difficulty_D11"] = 11,
+	["Difficulty_D12"] = 12,
+	["Difficulty_D13"] = 13,
+	["Difficulty_D14"] = 14,
+	["Difficulty_D15"] = 15
 }
 
 -- Resize function, We use this to resize images to size while keeping aspect ratio.
