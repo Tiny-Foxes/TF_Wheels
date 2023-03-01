@@ -284,7 +284,15 @@ end
 local function MoveDifficulty(self, offset, Songs)
 
 	-- check if player is joined.
-	if GAMESTATE:IsSideJoined(self.pn) then
+	if offset == 0 then
+		for _,v in pairs(GAMESTATE:GetHumanPlayers()) do
+			if DiffPos[v] < 1 then DiffPos[v] = 1 end
+			if DiffPos[v] > #Songs[CurSong] - 1 then DiffPos[v] = #Songs[CurSong] - 1 end
+		end
+
+		-- Call the move selecton command to update the graphical location of cursor.
+		MoveSelection(self, 0, Songs)
+	elseif self.pn and GAMESTATE:IsSideJoined(self.pn) then
 
 		-- Move cursor.
 		DiffPos[self.pn] = DiffPos[self.pn] + offset
@@ -453,9 +461,8 @@ return function(Style)
 		if type(param[6][CurSong]) ~= "string" then
 			local Val = {}
 			colour = param[3] and
-				DiffColorsInside[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()
-					]] or DiffColors[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()
-					]]
+				DiffColorsInside[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
+				 or DiffColors[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
 			zero = { { 0, 0, 0 }, colour }
 			for i = 0, 4 do
 				local temp = param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetRadarValues(param[4] and PLAYER_1
@@ -553,7 +560,7 @@ return function(Style)
 				InitCommand = function(self)
 					self:SetDrawState { Mode = "DrawMode_Triangles" }
 						:xy(-200, 120)
-						:playcommand("Move", { 0, .5, true, i == 1, DiffPos, GroupsAndSongs })
+						:playcommand("Move", { 0, .5, true, i == 0, DiffPos, GroupsAndSongs })
 				end,
 				MoveCommand = MoveFunction
 			},
@@ -564,7 +571,7 @@ return function(Style)
 					self:SetDrawState { Mode = "DrawMode_LineStrip" }
 						:xy(-200, 120)
 						:SetLineWidth(4)
-						:playcommand("Move", { 0, 1, false, i == 1, DiffPos, GroupsAndSongs })
+						:playcommand("Move", { 0, 1, false, i == 0, DiffPos, GroupsAndSongs })
 				end,
 				MoveCommand = MoveFunction
 			}
