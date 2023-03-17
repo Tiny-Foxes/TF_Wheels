@@ -60,6 +60,8 @@ function USWN.Load()
 	local sButton = Var "Button"
 	local sElement = Var "Element"
 
+	sElement = string.gsub(sElement, "Simple", "")
+
 	local Button = USWN.ButtonRedir[sButton] or sButton	
 	local Element = USWN.ElementRedir[sElement] or sElement
 
@@ -73,7 +75,10 @@ function USWN.Load()
 	if type(Actor) == "function" then
 		Actor = Actor(nil)
 	else
-		Actor = Def.Sprite { Texture=NOTESKIN:GetPath(Button,Element) }
+		Actor = Def.Sprite { 
+			Texture=NOTESKIN:GetPath(Button,Element),
+			HoldUpdateCommand=function(self) self:customtexturerect(0, -(self:GetHoldLength()/self:GetHeight()), 1, 0) end
+		}
 	end
 	
 	if USWN.Blank[sElement] then

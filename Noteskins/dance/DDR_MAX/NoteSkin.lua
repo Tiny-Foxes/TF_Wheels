@@ -61,6 +61,8 @@ function USWN.Load()
 	local sElement = Var "Element"
 	local sPlayer = Var "Player"
 
+	sElement = string.gsub(sElement, "Simple", "")
+
 	local Reverse = string.find(GAMESTATE:GetPlayerState(sPlayer):GetPlayerOptionsString("ModsLevel_Preferred"):lower(), "reverse")
 
 	local Button = USWN.ButtonRedir[sButton] or sButton	
@@ -81,7 +83,10 @@ function USWN.Load()
 	if type(Actor) == "function" then
 		Actor = Actor(nil)
 	else
-		Actor = Def.Sprite { Texture=NOTESKIN:GetPath(Button,Element) }
+		Actor = Def.Sprite { 
+			Texture=NOTESKIN:GetPath(Button,Element),
+			HoldUpdateCommand=function(self) self:customtexturerect(0, -(self:GetHoldLength()/self:GetHeight()), 1, 0) end
+		}
 	end
 	
 	if USWN.Blank[sElement] then
