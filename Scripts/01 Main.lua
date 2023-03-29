@@ -26,6 +26,8 @@ end
 -- We hate using globals, So use 1 global table.
 TF_WHEEL = {}
 
+LoadModule("Row.Prefs.lua")(LoadModule("Options.Prefs.lua"))
+
 TF_WHEEL.StyleDB = {
 	--Dance
 	["dance_single"] = "single",
