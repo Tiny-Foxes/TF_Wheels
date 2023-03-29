@@ -18,8 +18,6 @@ local DecOffset = 9
 -- The center offset of the wheel.
 local XOffset = 5
 
-local gStyle
-
 -- We start on the wheel so dont start the difficulty select being active.
 local DiffSelection = false
 
@@ -246,8 +244,6 @@ end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
-
-	gStyle = Style
 
 	-- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
