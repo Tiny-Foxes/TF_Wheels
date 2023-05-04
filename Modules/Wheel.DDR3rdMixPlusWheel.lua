@@ -1,3 +1,6 @@
+-- Use masks for CD's instead of multiple Banners.
+if not MaskMode then MaskMode = false end
+
 -- Difficulty Colours
 local DiffColors = {
 	color("#88ffff"), -- Difficulty_Beginner
@@ -16,17 +19,17 @@ local DiffNames = {
 	"ANOTHER", -- Difficulty_Medium
 	"MANIAC ", -- Difficulty_Hard
 	"EXTRA", -- Difficulty_Challenge
-	"EDIT" -- Difficulty_Edit
+	"EDIT"  -- Difficulty_Edit
 }
 
 -- Difficulty Chart Names based on Meter.
 local DiffChartNames = {
-	"SIMPLE", -- 1 feet
+	"SIMPLE",   -- 1 feet
 	"MODERATE", -- 2 feet
 	"ORDINARY", -- 3 feet
 	"SUPERIOR", -- 4 feet
 	"MARVELOUS", -- 5 feet
-	"GENUINE", -- 6 feet
+	"GENUINE",  -- 6 feet
 	"PARAMOUNT", -- 7 feet
 	"EXORBITANT", -- 8 feet
 	"CATASTROPHIC" -- 9 feet
@@ -52,7 +55,6 @@ local CDSwitch = 11
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
 local function MoveSelection(self, offset, Songs)
-
 	-- Curent Song + Offset.
 	CurSong = CurSong + offset
 
@@ -101,15 +103,17 @@ local function MoveSelection(self, offset, Songs)
 	-- If we dont use a Queuecommand it will instantly update the image.
 	self.CDSwitch = CDSwitch
 
+
 	-- Grab the hidden CD and set it to current selected song banner.
-	self:GetChild("CDSel"):GetChild("CDHolder2"):GetChild("CD"):SetTarget(self:GetChild("CDCon"):GetChild("CD" .. CDSwitch)
+	self:GetChild("CDSel"):GetChild("CDHolder2"):GetChild("CD"):SetTarget(self:GetChild("CDCon"):GetChild("CD" ..
+			CDSwitch)
 		:GetChild("Container"):GetChild("CDHolder"))
 
 	-- Move the current displayed front most CD to the top.
-	self:GetChild("CDSel"):GetChild("CDHolder1"):linear(0.1):y(-100)
+	self:GetChild("CDSel"):GetChild("CDHolder1"):linear(.1):y(-100)
 
 	-- Move the hidden CD and move it to the location of the front most CD.
-	self:GetChild("CDSel"):GetChild("CDHolder2"):linear(0.1):y(0)
+	self:GetChild("CDSel"):GetChild("CDHolder2"):linear(.1):y(0)
 
 	-- Reset the original front most CD to current selected song banner.
 	self:sleep(.1):queuecommand("ChangeCD")
@@ -137,26 +141,43 @@ local function MoveSelection(self, offset, Songs)
 
 	--Do a string check, If its a string, Its a group.
 	if type(Songs[pos]) ~= "string" then
-
 		-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 		if Songs[pos][1]:HasBanner() then
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(Songs[pos][1]:GetBannerPath())
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
+					:GetChild(
+						"CDPicture"):Load(Songs[pos]
+					[1]:GetBannerPath())
+			else
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(Songs[pos][1]:GetBannerPath())
+			end
 		else
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
+					:GetChild(
+						"CDPicture"):Load(THEME
+					:GetPathG("", "white.png"))
+			else
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+			end
 		end
 
-		-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
-		self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(self:GetChild("Con"):
-			GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 23, 0,
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 9, -80,
-			-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 9, -80,
-			-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
-
+		if MaskMode then
+			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder"):GetChild(
+				"CDPicture")
+				:setsize(-120, -120)
+		else
+			-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
+			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(
+				self:GetChild("Con"):
+				GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 23, 0,
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 9, -80,
+				-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 9, -80,
+				-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
+		end
 	elseif offset == 0 then
-
 		--For every CD do
 		for i = 1, 21 do
-
 			-- Reset pos for local usage
 			local pos = CurSong + i - 11
 
@@ -173,44 +194,98 @@ local function MoveSelection(self, offset, Songs)
 
 			--Check if it is a song.
 			if type(Songs[pos]) ~= "string" then
-
 				-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 				if Songs[pos][1]:HasBanner() then
-					self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(Songs[pos][1]:GetBannerPath())
+					if MaskMode then
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
+							:GetChild(
+								"CDPicture"):Load(Songs[pos]
+							[1]:GetBannerPath())
+					else
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(Songs[pos][1]:GetBannerPath())
+					end
 				else
-					self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+					if MaskMode then
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
+							:GetChild(
+								"CDPicture"):Load(THEME
+							:GetPathG("", "white.png"))
+					else
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+					end
 				end
-
-				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 			else
+				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-					self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+					if MaskMode then
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
+							:GetChild(
+								"CDPicture"):Load(SONGMAN:GetSongGroupBannerPath(
+							Songs[pos]))
+					else
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(SONGMAN:GetSongGroupBannerPath(
+							Songs[pos]))
+					end
 				else
-					self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+					if MaskMode then
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
+							:GetChild(
+								"CDPicture"):Load(THEME
+							:GetPathG("", "white.png"))
+					else
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+					end
 				end
 			end
 
-			-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
-			self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):setsize(512, 160):SetCustomPosCoords(self:GetChild("Con"):
-				GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 - 23, 0,
-				self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 - 9, -80,
-				-self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 + 9, -80,
-				-self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
+					:GetChild("CDPicture")
+					:setsize(-120, -120)
+			else
+				-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
+				self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):setsize(512, 160):SetCustomPosCoords(
+					self:GetChild("Con"):
+					GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 - 23, 0,
+					self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 - 9, -80,
+					-self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 + 9, -80,
+					-self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
+			end
 		end
 	else
 		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 		if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
+					:GetChild("CDPicture"):Load(
+					SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+			else
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+			end
 		else
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
+					:GetChild("CDPicture"):Load(
+					THEME:GetPathG("",
+						"white.png"))
+			else
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+			end
 		end
 
-		-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
-		self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(self:GetChild("Con"):
-			GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 23, 0,
-			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 9, -80,
-			-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 9, -80,
-			-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
+		if MaskMode then
+			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder"):GetChild(
+				"CDPicture"):setsize(
+				-120, -120)
+		else
+			-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
+			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(
+				self:GetChild("Con"):
+				GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 23, 0,
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 - 9, -80,
+				-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 9, -80,
+				-self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
+		end
 	end
 
 	-- Stop all the music playing, Which is the Song Music
@@ -218,7 +293,6 @@ local function MoveSelection(self, offset, Songs)
 
 	-- Check if its a song again.
 	if type(Songs[CurSong]) ~= "string" then
-
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
 			self:GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle())
@@ -261,13 +335,13 @@ local function MoveSelection(self, offset, Songs)
 		(512 / 8) * 5, (160 / 8) * 5))
 
 	-- Resize the CDTitles to be a max of w80 h80.
-	self:GetChild("CDTitle"):zoom(TF_WHEEL.Resize(self:GetChild("CDTitle"):GetWidth(), self:GetChild("CDTitle"):GetHeight()
+	self:GetChild("CDTitle"):zoom(TF_WHEEL.Resize(self:GetChild("CDTitle"):GetWidth(),
+		self:GetChild("CDTitle"):GetHeight()
 		, 80, 80))
 end
 
 -- We use this function to do an effect on the content of the music wheel when we switch to next screen.
 local function StartSelection(self, Songs)
-
 	-- Make the actorproxy holder fade out.
 	self:GetChild("CDSel"):GetChild("CDHolder1"):linear(.8):diffusealpha(0)
 
@@ -279,7 +353,12 @@ local function StartSelection(self, Songs)
 	for i = 1, 21 do
 		-- Check if its the front most CD.
 		if i == CDSwitch then
-			self:GetChild("Con"):GetChild("CDSlice" .. i):linear(.8):diffusealpha(0)
+			if MaskMode then
+				self:GetChild("CDCon"):GetChild("CD" .. i):GetChild("Container"):GetChild("CDHolder"):linear(.8)
+					:diffusealpha(0)
+			else
+				self:GetChild("Con"):GetChild("CDSlice" .. i):linear(.8):diffusealpha(0)
+			end
 		else
 			self:GetChild("CDCon"):GetChild("CD" .. i):GetChild("Container"):GetChild("CDHolder"):linear(.8):y(-2560)
 		end
@@ -292,10 +371,8 @@ end
 local CurDiff = 2
 
 local function MoveDifficulty(self, offset, Songs)
-
 	-- Check if its a group
 	if type(Songs[CurSong]) == "string" then
-
 		-- If it is a group hide the diffs
 		self:GetChild("Diffs"):visible(false)
 
@@ -312,7 +389,7 @@ local function MoveDifficulty(self, offset, Songs)
 		-- Run on every feet, A feet is a part of the Difficulty, We got a max of 9 feets.
 		for i = 1, 9 do
 			self:GetChild("Diffs"):GetChild("Feet" .. i):diffuse(DiffColors[
-				TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):diffusealpha(0)
+			TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):diffusealpha(0)
 			self:GetChild("Diffs"):GetChild("FeetShadow" .. i):diffusealpha(0)
 		end
 
@@ -328,15 +405,14 @@ local function MoveDifficulty(self, offset, Songs)
 
 		-- Set the name of the Chart Difficulty.
 		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount]):diffuse(DiffColors[
-			TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):strokecolor(DiffColors[
-			TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]])
+		TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):strokecolor(DiffColors[
+		TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]])
 		self:GetChild("DiffChartShadow"):settext(DiffChartNames[DiffCount])
 	end
 end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
-
 	-- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
 
@@ -358,84 +434,151 @@ return function(Style)
 
 	-- Here we generate all the CDs for the wheel
 	for i = 1, 21 do
-
 		-- Position of current song, We want the cd in the front, So its the one we change.
 		local pos = CurSong + i - 11
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
 		while pos < 1 do pos = #GroupsAndSongs + pos end
 
-		-- We load a Banner once, We use ActorProxy to copy it, This is lighter than loading the Banner for every Slice.
-		CDslice[#CDslice + 1] = Def.Sprite {
-			Name = "CDSlice" .. i,
-			-- Load white as fallback.
-			Texture = THEME:GetPathG("", "white.png"),
-			OnCommand = function(self)
+		if MaskMode then
+			CDs[#CDs + 1] = Def.ActorFrame {
+				Name = "CD" .. i,
+				OnCommand = function(self)
+					-- We set FOV/Field Of Vision to get a dept effect.
+					self:rotationz(180 - (((WheelOffset / 21) * (i - 11))) * -1):y(-80):rotationx(-52):SetFOV(80)
 
-				-- Check if its a song.
-				if type(GroupsAndSongs[pos]) ~= "string" then
+					-- Offset the wheel before and after the font most CD.
+					if CDSwitch < i then self:addrotationz((WheelOffset / 21) * 2) end
+					if CDSwitch > i then self:addrotationz((-WheelOffset / 21) * 2) end
+					if i == CDSwitch then self:diffusealpha(0) end
+				end,
+				-- The Container of the CDs.
+				Def.ActorFrame {
+					Name = "Container",
+					OnCommand = function(self) self:y(-220) end,
+					Def.ActorFrame {
+						Name = "CDHolder",
+						InitCommand = function(self)
+							self:zoom(.4)
+						end,
+						Def.ActorProxy {
+							Name = "CDBG",
+							InitCommand = function(self)
+								self:SetTarget(self:ForParent(5):GetChild("CDBGCon"):GetChild("CDBG")):zoom(.23)
+							end
+						},
+						Def.Sprite {
+							Name = "CDMask",
+							Texture = THEME:GetPathG("", "DDR/CDMask.png"),
+							InitCommand = function(self)
+								self:zoom(.23):MaskSource(true)
+							end
+						},
+						Def.Sprite {
+							Name = "CDPicture",
+							-- Load white as fallback.
+							Texture = THEME:GetPathG("", "white.png"),
+							OnCommand = function(self)
+								-- Check if its a song.
+								if type(GroupsAndSongs[pos]) ~= "string" then
+									-- If the banner exist, Load Banner.png.
+									if GroupsAndSongs[pos][1]:HasBanner() then
+										self:Load(GroupsAndSongs[pos][1]
+											:GetBannerPath())
+									end
+								else
+									-- IF group banner exist, Load banner.png
+									if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then
+										self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
+											[pos]))
+									end
+								end
 
-					-- If the banner exist, Load Banner.png.
-					if GroupsAndSongs[pos][1]:HasBanner() then self:Load(GroupsAndSongs[pos][1]:GetBannerPath()) end
-				else
+								-- Resize the Banner to the size of the Mask.
+								self:setsize(-120, -120)
+									:MaskDest()
+									:ztestmode("ZTestMode_WriteOnFail")
+							end
+						}
+					}
+				}
+			}
+		else
+			-- We load a Banner once, We use ActorProxy to copy it, This is lighter than loading the Banner for every Slice.
+			CDslice[#CDslice + 1] = Def.Sprite {
+				Name = "CDSlice" .. i,
+				-- Load white as fallback.
+				Texture = THEME:GetPathG("", "white.png"),
+				OnCommand = function(self)
+					-- Check if its a song.
+					if type(GroupsAndSongs[pos]) ~= "string" then
+						-- If the banner exist, Load Banner.png.
+						if GroupsAndSongs[pos][1]:HasBanner() then self:Load(GroupsAndSongs[pos][1]:GetBannerPath()) end
+					else
+						-- IF group banner exist, Load banner.png
+						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then
+							self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
+								[pos]))
+						end
+					end
 
-					-- IF group banner exist, Load banner.png
-					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
-						[pos])) end
-				end
-
-				-- Resize the Banner to the size of the slice.
-				self:setsize(512, 160):SetCustomPosCoords(self:GetWidth() / 2 - 23, 0, self:GetWidth() / 2 - 9, -80,
-					-self:GetWidth() / 2 + 9, -80, -self:GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
-			end
-		}
-
-		-- The CDHolder, This contains all the slices, And at start the CD Background.
-		local CDHolder = Def.ActorFrame {
-			Name = "CDHolder",
-			Def.ActorProxy {
-				Name = "CDBG",
-				InitCommand = function(self)
-					self:SetTarget(self:GetParent():GetParent():GetParent():GetParent():GetParent():GetChild("CDBGCon"):GetChild("CDBG"))
-						:zoom(.09)
+					-- Resize the Banner to the size of the slice.
+					self:setsize(512, 160):SetCustomPosCoords(self:GetWidth() / 2 - 23, 0, self:GetWidth() / 2 - 9, -80,
+						-self:GetWidth() / 2 + 9, -80, -self:GetWidth() / 2 + 23, 0):zoom(.4):y(-20)
 				end
 			}
-		}
 
-		-- We use 18 slices for the CDs.
-		for i2 = 1, 18 do
-			CDHolder[#CDHolder + 1] = Def.ActorFrame {
-				OnCommand = function(self)
-					self:rotationz((360 / 18) * i2)
-				end,
-
-				-- The ActorProxy's that contain all the CD Slices.
+			-- The CDHolder, This contains all the slices, And at start the CD Background.
+			local CDHolder = Def.ActorFrame {
+				Name = "CDHolder",
 				Def.ActorProxy {
+					Name = "CDBG",
 					InitCommand = function(self)
-						self:SetTarget(self:GetParent():GetParent():GetParent():GetParent():GetParent():GetParent():GetChild("Con"):
-							GetChild("CDSlice" .. i)):zoom(0.4)
+						self:SetTarget(self:ForParent(5):GetChild(
+								"CDBGCon")
+							:GetChild("CDBG"))
+							:zoom(.09)
 					end
 				}
 			}
-		end
 
-		-- The CD's for the music wheel.
-		CDs[#CDs + 1] = Def.ActorFrame {
-			Name = "CD" .. i,
-			OnCommand = function(self)
-				-- We set FOV/Field Of Vision to get a dept effect.
-				self:rotationz(180 - (((WheelOffset / 21) * (i - 11))) * -1):y(-80):rotationx(-52):SetFOV(80)
+			-- We use 18 slices for the CDs.
+			for i2 = 1, 18 do
+				CDHolder[#CDHolder + 1] = Def.ActorFrame {
+					OnCommand = function(self)
+						self:rotationz((360 / 18) * i2)
+					end,
 
-				-- Offset the wheel before and after the font most CD.
-				if CDSwitch < i then self:addrotationz((WheelOffset / 21) * 2) end
-				if CDSwitch > i then self:addrotationz((-WheelOffset / 21) * 2) end
-			end,
-			-- The Container of the Slices.
-			Def.ActorFrame {
-				Name = "Container",
-				OnCommand = function(self) self:y(-220) end,
-				CDHolder
+					-- The ActorProxy's that contain all the CD Slices.
+					Def.ActorProxy {
+						InitCommand = function(self)
+							self:SetTarget(self:ForParent(6)
+								:GetChild("Con"):
+								GetChild("CDSlice" .. i)):zoom(0.4)
+						end
+					}
+				}
+			end
+
+			-- The CD's for the music wheel.
+			CDs[#CDs + 1] = Def.ActorFrame {
+				Name = "CD" .. i,
+				OnCommand = function(self)
+					-- We set FOV/Field Of Vision to get a dept effect.
+					self:rotationz(180 - (((WheelOffset / 21) * (i - 11))) * -1):y(-80):rotationx(-52):SetFOV(80)
+
+					-- Offset the wheel before and after the font most CD.
+					if CDSwitch < i then self:addrotationz((WheelOffset / 21) * 2) end
+					if CDSwitch > i then self:addrotationz((-WheelOffset / 21) * 2) end
+					if i == CDSwitch then self:diffusealpha(0) end
+				end,
+				-- The Container of the Slices.
+				Def.ActorFrame {
+					Name = "Container",
+					OnCommand = function(self) self:y(-220) end,
+					CDHolder
+				}
 			}
-		}
+		end
 	end
 
 	-- The front most CD.
@@ -443,21 +586,19 @@ return function(Style)
 		CDSel[#CDSel + 1] = Def.ActorFrame {
 			Name = "CDHolder" .. i + 1,
 			OnCommand = function(self) self:y(-100 * i) end,
-			-- A quad we put behind the CD.
-			Def.Quad {
-				Name = "CDQuad",
-				OnCommand = function(self) self:zoomto(20, 20):diffuse(0, 0, 0, 1) end
-			},
 			-- The CD, We grab it using an ActorProxy.
 			Def.ActorProxy {
 				Name = "CD",
 				InitCommand = function(self)
-					self:SetTarget(self:GetParent():GetParent():GetParent():GetChild("CDCon"):GetChild("CD" .. 11):GetChild("Container")
+					self:SetTarget(self:ForParent(3):GetChild("CDCon"):GetChild("CD" .. 11)
+						:GetChild("Container")
 						:GetChild("CDHolder"))
+					if MaskMode then
+						self:zoom(-1)
+					end
 				end
 			}
 		}
-
 	end
 
 	-- The arrows that flash when pressing left or right
@@ -465,8 +606,10 @@ return function(Style)
 		Def.Sprite {
 			Name = "Inside",
 			Texture = THEME:GetPathG("", "DDR/ArrowIn.png"),
-			ColourCommand = function(self) self:sleep(0.02):diffuse(0, 0, 1, .5):sleep(0.02):diffuse(1, 1, 1, .5):sleep(0.02):
-				diffuse(1, 0, 0, .5) end
+			ColourCommand = function(self)
+				self:sleep(0.02):diffuse(0, 0, 1, .5):sleep(0.02):diffuse(1, 1, 1, .5):sleep(0.02):
+					diffuse(1, 0, 0, .5)
+			end
 		}
 	}
 
@@ -513,16 +656,20 @@ return function(Style)
 
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand = function(self)
-			if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-				GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-			elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(), GroupsAndSongs[CurSong][1]:GetSampleStart(),
-					GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+			if type(GroupsAndSongs[CurSong]) ~= "string" then
+				if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+					GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+				elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+					SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+						GroupsAndSongs[CurSong][1]:GetSampleStart(),
+						GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+				end
 			end
 		end,
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
-		MenuLeftCommand = function(self) MoveSelection(self, -1, GroupsAndSongs)
+		MenuLeftCommand = function(self)
+			MoveSelection(self, -1, GroupsAndSongs)
 			MoveDifficulty(self, 0, GroupsAndSongs)
 			self:GetChild("Left"):GetChild("Inside"):stoptweening()
 			-- Play the colour effect 5 times.
@@ -532,7 +679,8 @@ return function(Style)
 		end,
 
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
-		MenuRightCommand = function(self) MoveSelection(self, 1, GroupsAndSongs)
+		MenuRightCommand = function(self)
+			MoveSelection(self, 1, GroupsAndSongs)
 			MoveDifficulty(self, 0, GroupsAndSongs)
 			self:GetChild("Right"):GetChild("Inside"):stoptweening()
 			-- Play the colour effect 5 times.
@@ -556,7 +704,8 @@ return function(Style)
 					GAMESTATE:UnjoinPlayer(self.pn)
 				else
 					-- Go to the previous screen.
-					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen")
+					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName())
+						:StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 		end,
@@ -565,14 +714,13 @@ return function(Style)
 		StartCommand = function(self)
 			-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 			if StartOptions then
-				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
+				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
+					"SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
-
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
-
 					-- Check if we are on the same group thats currently open,
 					-- If not we set the curent group to our new selection.
 					if CurGroup ~= GroupsAndSongs[CurSong] then
@@ -600,7 +748,6 @@ return function(Style)
 
 					-- Not on a group, Start song.
 				else
-
 					--We use PlayMode_Regular for now.
 					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
@@ -609,7 +756,6 @@ return function(Style)
 
 					-- Check if 2 players are joined.
 					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
-
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDBVersus[Style])
 
@@ -621,7 +767,6 @@ return function(Style)
 						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][CurDiff])
 						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][CurDiff])
 					else
-
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 
@@ -658,12 +803,14 @@ return function(Style)
 
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
+				"SM_GoToNextScreen")
 		end,
 
 		-- The extra command we have to add to change the original front most CD after a while.
 		ChangeCDCommand = function(self)
-			self:GetChild("CDSel"):GetChild("CDHolder1"):GetChild("CD"):SetTarget(self:GetChild("CDCon"):GetChild("CD" ..
+			self:GetChild("CDSel"):GetChild("CDHolder1"):GetChild("CD"):SetTarget(self:GetChild("CDCon"):GetChild(
+				"CD" ..
 				self.CDSwitch):GetChild("Container"):GetChild("CDHolder"))
 		end,
 
@@ -681,7 +828,7 @@ return function(Style)
 		},
 
 		CDslice .. { OnCommand = function(self) self:zoom(0) end }, -- Load CD Slices.
-		CDs, -- Load CDs.
+		CDs,                                                      -- Load CDs.
 		CDSel .. { OnCommand = function(self) self:zoom(6):y(80) end }, -- Load front most CD.
 
 		-- Load the Global Centered Banner.
@@ -784,14 +931,21 @@ return function(Style)
 		},
 
 		-- Load the arrow for the Left size.
-		ArSel .. { Name = "Left", OnCommand = function(self)
-			self:xy(-160, 50):rotationz(25):rotationx(-50):SetFOV(80):zoom(.2):GetChild("Inside"):diffuse(1, 0, 0, .5)
-		end },
+		ArSel .. {
+			Name = "Left",
+			OnCommand = function(self)
+				self:xy(-160, 50):rotationz(25):rotationx(-50):SetFOV(80):zoom(.2):GetChild("Inside"):diffuse(1, 0, 0, .5)
+			end
+		},
 
 		-- Load the arrow for the Right size.
-		ArSel .. { Name = "Right", OnCommand = function(self)
-			self:xy(160, 50):rotationz(-25):rotationx(-50):SetFOV(80):zoom(.2):zoomx(-.2):GetChild("Inside"):diffuse(1, 0, 0, .5)
-		end },
+		ArSel .. {
+			Name = "Right",
+			OnCommand = function(self)
+				self:xy(160, 50):rotationz(-25):rotationx(-50):SetFOV(80):zoom(.2):zoomx(-.2):GetChild("Inside"):diffuse(
+					1, 0, 0, .5)
+			end
+		},
 
 		-- The Difficulty Feet Meter.
 		Diff .. { OnCommand = function(self) self:y(150) end },
