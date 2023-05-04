@@ -89,14 +89,16 @@ local function MoveSelection(self, offset, Songs)
 		-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 		if Songs[pos][1]:HasBanner() then
 			if MaskMode then
-				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(Songs[pos][1]
-				:GetBannerPath())
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(
+					Songs[pos][1]
+					:GetBannerPath())
 			else
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(Songs[pos][1]:GetBannerPath())
 			end
 		else
 			if MaskMode then
-				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(THEME:GetPathG("",
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(
+				THEME:GetPathG("",
 					"white.png"))
 			else
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
@@ -104,7 +106,8 @@ local function MoveSelection(self, offset, Songs)
 		end
 
 		if MaskMode then
-			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):setsize(-120, -120)
+			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):setsize(
+			-120, -120)
 		else
 			-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
 			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(
@@ -138,15 +141,17 @@ local function MoveSelection(self, offset, Songs)
 				-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 				if Songs[pos][1]:HasBanner() then
 					if MaskMode then
-						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture"):Load(Songs[pos]
-						[1]:GetBannerPath())
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild(
+						"CDPicture"):Load(Songs[pos]
+							[1]:GetBannerPath())
 					else
 						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(Songs[pos][1]:GetBannerPath())
 					end
 				else
 					if MaskMode then
-						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture"):Load(THEME
-						:GetPathG("", "white.png"))
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild(
+						"CDPicture"):Load(THEME
+							:GetPathG("", "white.png"))
 					else
 						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
 					end
@@ -156,16 +161,18 @@ local function MoveSelection(self, offset, Songs)
 			else
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 					if MaskMode then
-						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture"):Load(SONGMAN:GetSongGroupBannerPath(
-						Songs[pos]))
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild(
+						"CDPicture"):Load(SONGMAN:GetSongGroupBannerPath(
+							Songs[pos]))
 					else
 						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(SONGMAN:GetSongGroupBannerPath(
-						Songs[pos]))
+							Songs[pos]))
 					end
 				else
 					if MaskMode then
-						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture"):Load(THEME
-						:GetPathG("", "white.png"))
+						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild(
+						"CDPicture"):Load(THEME
+							:GetPathG("", "white.png"))
 					else
 						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
 					end
@@ -173,7 +180,8 @@ local function MoveSelection(self, offset, Songs)
 			end
 
 			if MaskMode then
-				self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture"):setsize(-120, -120)
+				self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDPicture")
+					:setsize(-120, -120)
 			else
 				-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
 				self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):setsize(512, 160):SetCustomPosCoords(
@@ -188,13 +196,15 @@ local function MoveSelection(self, offset, Songs)
 		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 		if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 			if MaskMode then
-				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(
+				SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 			else
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 			end
 		else
 			if MaskMode then
-				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(THEME:GetPathG("",
+				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):Load(
+				THEME:GetPathG("",
 					"white.png"))
 			else
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
@@ -202,7 +212,8 @@ local function MoveSelection(self, offset, Songs)
 		end
 
 		if MaskMode then
-			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):setsize(-120, -120)
+			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDPicture"):setsize(
+			-120, -120)
 		else
 			-- We make it so that the slices are always w512 h160, and then resize the CD slices so they fit as part of the CD.
 			self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):setsize(512, 160):SetCustomPosCoords(
@@ -509,12 +520,14 @@ return function(Style)
 
 		-- Play Music at start of screen,.
 		PlayCurrentSongCommand = function(self)
-			if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-				GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-			elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
-					GroupsAndSongs[CurSong][1]:GetSampleStart(),
-					GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+			if type(GroupsAndSongs[CurSong]) ~= "string" then
+				if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+					GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+				elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+					SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+						GroupsAndSongs[CurSong][1]:GetSampleStart(),
+						GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+				end
 			end
 		end,
 
