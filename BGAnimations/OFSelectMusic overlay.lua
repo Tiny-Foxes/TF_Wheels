@@ -1,3 +1,6 @@
+-- Unload keysounds on return to SelectMusic.
+GAMESTATE:DeleteKeysounds()
+
 -- The wheels we support/have.
 local Wheels = {
 	"DDR1st1.5Wheel",
