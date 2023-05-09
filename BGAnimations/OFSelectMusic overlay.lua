@@ -8,7 +8,9 @@ local Wheels = {
 	"DDR3rdMixPlusWheel",
 	"DDR4thMixPlusWheel",
 	"DDR5thMixWheel",
-	--"DDRMAXWheel",
+	"DDRMAXWheel",
+
+	"BM1stWheel",
 
 	---"Popn10Wheel",
 }

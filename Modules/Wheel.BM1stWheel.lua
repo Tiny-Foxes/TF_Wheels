@@ -142,10 +142,9 @@ local function MoveSelection(self, offset, Songs)
 	if type(Songs[CurSong]) ~= "string" then
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):Regen()
-				:MainActor():zoomto(280, 160)
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160):Regen()
 		else
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):Regen():MainActor():zoomto(280, 160)
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(160):Regen()
 		end
 
 		-- Set the Centered Banner.
@@ -165,12 +164,12 @@ local function MoveSelection(self, offset, Songs)
 		if SONGMAN:GetSongGroupBannerPath(Songs[CurSong]) ~= "" then
 			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[CurSong]))
 
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):Regen():MainActor():zoomto(280, 160)
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):Regen()
 		else
 			self:GetChild("Banner"):visible(false)
 
 			-- Set name to group.
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong]):Regen():MainActor():zoomto(280, 160)
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong]):Regen()
 		end
 	end
 
@@ -574,6 +573,7 @@ return function(Style)
 			-- Global Centered Banner Text, Incase there is no banner.
 			Def.Text {
 				Name = "BannerText",
+				--Fallback = THEME:GetPathF("", "NotoSans-All.ttf"),
 				Font = THEME:GetPathF("", "BM/forgotten-futurist.rg-bold.ttf"),
 				Size = 100,
 				OnCommand = function(self)
@@ -581,17 +581,17 @@ return function(Style)
 					if type(GroupsAndSongs[CurSong]) == "string" then
 						-- Check if group has banner, If so, Set text to empty
 						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) == "" then
-							self:settext(GroupsAndSongs[CurSong]):Regen()
+							self:settext(GroupsAndSongs[CurSong]):maxwidth(280):maxheight(160):Regen()
 						end
 						-- not group.
 					else
 						-- Check if we have banner, if not, set text to song title.
 						if not GroupsAndSongs[CurSong][1]:HasBanner() then
-							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):Regen()
+							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160):Regen()
 						end
 					end
 
-					self:MainActor():zoomto(280, 160):xy(140, 80)
+					self:MainActor():xy(140, 80)
 					self:StrokeActor():diffusealpha(0)
 				end
 			}
@@ -599,14 +599,14 @@ return function(Style)
 		Def.Sprite {
 			Texture = "BannerAFT",
 			OnCommand = function(self)
-				self:y(-56):cropbottom(.36):diffusetopedge(1, .5, 0, 1)
+				self:y(-50):cropbottom(.32):diffusetopedge(1, .5, 0, 1)
 			end
 		},
 
 		Def.Sprite {
 			Texture = "BannerAFT",
 			OnCommand = function(self)
-				self:y(-56):croptop(.36):diffuse(0, 0, 0, .7):diffusebottomedge(1, .5, 0, 1)
+				self:y(-50):croptop(.32):diffuse(0, 0, 0, .7):diffusebottomedge(1, .5, 0, 1)
 			end
 		},
 
