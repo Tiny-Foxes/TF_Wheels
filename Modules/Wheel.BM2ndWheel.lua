@@ -31,13 +31,14 @@ local function MoveSelection(self, offset, Songs)
 	LPOffset = LPOffset + offset
 
 	-- We want to rotate for every LP, So we grab the current Offset of the LP,
-	-- And we Check if its beyond 3 and below 1.
-	if LPOffset > 3 then LPOffset = 1 end
-	if LPOffset < 1 then LPOffset = 3 end
+	-- And we Check if its beyond 9 and below 1.
+	if LPOffset > 5 then LPOffset = 1 end
+	if LPOffset < 1 then LPOffset = 5 end
 
-	-- For every LP on the wheel, Rotate it by 360/3, 3 being the amount of LPs.
-	for i = 1, 3 do
-		self:GetChild("LPCon"):GetChild("LP" .. i):linear(.1):addrotationz(((360 / 3) * offset) * -1)
+	-- For every LP on the wheel, Rotate it by 360/5, 5 being the amount of LPs.
+	for i = 1, 5 do
+		self:GetChild("LPCon"):GetChild("LP" .. i):linear(.1):addrotationz(((360 / 5) * offset) * -1)
+		self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):linear(.1):addrotationz((360 / 5) * offset)
 	end
 
 	-- We Define the ChangeOffset, Which is used to define the location the LPs change Images.
@@ -47,11 +48,11 @@ local function MoveSelection(self, offset, Songs)
 	if offset > 0 then ChangeOffset = ChangeOffset + -1 end
 
 	-- Same as LPOffset, Stay withing limits.
-	if ChangeOffset > 3 then ChangeOffset = 1 end
-	if ChangeOffset < 1 then ChangeOffset = 3 end
+	if ChangeOffset > 5 then ChangeOffset = 1 end
+	if ChangeOffset < 1 then ChangeOffset = 5 end
 
-	-- The Position of Current song, The Wheel is 3 LP's so we grab Half
-	local pos = CurSong + (1 * offset)
+	-- The Position of Current song, The Wheel is 5 LP's so we grab Half
+	local pos = CurSong + (2 * offset)
 
 	-- The Position is checked if its withing Song limits.
 	while pos > #Songs do pos = pos - #Songs end
@@ -71,14 +72,14 @@ local function MoveSelection(self, offset, Songs)
 		end
 
 		self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):setsize(
-			-180, -180)
+			180, 180)
 
 		--Only do the LP Banner change on 0 offset.
 	elseif offset == 0 then
 		--For every LP do
-		for i = 1, 3 do
+		for i = 1, 5 do
 			-- Reset pos for local usage
-			local pos = CurSong + i - 2
+			local pos = CurSong + i - 3
 
 			-- Stay within limits.
 			while pos > #Songs do pos = pos - #Songs end
@@ -88,7 +89,7 @@ local function MoveSelection(self, offset, Songs)
 			local LPSliceOffset = ChangeOffset + i - 1
 
 			-- Same as LPOffset, Stay withing limits.
-			while LPSliceOffset > 3 do LPSliceOffset = LPSliceOffset - 3 end
+			while LPSliceOffset > 5 do LPSliceOffset = LPSliceOffset - 5 end
 			while LPSliceOffset < 1 do LPSliceOffset = 1 + LPSliceOffset end
 
 			--Check if it is a song.
@@ -117,7 +118,7 @@ local function MoveSelection(self, offset, Songs)
 				end
 			end
 			self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild("LPPicture")
-				:setsize(-180, -180)
+				:setsize(180, 180)
 		end
 	else
 		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
@@ -131,7 +132,7 @@ local function MoveSelection(self, offset, Songs)
 		end
 
 		self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):setsize(
-			-180, -180)
+			180, 180)
 	end
 
 
@@ -142,7 +143,8 @@ local function MoveSelection(self, offset, Songs)
 	if type(Songs[CurSong]) ~= "string" then
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160):Regen()
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280)
+				:maxheight(160):Regen()
 		else
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(160):Regen()
 		end
@@ -242,9 +244,9 @@ return function(Style)
 	local LPs = Def.ActorFrame { Name = "LPCon" }
 
 	-- Here we generate all the LPs for the wheel
-	for i = 1, 3 do
+	for i = 1, 5 do
 		-- Position of current song, We want the LP in the front, So its the one we change.
-		local pos = CurSong + i - 2
+		local pos = CurSong + i - 3
 
 		-- Stay within limits.
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
@@ -253,12 +255,15 @@ return function(Style)
 		LPs[#LPs + 1] = Def.ActorFrame {
 			Name = "LP" .. i,
 			OnCommand = function(self)
-				self:rotationz((180 - (360 / 3) * (i - 2)) * -1):y(-200)
+				self:rotationz((180 - (360 / 5) * (i - 3)) * -1):y(-300)
 			end,
 			-- The Container of the LPs.
 			Def.ActorFrame {
 				Name = "Container",
-				OnCommand = function(self) self:y(-240):zoom(.8) end,
+				OnCommand = function(self)
+					self:y(-340):zoom(.8)
+					self:rotationz((180 - (360 / 5) * (i - 3)))
+				end,
 				Def.ActorProxy {
 					Name = "LPBG",
 					InitCommand = function(self)
@@ -293,7 +298,7 @@ return function(Style)
 						end
 
 						-- Resize the Banner to the size of the Mask.
-						self:setsize(-180, -180)
+						self:setsize(180, 180)
 							:MaskDest()
 							:ztestmode("ZTestMode_WriteOnFail")
 					end
@@ -586,7 +591,8 @@ return function(Style)
 					else
 						-- Check if we have banner, if not, set text to song title.
 						if not GroupsAndSongs[CurSong][1]:HasBanner() then
-							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160):Regen()
+							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160)
+								:Regen()
 						end
 					end
 
@@ -609,36 +615,21 @@ return function(Style)
 			end
 		},
 
-		Def.ActorFrameTexture {
-			InitCommand = function(self)
-				self:SetTextureName("SSAFT")
-					:SetWidth(SCREEN_WIDTH)
-					:SetHeight(SCREEN_HEIGHT)
-					:EnableAlphaBuffer(true)
-					:Create()
-					:Draw()
-			end,
-			Def.Text {
-				Font = THEME:GetPathF("", "BM/dpcomic.regular.ttf"),
-				Size = 80,
-				StrokeSize = 2,
-				OnCommand = function(self)
-					self:settext("SONG SELECT"):Regen()
-						:CenterX()
-						:y(80)
-
-					self:MainActor()
-						:diffuse(.3, .3, .3, 1)
-
-					self:StrokeActor()
-						:diffuse(1, 1, 1, .8)
-				end
-			}
-		},
-		Def.Sprite {
-			Texture = "SSAFT",
+		Def.Text {
+			Font = THEME:GetPathF("", "BM/BadComic-2OXnX.ttf"),
+			Size = 20,
 			OnCommand = function(self)
-				self:texcoordvelocity(.1, 0)
+				self:settext("normal mode"):Regen()
+				self:y(-200)
+			end
+		},
+
+		Def.Text {
+			Font = THEME:GetPathF("", "BM/BadComic-2OXnX.ttf"),
+			Size = 40,
+			OnCommand = function(self)
+				self:settext("SOUND SELECT"):Regen()
+				self:y(-160)
 			end
 		},
 
