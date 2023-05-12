@@ -4,7 +4,8 @@ local DiffNames = {
 	"NORMAL", -- 2 Stars
 	"NORMAL", -- 3 Stars
 	"HARD", -- 4 Stars
-	"HARD" -- 5 Stars
+	"HARD", -- 5 Stars
+	"HARD", -- 6 Stars
 }
 
 -- We define the curent song if no song is selected.
@@ -13,8 +14,14 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
--- The Offset we use for the LP wheel.
-local LPOffset = 1
+-- The increase offset for when we move with postive.
+local IncOffset = 1
+
+-- The decrease offset for when we move with negative.
+local DecOffset = 5
+
+-- The center offset of the wheel.
+local XOffset = 3
 
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
@@ -27,113 +34,116 @@ local function MoveSelection(self, offset, Songs)
 	-- Check if curent song is lower than 1 if so, grab last song.
 	if CurSong < 1 then CurSong = #Songs end
 
-	-- LP Wheel offset + Offset.
-	LPOffset = LPOffset + offset
+	-- Set the offsets for increase and decrease.
+	DecOffset = DecOffset + offset
+	IncOffset = IncOffset + offset
 
-	-- We want to rotate for every LP, So we grab the current Offset of the LP,
-	-- And we Check if its beyond 3 and below 1.
-	if LPOffset > 3 then LPOffset = 1 end
-	if LPOffset < 1 then LPOffset = 3 end
+	if DecOffset > 5 then DecOffset = 1 end
+	if IncOffset > 5 then IncOffset = 1 end
 
-	-- For every LP on the wheel, Rotate it by 360/3, 3 being the amount of LPs.
-	for i = 1, 3 do
-		self:GetChild("LPCon"):GetChild("LP" .. i):linear(.1):addrotationz(((360 / 3) * offset) * -1)
-	end
+	if DecOffset < 1 then DecOffset = 5 end
+	if IncOffset < 1 then IncOffset = 5 end
 
-	-- We Define the ChangeOffset, Which is used to define the location the LPs change Images.
-	local ChangeOffset = LPOffset
+	-- Set the offset for the center of the wheel.
+	XOffset = XOffset + offset
+	if XOffset > 5 then XOffset = 1 end
+	if XOffset < 1 then XOffset = 5 end
 
-	-- An extra check that results the ChangeOffset is right when we go in reverse.
-	if offset > 0 then ChangeOffset = ChangeOffset + -1 end
 
-	-- Same as LPOffset, Stay withing limits.
-	if ChangeOffset > 3 then ChangeOffset = 1 end
-	if ChangeOffset < 1 then ChangeOffset = 3 end
+	-- If we are calling this command with an offset that is not 0 then do stuff.
+	if offset ~= 0 then
+		-- For every part on the wheel do.
+		for i = 1, 5 do
+			-- Calculate current position based on song with a value to get center.
+			local pos = CurSong + (2 * offset)
 
-	-- The Position of Current song, The Wheel is 3 LP's so we grab Half
-	local pos = CurSong + (1 * offset)
-
-	-- The Position is checked if its withing Song limits.
-	while pos > #Songs do pos = pos - #Songs end
-	while pos < 1 do pos = #Songs + pos end
-
-	--Do a string check, If its a string, Its a group.
-	if type(Songs[pos]) ~= "string" then
-		-- We check if the song has a banner, We use this for the LPs, If there is no banner, use white.png
-		if Songs[pos][1]:HasBanner() then
-			self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):Load(
-				Songs[pos][1]
-				:GetBannerPath())
-		else
-			self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):Load(
-				THEME:GetPathG("",
-					"white.png"))
-		end
-
-		self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):setsize(
-			-180, -180)
-
-		--Only do the LP Banner change on 0 offset.
-	elseif offset == 0 then
-		--For every LP do
-		for i = 1, 3 do
-			-- Reset pos for local usage
-			local pos = CurSong + i - 2
-
-			-- Stay within limits.
+			-- Keep it within reasonable values.
 			while pos > #Songs do pos = pos - #Songs end
 			while pos < 1 do pos = #Songs + pos end
 
-			-- Do math for the LP slices we want to change at which location.
-			local LPSliceOffset = ChangeOffset + i - 1
+			-- Transform the wheel, As in make it move.
+			self:GetChild("LPCon"):GetChild("LP" .. i):linear(.1):addx((offset * 400))
+			self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):sleep(0):y(320)
 
-			-- Same as LPOffset, Stay withing limits.
-			while LPSliceOffset > 3 do LPSliceOffset = LPSliceOffset - 3 end
-			while LPSliceOffset < 1 do LPSliceOffset = 1 + LPSliceOffset end
+			if i == XOffset then
+				self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):sleep(.1):y(340)
+			end
 
-			--Check if it is a song.
-			if type(Songs[pos]) ~= "string" then
-				-- We check if the song has a banner, We use this for the LPs, If there is no banner, use white.png
-				if Songs[pos][1]:HasBanner() then
-					self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild(
-						"LPPicture"):Load(Songs[pos]
-						[1]:GetBannerPath())
+			-- Here we define what the wheel does if it is outside the values.
+			-- So that when a part is at the bottom it will move to the top.
+			if (i == IncOffset and offset == -1) or (i == DecOffset and offset == 1) then
+				-- Move wheelpart instantly to new location.
+				self:GetChild("LPCon"):GetChild("LP" .. i):sleep(0):addx((offset * 400) * -5)
+
+				-- Check if it's a song.
+				if type(Songs[pos]) ~= "string" then
+					if Songs[pos][1]:HasBanner() then
+						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture")
+							:Load(Songs[pos][1]:GetBannerPath())
+					else
+						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture")
+							:Load(THEME:GetPathG("", "white.png"))
+					end
 				else
-					self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild(
-						"LPPicture"):Load(THEME
-						:GetPathG("", "white.png"))
+					if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
+						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture"):Load(
+							SONGMAN:GetSongGroupBannerPath(Songs[pos]))
+					else
+						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture"):Load(
+							THEME:GetPathG("", "white.png"))
+					end
 				end
 
-				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
+				self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture")
+					:setsize(180, 180)
+			end
+		end
+		-- We are on an offset of 0.
+	else
+		-- For every part of the wheel do.
+		for i = 1, 5 do
+			-- Offset for the wheel items.
+			local off = i + XOffset
+
+			-- Stay withing limits.
+			while off > 5 do off = off - 5 end
+			while off < 1 do off = off + 5 end
+
+			-- Get center position.
+			local pos = CurSong + i
+
+			-- If item is above 3 then we do a +5 to fix the display.
+			if i > 2 then
+				pos = CurSong + i - 5
+			end
+
+			-- Keep pos withing limits.
+			while pos > #Songs do pos = pos - #Songs end
+			while pos < 1 do pos = #Songs + pos end
+
+			-- Check if it's a song.
+			if type(Songs[pos]) ~= "string" then
+				if Songs[pos][1]:HasBanner() then
+					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture")
+						:Load(Songs[pos][1]:GetBannerPath())
+				else
+					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture")
+						:Load(THEME:GetPathG("", "white.png"))
+				end
 			else
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-					self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild(
-						"LPPicture"):Load(SONGMAN:GetSongGroupBannerPath(
-						Songs[pos]))
+					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture"):Load(
+						SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 				else
-					self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild(
-						"LPPicture"):Load(THEME
-						:GetPathG("", "white.png"))
+					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture"):Load(
+						THEME:GetPathG("", "white.png"))
 				end
 			end
-			self:GetChild("LPCon"):GetChild("LP" .. LPSliceOffset):GetChild("Container"):GetChild("LPPicture")
-				:setsize(-180, -180)
-		end
-	else
-		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
-		if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-			self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):Load(
-				SONGMAN:GetSongGroupBannerPath(Songs[pos]))
-		else
-			self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):Load(
-				THEME:GetPathG("",
-					"white.png"))
-		end
 
-		self:GetChild("LPCon"):GetChild("LP" .. ChangeOffset):GetChild("Container"):GetChild("LPPicture"):setsize(
-			-180, -180)
+			self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture")
+				:setsize(180, 180)
+		end
 	end
-
 
 	-- Stop all the music playing, Which is the Song Music
 	SOUND:StopMusic()
@@ -145,12 +155,19 @@ local function MoveSelection(self, offset, Songs)
 			self:GetChild("Banner"):visible(false)
 
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280)
-				:maxheight(160):Regen()
+				:maxheight(120):Regen()
 		else
 			self:GetChild("Banner"):visible(true):Load(Songs[CurSong][1]:GetBannerPath())
 
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(160):Regen()
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(120):Regen()
 		end
+
+		local Genre = Songs[CurSong][1]:GetGenre()
+
+		if Genre == "" then Genre = "UNKNOWN" end
+
+		self:GetChild("GenreAFT"):GetChild("GenreText"):settext("\"" .. ToLower(Genre) .. "\""):maxwidth(280)
+			:maxheight(60):Regen()
 
 		-- Play Current selected Song Music.
 		if Songs[CurSong][1].PlayPreviewMusic then
@@ -166,18 +183,20 @@ local function MoveSelection(self, offset, Songs)
 		if SONGMAN:GetSongGroupBannerPath(Songs[CurSong]) ~= "" then
 			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[CurSong]))
 
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):Regen()
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(120):Regen()
 		else
 			self:GetChild("Banner"):visible(false)
 
 			-- Set name to group.
-			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong]):Regen()
+			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong]):maxwidth(280):maxheight(120):Regen()
 		end
+
+		self:GetChild("GenreAFT"):GetChild("GenreText"):settext("\"pack\""):maxwidth(280):maxheight(60):Regen()
 	end
 
 	-- Resize the Centered Banner  to be w(512/8)*5 h(160/8)*5
 	self:GetChild("Banner"):zoom(TF_WHEEL.Resize(self:GetChild("Banner"):GetWidth(), self:GetChild("Banner"):GetHeight(),
-		(512 / 9) * 5, (160 / 9) * 5))
+		(512 / 12) * 5, (160 / 12) * 5))
 end
 
 -- Define the start difficulty to be the 2nd selection,
@@ -190,16 +209,20 @@ local function MoveDifficulty(self, offset, Songs)
 	-- Check if its a group
 	if type(Songs[CurSong]) == "string" then
 		-- If it is a group hide the diffs
-		for i = 1, 5 do
+		for i = 1, 6 do
 			self:GetChild("Diffs"):GetChild("Star" .. i):visible(false)
 		end
+		self:GetChild("Diffs"):x(140)
+		self:GetChild("Diffs"):GetChild("StarBG6"):visible(false)
 		self:GetChild("DiffChart"):visible(false)
 
 		-- Not a group
 	else
-		for i = 1, 5 do
+		for i = 1, 6 do
 			self:GetChild("Diffs"):GetChild("Star" .. i):visible(true)
 		end
+		self:GetChild("Diffs"):x(140)
+		self:GetChild("Diffs"):GetChild("StarBG6"):visible(false)
 		self:GetChild("DiffChart"):visible(true)
 		-- Move the current difficulty + offset.
 		CurDiff = CurDiff + offset
@@ -208,19 +231,24 @@ local function MoveDifficulty(self, offset, Songs)
 		if CurDiff > #Songs[CurSong] then CurDiff = 2 end
 		if CurDiff < 2 then CurDiff = #Songs[CurSong] end
 
-		-- Run on every Star, A Star is a part of the Difficulty, We got a max of 5 Stars.
-		for i = 1, 5 do
+		-- Run on every Star, A Star is a part of the Difficulty, We got a max of 6 Stars.
+		for i = 1, 6 do
 			self:GetChild("Diffs"):GetChild("Star" .. i):diffuse(1, 0, 0, 1):diffusealpha(0)
 		end
 
-		-- We get the Meter from the game, And make it so it stays between 5 which is the Max Stars we support.
+		-- We get the Meter from the game, And make it so it stays between 6 which is the Max Stars we support.
 		local DiffCount = math.floor(Songs[CurSong][CurDiff]:GetMeter() / 2)
-		if DiffCount > 5 then DiffCount = 5 end
+		if DiffCount > 6 then DiffCount = 6 end
 		if DiffCount < 1 then DiffCount = 1 end
 
 		-- For every Meter value we got for the game, We show the amount of Stars for the difficulty, And center them.
 		for i = 1, DiffCount do
 			self:GetChild("Diffs"):GetChild("Star" .. i):diffusealpha(1)
+			if i == 6 then
+				self:GetChild("Diffs"):x(120)
+				self:GetChild("Diffs"):GetChild("StarBG6"):visible(true)
+			end
+
 		end
 
 		-- Set the name of the Chart Difficulty.
@@ -244,9 +272,9 @@ return function(Style)
 	local LPs = Def.ActorFrame { Name = "LPCon" }
 
 	-- Here we generate all the LPs for the wheel
-	for i = 1, 3 do
+	for i = 1, 5 do
 		-- Position of current song, We want the LP in the front, So its the one we change.
-		local pos = CurSong + i - 2
+		local pos = CurSong + i - 3
 
 		-- Stay within limits.
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
@@ -255,12 +283,17 @@ return function(Style)
 		LPs[#LPs + 1] = Def.ActorFrame {
 			Name = "LP" .. i,
 			OnCommand = function(self)
-				self:rotationz((180 - (360 / 3) * (i - 2)) * -1):y(-200)
+				self:xy((i * -400) - (-400 * 3), -300)
 			end,
 			-- The Container of the LPs.
 			Def.ActorFrame {
 				Name = "Container",
-				OnCommand = function(self) self:y(-240):zoom(.8) end,
+				OnCommand = function(self)
+					self:y(320):zoom(.8)
+					if i == 3 then
+						self:y(340)
+					end
+				end,
 				Def.ActorProxy {
 					Name = "LPBG",
 					InitCommand = function(self)
@@ -295,7 +328,7 @@ return function(Style)
 						end
 
 						-- Resize the Banner to the size of the Mask.
-						self:setsize(-180, -180)
+						self:setsize(180, 180)
 							:MaskDest()
 							:ztestmode("ZTestMode_WriteOnFail")
 					end
@@ -345,16 +378,21 @@ return function(Style)
 	local Diff = Def.ActorFrame { Name = "Diffs", }
 
 	-- The amount of Star we use to display the Difficulty using the Meter.
-	for i = 1, 5 do
+	for i = 1, 6 do
 		Diff[#Diff + 1] = Def.ActorProxy {
+			Name = "StarBG" .. i,
 			InitCommand = function(self)
 				self:SetTarget(self:ForParent(2):GetChild("BGStar")):x(35 * (i - 4.5))
+				if i == 6 then self:visible(false) end
 			end
 		}
 		Diff[#Diff + 1] = Def.Sprite {
 			Name = "Star" .. i,
 			Texture = THEME:GetPathG("", "Star.png"),
-			InitCommand = function(self) self:zoom(.04):x(35 * (i - 4.5)) end
+			InitCommand = function(self)
+				self:zoom(.04):x(35 * (i - 4.5))
+				if i == 6 then self:visible(false) end
+			end
 		}
 	end
 
@@ -510,7 +548,6 @@ return function(Style)
 			end
 		end,
 
-
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
 			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
@@ -557,7 +594,7 @@ return function(Style)
 					end
 				end
 
-				self:y(-80):zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), (512 / 9) * 5, (160 / 9) * 5))
+				self:y(-70):zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), (512 / 12) * 5, (160 / 12) * 5))
 			end
 		},
 
@@ -566,7 +603,7 @@ return function(Style)
 			InitCommand = function(self)
 				self:SetTextureName("BannerAFT")
 					:SetWidth(280)
-					:SetHeight(160)
+					:SetHeight(120)
 					:EnableAlphaBuffer(true)
 					:Create()
 					:Draw()
@@ -582,65 +619,91 @@ return function(Style)
 					if type(GroupsAndSongs[CurSong]) == "string" then
 						-- Check if group has banner, If so, Set text to empty
 						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) == "" then
-							self:settext(GroupsAndSongs[CurSong]):maxwidth(280):maxheight(160):Regen()
+							self:settext(GroupsAndSongs[CurSong]):maxwidth(280):maxheight(120):Regen()
 						end
 						-- not group.
 					else
 						-- Check if we have banner, if not, set text to song title.
 						if not GroupsAndSongs[CurSong][1]:HasBanner() then
-							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(160):Regen()
+							self:settext(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(120)
+								:Regen()
 						end
 					end
 
-					self:MainActor():xy(140, 80)
+					self:MainActor():xy(140, 60)
 					self:StrokeActor():diffusealpha(0)
 				end
 			}
 		},
+
 		Def.Sprite {
 			Texture = "BannerAFT",
 			OnCommand = function(self)
-				self:y(-50):cropbottom(.32):diffusetopedge(1, .5, 0, 1)
+				self:y(-50):cropbottom(.32):diffusetopedge(0, .5, 1, 1)
 			end
 		},
 
 		Def.Sprite {
 			Texture = "BannerAFT",
 			OnCommand = function(self)
-				self:y(-50):croptop(.32):diffuse(0, 0, 0, .7):diffusebottomedge(1, .5, 0, 1)
+				self:y(-50):croptop(.32):diffuse(1, .5, 0, 1):diffusebottomedge(1, 1, 0, 1)
 			end
 		},
 
 		Def.ActorFrameTexture {
+			Name = "GenreAFT",
 			InitCommand = function(self)
-				self:SetTextureName("SSAFT")
-					:SetWidth(SCREEN_WIDTH)
-					:SetHeight(SCREEN_HEIGHT)
+				self:SetTextureName("GenreAFT")
+					:SetWidth(280)
+					:SetHeight(60)
 					:EnableAlphaBuffer(true)
 					:Create()
 					:Draw()
 			end,
+			-- Global Centered Banner Text, Incase there is no banner.
 			Def.Text {
-				Font = THEME:GetPathF("", "BM/dpcomic.regular.ttf"),
-				Size = 80,
-				StrokeSize = 2,
+				Name = "GenreText",
+				--Fallback = THEME:GetPathF("", "NotoSans-All.ttf"),
+				Font = THEME:GetPathF("", "BM/forgotten-futurist.rg-bold.ttf"),
+				Size = 60,
 				OnCommand = function(self)
-					self:settext("SONG SELECT"):Regen()
-						:CenterX()
-						:y(80)
+					-- Check if we are on group.
+					if type(GroupsAndSongs[CurSong]) == "string" then
+						-- Check if group has banner, If so, Set text to empty
+						self:settext("\"pack\""):maxwidth(280):maxheight(60):Regen()
+						-- not group.
+					else
+						-- Check if we have banner, if not, set text to song title.
+						self:settext("\"" .. ToLower(GroupsAndSongs[CurSong][1]:GetGenre()) .. "\""):maxwidth(280)
+							:maxheight(60):Regen()
+					end
 
-					self:MainActor()
-						:diffuse(.3, .3, .3, 1)
-
-					self:StrokeActor()
-						:diffuse(1, 1, 1, .8)
+					self:MainActor():xy(140, 30)
+					self:StrokeActor():diffusealpha(0)
 				end
 			}
 		},
+
 		Def.Sprite {
-			Texture = "SSAFT",
+			Texture = "GenreAFT",
 			OnCommand = function(self)
-				self:texcoordvelocity(.1, 0)
+				self:y(-105):cropbottom(.32):diffusetopedge(0, .5, 1, 1)
+			end
+		},
+
+		Def.Sprite {
+			Texture = "GenreAFT",
+			OnCommand = function(self)
+				self:y(-105):croptop(.32):diffuse(1, .5, 0, 1):diffusebottomedge(1, 1, 0, 1)
+			end
+		},
+
+		Def.Text {
+			Font = THEME:GetPathF("", "BM/BadComic-2OXnX.ttf"),
+			Size = 40,
+			OnCommand = function(self)
+				self:settext("SOUND SELECT"):Regen()
+				self:y(-160)
 			end
 		},
 

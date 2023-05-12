@@ -4,7 +4,7 @@ local DiffNames = {
 	"NORMAL", -- 2 Stars
 	"NORMAL", -- 3 Stars
 	"HARD", -- 4 Stars
-	"EXPERT" -- 5 Stars
+	"HARD" -- 5 Stars
 }
 
 -- We define the curent song if no song is selected.
@@ -143,14 +143,15 @@ local function MoveSelection(self, offset, Songs)
 	if type(Songs[CurSong]) ~= "string" then
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[CurSong][1]:HasBanner() then
+			self:GetChild("Banner"):visible(false)
+
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong][1]:GetDisplayMainTitle()):maxwidth(280)
 				:maxheight(160):Regen()
 		else
+			self:GetChild("Banner"):visible(true):Load(Songs[CurSong][1]:GetBannerPath())
+
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(160):Regen()
 		end
-
-		-- Set the Centered Banner.
-		self:GetChild("Banner"):visible(true):Load(Songs[CurSong][1]:GetBannerPath())
 
 		-- Play Current selected Song Music.
 		if Songs[CurSong][1].PlayPreviewMusic then

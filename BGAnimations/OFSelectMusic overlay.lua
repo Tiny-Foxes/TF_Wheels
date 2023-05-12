@@ -11,6 +11,8 @@ local Wheels = {
 	"DDRMAXWheel",
 
 	"BM1stWheel",
+	"BM2ndWheel",
+	"BMCompleteMixWheel",
 
 	---"Popn10Wheel",
 }
