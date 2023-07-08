@@ -79,18 +79,25 @@ return function(Style)
 			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
 			-- Sleep for 0.2 sec, And then load the current song music.
-			self:sleep(0.2):queuecommand("PlayCurrentSong")
+			self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
 		end,
 
 		-- Play Music at start of screen,.
-		PlayCurrentSongCommand = function(self)
-			if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-				GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-			elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(), GroupsAndSongs[CurSong][1]:GetSampleStart(),
-					GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+		Def.ActorFrame {
+			Name = "MusicCon",
+			PlayCurrentSongCommand = function(self)
+				TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+							GroupsAndSongs[CurSong][1]:GetSampleStart(),
+							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+					end
+				end
 			end
-		end,
+		},
 
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "Popila/BG.png"),

@@ -234,12 +234,8 @@ local function MoveSelection(self, offset, Songs)
 		self:GetChild("Subtitle"):settext(Songs[CurSong][1]:GetDisplaySubTitle())
 
 		-- Play Current selected Song Music.
-		if Songs[CurSong][1].PlayPreviewMusic then
-			Songs[CurSong][1]:PlayPreviewMusic()
-		elseif Songs[CurSong][1]:GetMusicPath() then
-			SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(), Songs[CurSong][1]:GetSampleStart(),
-				Songs[CurSong][1]:GetSampleLength(), 0, 0, true)
-		end
+		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
+
 
 		if Songs[CurSong][1]:HasBanner() then
 			self:GetChild("Banners"):GetChild(CurRow .. SongPos + 3):GetChild("BannerCon"):GetChild("Banner"):position(0)
@@ -781,18 +777,25 @@ return function(Style)
 			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
 			-- Sleep for 0.2 sec, And then load the current song music.
-			self:sleep(0.2):queuecommand("PlayCurrentSong")
+			self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
 		end,
 
 		-- Play Music at start of screen,.
-		PlayCurrentSongCommand = function(self)
-			if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-				GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-			elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-				SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(), GroupsAndSongs[CurSong][1]:GetSampleStart(),
-					GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+		Def.ActorFrame {
+			Name = "MusicCon",
+			PlayCurrentSongCommand = function(self)
+				TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+							GroupsAndSongs[CurSong][1]:GetSampleStart(),
+							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+					end
+				end
 			end
-		end,
+		},
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
 		MenuLeftCommand = function(self)

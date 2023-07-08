@@ -177,10 +177,7 @@ local function MoveSelection(self, offset, Songs)
     SOUND:StopMusic()
 
     -- Play Current selected Song Music.
-    if Songs[CurSong][1]:GetMusicPath() then
-        SOUND:PlayMusicPart(Songs[CurSong][1]:GetMusicPath(), Songs[CurSong][1]:GetSampleStart(),
-            Songs[CurSong][1]:GetSampleLength(), 0, 0, true)
-    end
+    self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 end
 
 local function MoveGroup(self, offset, Group)
@@ -535,18 +532,25 @@ return function(Style)
             SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
             -- Sleep for 0.2 sec, And then load the current song music.
-            self:sleep(0.2):queuecommand("PlayCurrentSong")
+            self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
         end,
 
         -- Play Music at start of screen,.
-        PlayCurrentSongCommand = function(self)
-            if DiffSongs[CurSong][1].PlayPreviewMusic then
-                DiffSongs[CurSong][1]:PlayPreviewMusic()
-            elseif GroupDiffSongssAndSongs[CurSong][1]:GetMusicPath() then
-                SOUND:PlayMusicPart(DiffSongs[CurSong][1]:GetMusicPath(), DiffSongs[CurSong][1]:GetSampleStart(),
-                    DiffSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
-            end
-        end,
+		Def.ActorFrame {
+			Name = "MusicCon",
+			PlayCurrentSongCommand = function(self)
+				TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+							GroupsAndSongs[CurSong][1]:GetSampleStart(),
+							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+					end
+				end
+			end
+		},
 
         -- Do stuff when a user presses left on Pad or Menu buttons.
         MenuLeftCommand = function(self)

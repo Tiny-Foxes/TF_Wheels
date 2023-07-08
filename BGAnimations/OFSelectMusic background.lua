@@ -1,5 +1,10 @@
 -- Random BG Colour
-return Def.Quad {
-	OnCommand = function(self) self:Center():zoomto(SCREEN_WIDTH, SCREEN_HEIGHT):diffuse(math.random() / 4, math.random() /
-		4, math.random() / 4, 1) end
+return Def.ActorFrame {
+	Def.Sprite {
+		Frag = THEME:GetPathG("", "Blur.frag"),
+		Texture = THEME:GetPathG("", "_white"),
+		InitCommand = function(self)
+			TF_WHEEL.BG = self
+		end
+	}
 }

@@ -209,7 +209,7 @@ local function MoveSelection(self, offset, Songs)
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
-		self:GetChild("SoundCon"):stoptweening():sleep(.5):queuecommand("PlayChangedSong")
+		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	end
 end
 
@@ -338,25 +338,30 @@ return function(Style)
 			MoveSelection(self, 0, GroupsAndSongs)
 
 			-- Sleep for 1.8 sec, And then load the current song music.
-			self:sleep(1.8):queuecommand("PlayCurrentSong")
+			self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
 		end,
 
 		-- Play Music at start of screen,.
-		PlayCurrentSongCommand = function(self)
-			-- We use a Input function from the Scripts folder.
-			-- It uses a Command function. So you can define all the Commands,
-			-- Like MenuLeft is MenuLeftCommand.
-			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
+		Def.ActorFrame {
+			Name = "MusicCon",
+			PlayCurrentSongCommand = function(self)
+				-- We use a Input function from the Scripts folder.
+				-- It uses a Command function. So you can define all the Commands,
+				-- Like MenuLeft is MenuLeftCommand.
+				SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
-			if type(GroupsAndSongs[CurSong]) ~= "string" then
-				if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-					GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-				elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-					SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(), GroupsAndSongs[CurSong][1]:GetSampleStart(),
-						GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+				TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
+				if type(GroupsAndSongs[CurSong]) ~= "string" then
+					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
+							GroupsAndSongs[CurSong][1]:GetSampleStart(),
+							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+					end
 				end
 			end
-		end,
+		},
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
 		MenuLeftCommand = function(self) if DiffSelection then MoveConfirm(self, -1) else MoveSelection(self, -1,
@@ -493,21 +498,6 @@ return function(Style)
 		StartSongCommand = function(self)
 			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
 		end,
-
-		Def.ActorFrame {
-			Name = "SoundCon",
-			PlayChangedSongCommand = function(self)
-				if type(GroupsAndSongs[CurSong]) ~= "string" then
-					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
-					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(), GroupsAndSongs[CurSong][1]:GetSampleStart(),
-							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
-					end
-				end
-			end
-		},
 
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "IDOL/IdolBG.png"),
