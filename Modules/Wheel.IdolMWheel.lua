@@ -350,7 +350,7 @@ return function(Style)
 				-- Like MenuLeft is MenuLeftCommand.
 				SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
-				TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
+				--TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
 				if type(GroupsAndSongs[CurSong]) ~= "string" then
 					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
 						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
