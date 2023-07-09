@@ -12,7 +12,7 @@ return Def.ActorFrame {
 		UpdateRate = 0.05,
 		Amount = 68,
 		OnCommand = function(self)
-			self:Center():diffuse(1,1,1,.25):zoomx(SCREEN_HEIGHT/360):zoomy(100)
+			self:Center():diffuse(1,1,1,.25):zoomx(SCREEN_HEIGHT/360):zoomy(100*(360/SCREEN_HEIGHT))
 		end
 	}
 }
