@@ -1,6 +1,9 @@
 -- Global Colour to define the colour of the wheel, Change this if orange isnt your flavour.
 local DisplayColor = { 1, .5, 0, 1 }
 
+-- Math to offset the items on a screen bigger than 480.
+local OffsetMath = 480 / SCREEN_HEIGHT
+
 -- Difficulty Colours
 local DiffColors = {
 	color("#88ffff"), -- Difficulty_Beginner
@@ -739,7 +742,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("DDR/Info", "Display"),
 			OnCommand = function(self)
-				self:zoom(.45):xy(-SCREEN_CENTER_X, -60):halign(0)
+				self:zoom(.45):xy(-(SCREEN_CENTER_X*OffsetMath), -60):halign(0)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -748,7 +751,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 180, -162):zoom(.05)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 180, -162):zoom(.05)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -758,7 +761,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "BPM",
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 178, -162):zoom(.2):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 178, -162):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -775,7 +778,7 @@ return function(Style)
 					self:settext(string.format("%.0f", GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
 				end
 
-				self:xy(-SCREEN_CENTER_X + 190, -134)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 190, -134)
 					:zoomy(.6):diffusebottomedge(1, .5, 0, 1)
 					:diffusetopedge(1, 1, 0, 1):skewx(-.2)
 			end
@@ -785,7 +788,7 @@ return function(Style)
 			Text = "bpm",
 			Font = "_noto sans 40px",
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 238, -130):zoom(.2)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 238, -130):zoom(.2)
 					:diffuse(1, 1, 0, 1):skewx(-.3)
 			end
 		},
@@ -794,7 +797,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 70, -154):zoom(.05):zoomx(.07)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 70, -154):zoom(.05):zoomx(.07)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -804,7 +807,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "STAGE",
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 68, -154):zoom(.2):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 68, -154):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -815,7 +818,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			OnCommand = function(self)
 				self:diffuse(0, .5, 0, 1):strokecolor(0, .5, 0, 1):zoom(.3)
-					:xy(-SCREEN_CENTER_X + 68, -136):skewx(-.2)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 68, -136):skewx(-.2)
 			end
 		},
 
@@ -824,7 +827,7 @@ return function(Style)
 			Name = "Dance",
 			Texture = THEME:GetPathG("", "DDR/Dance"),
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 272, -140):zoom(.14)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 272, -140):zoom(.14)
 			end
 		},
 
@@ -833,7 +836,7 @@ return function(Style)
 			Name = "BannerUnderlay",
 			InitCommand = function(self)
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 224, 70))
-					:xy(-SCREEN_CENTER_X + 150, -84)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 150, -84)
 			end
 		},
 
@@ -854,7 +857,7 @@ return function(Style)
 				end
 
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 224, 70))
-					:xy(-SCREEN_CENTER_X + 150, -84)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 150, -84)
 			end,
 			LoadCommand = function(self)
 				-- Check if its a song.
@@ -886,7 +889,7 @@ return function(Style)
 				end
 
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 50, 50))
-					:xy(-SCREEN_CENTER_X + 240, -102)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 240, -102)
 			end,
 			LoadCommand = function(self)
 				-- Check if its a song.
@@ -907,7 +910,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 120, -42):zoom(.033):zoomx(-.08)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 120, -42):zoom(.033):zoomx(-.08)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -916,7 +919,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 174, -42):zoom(.033):zoomx(.08)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 174, -42):zoom(.033):zoomx(.08)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -928,7 +931,7 @@ return function(Style)
 			OnCommand = function(self)
 				self:diffuse(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
 					:strokecolor(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
-					:xy(-SCREEN_CENTER_X + 36, -40):zoomy(.23):zoomx(.33):skewx(-.25)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 36, -40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 
@@ -938,7 +941,7 @@ return function(Style)
 			OnCommand = function(self)
 				self:diffuse(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
 					:strokecolor(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
-					:xy(-SCREEN_CENTER_X + 260, -40):zoomy(.23):zoomx(.33):skewx(-.25)
+					:xy(-(SCREEN_CENTER_X*OffsetMath) + 260, -40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 
@@ -947,24 +950,24 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "DIFFICULTY",
 			OnCommand = function(self)
-				self:xy(-SCREEN_CENTER_X + 148, -42):zoom(.18):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 148, -42):zoom(.18):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
 
 		-- Load the difficulties selector.
-		Diffs .. { OnCommand = function(self) self:x(-SCREEN_CENTER_X + 78):valign(0) end },
+		Diffs .. { OnCommand = function(self) self:x(-(SCREEN_CENTER_X*OffsetMath) + 78):valign(0) end },
 
 		-- Load the wheel.
 		Wheel .. {
-			OnCommand = function(self) self:x(SCREEN_CENTER_X - 320) end
+			OnCommand = function(self) self:x((SCREEN_CENTER_X*OffsetMath) - 320) end
 		},
 
 		-- Add the glowing selector part on the top of the wheel.
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/Selector"),
 			OnCommand = function(self)
-				self:zoom(.65):xy(SCREEN_CENTER_X - 180, -2):faderight(1)
+				self:zoom(.65):xy((SCREEN_CENTER_X*OffsetMath) - 180, -2):faderight(1)
 					:diffuseshift():effectcolor1(1, 1, 1, .9)
 					:effectcolor2(DisplayColor[1], DisplayColor[2], DisplayColor[3], .5)
 			end
@@ -973,7 +976,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/Slider"),
 			OnCommand = function(self)
-				self:zoom(.35):diffuse(.8, .8, 0, 1):x(SCREEN_CENTER_X - 20)
+				self:zoom(.35):diffuse(.8, .8, 0, 1):x((SCREEN_CENTER_X*OffsetMath) - 20)
 			end
 		},
 
@@ -981,7 +984,7 @@ return function(Style)
 			Name = "Slider",
 			Texture = THEME:GetPathG("", "DDR/SlidSelect"),
 			OnCommand = function(self)
-				self:zoom(.35):diffuse(1, 0, 0, 1):xy(SCREEN_CENTER_X - 20, -176 + (350 * (CurSong / #GroupsAndSongs)))
+				self:zoom(.35):diffuse(1, 0, 0, 1):xy((SCREEN_CENTER_X*OffsetMath) - 20, -176 + (350 * (CurSong / #GroupsAndSongs)))
 			end
 		}
 	}
