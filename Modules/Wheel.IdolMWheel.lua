@@ -338,18 +338,21 @@ return function(Style)
 			MoveSelection(self, 0, GroupsAndSongs)
 
 			-- Sleep for 1.8 sec, And then load the current song music.
-			self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
+			self:GetChild("MusicCon"):stoptweening():sleep(1.8):queuecommand("PlayCurrentSong")
+			self:sleep(1.8):queuecommand("EnableInput")
+		end,
+
+		EnableInputCommand = function (self)
+			-- We use a Input function from the Scripts folder.
+			-- It uses a Command function. So you can define all the Commands,
+			-- Like MenuLeft is MenuLeftCommand.
+			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 		end,
 
 		-- Play Music at start of screen,.
 		Def.ActorFrame {
 			Name = "MusicCon",
 			PlayCurrentSongCommand = function(self)
-				-- We use a Input function from the Scripts folder.
-				-- It uses a Command function. So you can define all the Commands,
-				-- Like MenuLeft is MenuLeftCommand.
-				SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
-
 				--TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
 				if type(GroupsAndSongs[CurSong]) ~= "string" then
 					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
@@ -476,6 +479,9 @@ return function(Style)
 					else
 						--We use PlayMode_Regular for now.
 						GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
+
+						--Set the song we want to play.
+						GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
 
 						DiffSelection = true
 
