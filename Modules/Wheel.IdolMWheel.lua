@@ -353,7 +353,6 @@ return function(Style)
 		Def.ActorFrame {
 			Name = "MusicCon",
 			PlayCurrentSongCommand = function(self)
-				--TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
 				if type(GroupsAndSongs[CurSong]) ~= "string" then
 					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
 						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
