@@ -152,10 +152,6 @@ local function MoveSelection(self, offset, Songs)
 
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(160):Regen()
 		end
-
-		-- Play Current selected Song Music.
-		self:GetChild("MusicCon"):sleep(0.4):queuecommand("PlayCurrentSong")
-
 		-- Its a group.
 	else
 		-- Set banner.
@@ -170,6 +166,9 @@ local function MoveSelection(self, offset, Songs)
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[CurSong]):Regen()
 		end
 	end
+
+	-- Play Current selected Song Music.
+	self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 
 	-- Resize the Centered Banner  to be w(512/8)*5 h(160/8)*5
 	self:GetChild("Banner"):zoom(TF_WHEEL.Resize(self:GetChild("Banner"):GetWidth(), self:GetChild("Banner"):GetHeight(),
@@ -352,7 +351,7 @@ return function(Style)
 		}
 		Diff[#Diff + 1] = Def.Sprite {
 			Name = "Star" .. i,
-			Texture = THEME:GetPathG("", "Star.png"),
+			Texture = THEME:GetPathG("", "StarSharp.png"),
 			InitCommand = function(self) self:zoom(.04):x(35 * (i - 4.5)) end
 		}
 	end
@@ -386,6 +385,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},
@@ -639,28 +640,28 @@ return function(Style)
 				self:visible(false)
 			end,
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				InitCommand = function(self)
 					self:zoom(.02)
 						:MaskSource(true)
 				end
 			},
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				InitCommand = function(self)
 					self:zoom(.05)
 						:MaskDest()
 				end
 			},
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				InitCommand = function(self)
 					self:zoom(.04):diffuse(0, 0, 0, 1)
 						:MaskDest()
 				end
 			},
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				InitCommand = function(self)
 					self:zoom(.03)
 						:MaskDest()

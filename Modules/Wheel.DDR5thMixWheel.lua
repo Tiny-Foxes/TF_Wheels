@@ -354,13 +354,15 @@ local function MoveSelection(self, offset, Songs)
 		self:GetChild("Diffs"):zoomy(1):y(-45)
 	end
 
-	-- Check if its a song.
-	if type(Songs[CurSong]) ~= "string" then
-		-- Do a counting up or counting down effect on the BPM display.
-		TF_WHEEL.CountingNumbers(self:GetChild("BPM"), self:GetChild("BPM"):GetText(), Songs[CurSong][1]:GetDisplayBpms()[2],
-			.1)
-	else
-		TF_WHEEL.CountingNumbers(self:GetChild("BPM"), self:GetChild("BPM"):GetText(), 0, .1)
+	if offset ~= 0 then
+		-- Check if its a song.
+		if type(Songs[CurSong]) ~= "string" then
+			-- Do a counting up or counting down effect on the BPM display.
+			TF_WHEEL.CountingNumbers(self:GetChild("BPM"), self:GetChild("BPM"):GetText(),
+				Songs[CurSong][1]:GetDisplayBpms()[2], .1)
+		else
+			TF_WHEEL.CountingNumbers(self:GetChild("BPM"), self:GetChild("BPM"):GetText(), 0, .1)
+		end
 	end
 
 
@@ -372,11 +374,8 @@ local function MoveSelection(self, offset, Songs)
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
-		-- Check if its a song.
-		if type(Songs[CurSong]) ~= "string" then
-			-- Play Current selected Song Music.
-			self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
-		end
+		-- Play Current selected Song Music.
+		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	else
 		self:GetChild("Slider"):y(-176 + (350 * (CurSong / #Songs)))
 	end
@@ -612,6 +611,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

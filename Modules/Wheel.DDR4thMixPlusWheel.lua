@@ -233,10 +233,6 @@ local function MoveSelection(self, offset, Songs)
 		-- Change the current song subtitle.
 		self:GetChild("Subtitle"):settext(Songs[CurSong][1]:GetDisplaySubTitle())
 
-		-- Play Current selected Song Music.
-		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
-
-
 		if Songs[CurSong][1]:HasBanner() then
 			self:GetChild("Banners"):GetChild(CurRow .. SongPos + 3):GetChild("BannerCon"):GetChild("Banner"):position(0)
 		end
@@ -247,6 +243,9 @@ local function MoveSelection(self, offset, Songs)
 		-- Change the current song subtitle.
 		self:GetChild("Subtitle"):settext("")
 	end
+
+	-- Play Current selected Song Music.
+	self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 
 	-- Unlock the input.
 	self:sleep(.2):queuecommand("UnlockInput")
@@ -793,6 +792,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

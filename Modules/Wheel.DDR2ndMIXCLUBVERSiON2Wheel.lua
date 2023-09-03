@@ -257,9 +257,6 @@ local function MoveSelection(self, offset, Songs)
 		-- This is the same as Centered Banner, But for CDTitles.
 		self:GetChild("CDTitle"):visible(true):Load(Songs[CurSong][1]:GetCDTitlePath())
 
-		-- Play Current selected Song Music.
-		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
-
 		-- Its a group.
 	else
 		-- Set banner and hide cdtitle.
@@ -275,6 +272,9 @@ local function MoveSelection(self, offset, Songs)
 		end
 		self:GetChild("CDTitle"):visible(false)
 	end
+
+	-- Play Current selected Song Music.
+	self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 
 	-- Resize the Centered Banner  to be w(512/8)*5 h(160/8)*5
 	self:GetChild("Banner"):zoom(TF_WHEEL.Resize(self:GetChild("Banner"):GetWidth(), self:GetChild("Banner"):GetHeight(),
@@ -547,6 +547,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

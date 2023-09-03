@@ -95,6 +95,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

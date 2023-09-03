@@ -266,12 +266,9 @@ local function MoveSelection(self, offset, Songs)
 
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
-
-		-- Check if its a song.
-		if type(Songs[CurSong]) ~= "string" then
-			-- Play Current selected Song Music.
-			self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
-		end
+	
+		-- Play Current selected Song Music.
+		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	end
 end
 
@@ -621,6 +618,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

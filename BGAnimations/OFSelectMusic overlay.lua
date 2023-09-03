@@ -20,6 +20,7 @@ local Wheels = {
 -- The Styles that are defined for the game mode.
 local GameModeStyles = {
 	["dance"] = "dance_single",
+	["groove"] = "dance_single",
 	["pump"] = "pump_single",
 	["ez2"] = "ez2_single",
 	["para"] = "para_single",
@@ -51,9 +52,10 @@ local function RandButNotLast(Amount)
 	return Now
 end
 
+MaskMode = true;
+
 --Return the Def table that contains all the stuff, Check the module folder for the wheels.
-return LoadModule("Wheel." .. Wheels[RandButNotLast(#Wheels)] .. ".lua")(GameModeStyles[
-	GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+return LoadModule("Wheel." .. Wheels[RandButNotLast(#Wheels)] .. ".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
 
 --Debugging.
---return LoadModule("Wheel.Popn10Wheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
+--return LoadModule("Wheel.IdolMWheel.lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")

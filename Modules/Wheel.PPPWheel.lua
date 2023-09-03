@@ -206,12 +206,8 @@ local function MoveSelection(self, offset, Songs)
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
-		-- Check if its a song.
-		if type(Songs[CurSong]) ~= "string" then
-			-- Play Current selected Song Music.
-			self:GetChild("MusicCon"):sleep(0.4):queuecommand("PlayCurrentSong")
-
-		end
+		-- Play Current selected Song Music.
+		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	end
 end
 
@@ -344,19 +340,19 @@ return function(Style)
 			Name = "Star" .. i,
 			OnCommand = function(self) self:zoom(.06):x(-30 + (i * 40)) end,
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				OnCommand = function(self)
 					self:MaskSource():zoom(.5)
 				end
 			},
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				OnCommand = function(self)
 					self:MaskDest():diffuse(1, 1, 0, 1)
 				end
 			},
 			Def.Sprite {
-				Texture = THEME:GetPathG("", "Star.png"),
+				Texture = THEME:GetPathG("", "StarSharp.png"),
 				OnCommand = function(self)
 					self:MaskDest():fadetop(.4):fadebottom(.6)
 				end
@@ -393,6 +389,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},

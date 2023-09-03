@@ -1,3 +1,23 @@
+-- Difficulty Colours
+local DiffColors = {
+	color("#89CFF0"), -- Difficulty_Beginner
+	color("#FFD700"), -- Difficulty_Easy
+	color("#FFB6C1"), -- Difficulty_Medium
+	color("#BA55D3"), -- Difficulty_Hard
+	color("#BA55D3"), -- Difficulty_Challenge
+	color("#888888") -- Difficulty_Edit
+}
+
+-- Difficulty Names.
+local DiffNames = {
+	"DEBUT", -- Difficulty_Beginner
+	"REGULAR", -- Difficulty_Easy
+	"PRO", -- Difficulty_Medium
+	"MASTER", -- Difficulty_Hard
+	"MASTER+", -- Difficulty_Challenge
+	"EDIT" -- Difficulty_Edit
+}
+
 -- We define the curent song if no song is selected.
 if not CurSong then CurSong = 1 end
 
@@ -209,6 +229,7 @@ local function MoveSelection(self, offset, Songs)
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
 
+		-- Play Current selected Song Music.
 		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	end
 end
@@ -239,6 +260,14 @@ local function MoveDifficulty(self, offset, Songs)
 		-- Check if its within limits.
 		if DiffPos[self.pn] < 1 then DiffPos[self.pn] = 1 end
 		if DiffPos[self.pn] > #Songs[CurSong] - 1 then DiffPos[self.pn] = #Songs[CurSong] - 1 end
+
+		local DiffActor = self:GetChild("DiffSel"):GetChild("Diff"):GetChild("DiffButton"..(self.pn == PLAYER_1 and 1 or 2))
+
+			DiffActor:visible(true)
+			DiffActor:GetChild("Colour"):diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[self.pn]+1]:GetDifficulty()]])
+			DiffActor:GetChild("DiffNameBottom"):strokecolor(DiffColors[TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[self.pn]+1]:GetDifficulty()]])
+					:settext(DiffNames[TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[self.pn]+1]:GetDifficulty()]])
+			DiffActor:GetChild("DiffNameTop"):settext(DiffNames[TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[self.pn]+1]:GetDifficulty()]])
 	end
 end
 
@@ -257,6 +286,9 @@ return function(Style)
 
 	-- The actual wheel.
 	local Wheel = Def.ActorFrame { Name = "Wheel" }
+
+	-- The Difficulty Selector
+	local Diff = Def.ActorFrame { Name = "Diff" }
 
 	-- For every item on the wheel do.
 	for i = 1, 9 do
@@ -330,6 +362,83 @@ return function(Style)
 		}
 	end
 
+	for i = 1,2 do
+		Diff[#Diff+1] = Def.ActorFrame {
+			Name = "DiffButton"..i,
+			OnCommand=function(self)
+				self:zoom(.4):xy(i == 1 and -100 or 100,-30):visible(false)
+			end,
+			Def.ActorFrame {
+				Name = "Colour",
+				Def.Sprite {
+					Texture = THEME:GetPathG("", "IDOL/DiffButton.png")
+				},
+				Def.ActorFrame {
+					OnCommand = function(self)
+						self:zoom(.6):rotationz(16):xy(-20,30)
+							:effectclock("Beat"):wag():effectmagnitude(0,0,6):effectperiod(4)
+					end,
+					Def.ActorFrame {
+						OnCommand = function(self)
+							self:y(-80):effectclock("Beat"):bounce():effectmagnitude(0,-30,0)
+						end,
+						Def.Sprite {
+							Texture = THEME:GetPathG("", "IDOL/NoteOuter.png"),
+							OnCommand = function(self)
+								self:glow(0,0,0,.4)
+							end
+						},
+						Def.Sprite {
+							Texture = THEME:GetPathG("", "IDOL/NoteInner.png"),
+							OnCommand = function(self)
+								self:glow(1,1,1,.4)
+							end
+						},
+						Def.Sprite {
+							Texture = THEME:GetPathG("", "StarRounded.png"),
+							OnCommand = function(self)
+								self:zoom(.075):xy(-60,76)
+							end
+						}
+					}
+				},
+				Def.ActorFrame {
+					OnCommand = function(self)
+						self:xy(50,20):zoom(.1):effectclock("Beat"):spin():effectmagnitude(0,0,50)
+					end,
+					Def.Sprite {
+						Texture = THEME:GetPathG("", "StarRounded.png"),
+						OnCommand = function(self)
+							self:glow(0,0,0,.4)
+						end
+					},
+					Def.Sprite {
+						Texture = THEME:GetPathG("", "StarRounded.png"),
+						OnCommand = function(self)
+							self:zoom(.8):glow(1,1,1,.4)
+						end
+					}
+				}
+			},
+			Def.BitmapText {
+				Name = "DiffNameBottom",
+				Text = "UNKNOWN",
+				Font = "_noto sans 40px",
+				OnCommand = function(self)
+					self:zoom(2):y(60):strokecolor(1,1,1,1):glow(0,0,0,.4):maxwidth(120)
+				end
+			},
+			Def.BitmapText {
+				Name = "DiffNameTop",
+				Text = "UNKNOWN",
+				Font = "_noto sans 40px",
+				OnCommand = function(self)
+					self:zoom(2):y(60):maxwidth(120)
+				end
+			}
+		}
+	end
+
 	-- Here we return the actual Music Wheel Actor.
 	return Def.ActorFrame {
 		OnCommand = function(self)
@@ -347,6 +456,10 @@ return function(Style)
 			-- It uses a Command function. So you can define all the Commands,
 			-- Like MenuLeft is MenuLeftCommand.
 			SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
+			self.pn = PLAYER_1
+			MoveDifficulty(self, 0, GroupsAndSongs)
+			self.pn = PLAYER_2
+			MoveDifficulty(self, 0, GroupsAndSongs)
 		end,
 
 		-- Play Music at start of screen,.
@@ -361,6 +474,8 @@ return function(Style)
 							GroupsAndSongs[CurSong][1]:GetSampleStart(),
 							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
+				else
+					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
 				end
 			end
 		},
@@ -387,6 +502,7 @@ return function(Style)
 					GAMESTATE:UnjoinPlayer(self.pn)
 
 					MoveSelection(self, 0, GroupsAndSongs)
+					self:GetChild("DiffSel"):GetChild("Diff"):GetChild("DiffButton"..(self.pn == PLAYER_1 and 1 or 2)):visible(false)
 				else
 					-- Go to the previous screen.
 					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen")
@@ -496,6 +612,7 @@ return function(Style)
 				GAMESTATE:LoadProfiles()
 
 				MoveSelection(self, 0, GroupsAndSongs)
+				MoveDifficulty(self, 0, GroupsAndSongs)
 			end
 		end,
 
@@ -696,13 +813,13 @@ return function(Style)
 					self:xy(220, -20):sleep(.5):decelerate(1):rotationz(360)
 				end,
 				Def.Sprite {
-					Texture = THEME:GetPathG("", "Star.png"),
+					Texture = THEME:GetPathG("", "StarSharp.png"),
 					InitCommand = function(self)
 						self:zoom(.025):diffuse(0, 0, 0, 1)
 					end
 				},
 				Def.Sprite {
-					Texture = THEME:GetPathG("", "Star.png"),
+					Texture = THEME:GetPathG("", "StarSharp.png"),
 					InitCommand = function(self)
 						self:zoom(.015):diffuse(.25, .5, 1, 1)
 					end
@@ -1033,6 +1150,7 @@ return function(Style)
 			Def.Sprite {
 				Texture = "DiffAFT"
 			},
+			Diff,
 			Def.ActorFrame {
 				InitCommand = function(self)
 					self:y(30)
