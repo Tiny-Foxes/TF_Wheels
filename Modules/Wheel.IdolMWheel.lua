@@ -252,7 +252,7 @@ end
 local function MoveDifficulty(self, offset, Songs)
 
 	-- If player is joined, let them change the difficulty.
-	if GAMESTATE:IsSideJoined(self.pn) then
+	if GAMESTATE:IsSideJoined(self.pn) and type(Songs[CurSong]) ~= "string" then
 
 		-- Change the difficulty position for the current player.
 		DiffPos[self.pn] = DiffPos[self.pn] + offset
@@ -380,7 +380,7 @@ return function(Style)
 					end,
 					Def.ActorFrame {
 						OnCommand = function(self)
-							self:y(-80):effectclock("Beat"):bounce():effectmagnitude(0,-30,0)
+							self:y(-80):effectclock("Beat"):bounce():effectmagnitude(0,-24,0)
 						end,
 						Def.Sprite {
 							Texture = THEME:GetPathG("", "IDOL/NoteOuter.png"),
@@ -481,12 +481,32 @@ return function(Style)
 		},
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
-		MenuLeftCommand = function(self) if DiffSelection then MoveConfirm(self, -1) else MoveSelection(self, -1,
-			GroupsAndSongs) end end,
+		MenuLeftCommand = function(self) 
+			if DiffSelection then 
+				MoveConfirm(self, -1) 
+			else 
+				MoveSelection(self, -1,	GroupsAndSongs) 
+				
+				self.pn = PLAYER_1
+				MoveDifficulty(self, 0, GroupsAndSongs)
+				self.pn = PLAYER_2
+				MoveDifficulty(self, 0, GroupsAndSongs)
+			end 
+		end,
 
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
-		MenuRightCommand = function(self) if DiffSelection then MoveConfirm(self, 1) else MoveSelection(self, 1, GroupsAndSongs) end end,
-
+		MenuRightCommand = function(self) 
+			if DiffSelection then 
+				MoveConfirm(self, 1) 
+			else 
+				MoveSelection(self, 1,	GroupsAndSongs) 
+				
+				self.pn = PLAYER_1
+				MoveDifficulty(self, 0, GroupsAndSongs)
+				self.pn = PLAYER_2
+				MoveDifficulty(self, 0, GroupsAndSongs)
+			end 
+		end,
 		-- Do stuff when a user presses Up on Pad or Menu buttons.
 		MenuUpCommand = function(self) if DiffSelection then MoveDifficulty(self, -1, GroupsAndSongs) end end,
 
