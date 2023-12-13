@@ -7,6 +7,7 @@ return Def.ActorFrame {
 			TF_WHEEL.BG = self
 		end
 	},
+	--[[
 	Def.AudioVisualizer {
 		Name="AV",
 		UpdateRate = 0.05,
@@ -15,4 +16,5 @@ return Def.ActorFrame {
 			self:Center():diffuse(1,1,1,.25):zoomx(SCREEN_HEIGHT/360):zoomy(20*(360/SCREEN_HEIGHT))
 		end
 	}
+	--]]
 }

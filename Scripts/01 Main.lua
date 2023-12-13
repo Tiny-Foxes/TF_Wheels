@@ -69,12 +69,12 @@ TF_WHEEL.StyleDB = {
 	["ds3ddx_routine5"] = "routine5",
 
 	--Be-Mu
-	["bm_single5"] = "single5",
-	["bm_double5"] = "double5",
-	["bm_single6"] = "single6",
-	["bm_double6"] = "double6",
-	["bm_single7"] = "single7",
-	["bm_double7"] = "double7",
+	["bemu_single5"] = "single5",
+	["bemu_double5"] = "double5",
+	["bemu_single6"] = "single6",
+	["bemu_double6"] = "double6",
+	["bemu_single7"] = "single7",
+	["bemu_double7"] = "double7",
 
 	--Maniax
 	["maniax_single"] = "single",
@@ -95,12 +95,12 @@ TF_WHEEL.StyleDB = {
 	["techno_double9"] = "double9",
 
 	--Po-Mu
-	["pnm_three"] = "po-mu-three",
-	["pnm_four"] = "po-mu-four",
-	["pnm_five"] = "po-mu-five",
-	["pnm_seven"] = "po-mu-seven",
-	["pnm_nine"] = "po-mu-nine",
-	["pnm_nine_double"] = "po-mu-nine-double",
+	["pomu_three"] = "po-mu-three",
+	["pomu_four"] = "po-mu-four",
+	["pomu_five"] = "po-mu-five",
+	["pomu_seven"] = "po-mu-seven",
+	["pomu_nine"] = "po-mu-nine",
+	["pomu_nine_double"] = "po-mu-nine-double",
 
 	--Gddm
 	["gddm_real"] = "gddm-real",

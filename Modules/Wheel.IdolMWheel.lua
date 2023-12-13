@@ -382,23 +382,28 @@ return function(Style)
 						OnCommand = function(self)
 							self:y(-80):effectclock("Beat"):bounce():effectmagnitude(0,-24,0)
 						end,
-						Def.Sprite {
-							Texture = THEME:GetPathG("", "IDOL/NoteOuter.png"),
+						Def.ActorFrame {
 							OnCommand = function(self)
-								self:glow(0,0,0,.4)
-							end
-						},
-						Def.Sprite {
-							Texture = THEME:GetPathG("", "IDOL/NoteInner.png"),
-							OnCommand = function(self)
-								self:glow(1,1,1,.4)
-							end
-						},
-						Def.Sprite {
-							Texture = THEME:GetPathG("", "StarRounded.png"),
-							OnCommand = function(self)
-								self:zoom(.075):xy(-60,76)
-							end
+								self:effectclock("Beat"):pulse():effectmagnitude(.8,1,0)
+							end,
+							Def.Sprite {
+								Texture = THEME:GetPathG("", "IDOL/NoteOuter.png"),
+								OnCommand = function(self)
+									self:glow(0,0,0,.4)
+								end
+							},
+							Def.Sprite {
+								Texture = THEME:GetPathG("", "IDOL/NoteInner.png"),
+								OnCommand = function(self)
+									self:glow(1,1,1,.4)
+								end
+							},
+							Def.Sprite {
+								Texture = THEME:GetPathG("", "StarRounded.png"),
+								OnCommand = function(self)
+									self:zoom(.075):xy(-60,76)
+								end
+							}
 						}
 					}
 				},
