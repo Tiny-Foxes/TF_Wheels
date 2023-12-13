@@ -1,8 +1,8 @@
 -- We define the curent song if no song is selected.
-if not CurSong then CurSong = 1 end
+if not TF_WHEEL.CurSong then TF_WHEEL.CurSong = 1 end
 
 -- We define the current group to be empty if no group is defined.
-if not CurGroup then GurGroup = "" end
+if not TF_WHEEL.CurGroup then TF_WHEEL.CurGroup = "" end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
@@ -11,7 +11,7 @@ return function(Style)
     local Songs = LoadModule("Songs.Loader.lua")(Style)
 
     -- Sort the Songs and Group.
-    local GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, CurGroup)
+    local GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, TF_WHEEL.CurGroup)
 
     -- We define here is we load the Options menu when people double press,
     -- Because they need to double press it starts at false.
@@ -22,7 +22,7 @@ return function(Style)
     for i = 1, 4 do
 
         -- Position of current song, We want the cd in the front, So its the one we change.
-        local pos = CurSong + i - 1
+        local pos = TF_WHEEL.CurSong + i - 1
 
         local xoffset = 1
         if i == 2 or i == 3 then xoffset = -1 end

@@ -19,12 +19,12 @@ local DiffNames = {
 }
 
 -- We define the curent song if no song is selected.
-if not CurSong then CurSong = 1 end
+if not TF_WHEEL.CurSong then TF_WHEEL.CurSong = 1 end
 
 -- We define the current group to be empty if no group is defined.
-if not CurGroup then GurGroup = "" end
+if not TF_WHEEL.CurGroup then TF_WHEEL.CurGroup = "" end
 
-if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
+if not TF_WHEEL.DiffPos then TF_WHEEL.DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
 local DiffPlayer = GAMESTATE:GetMasterPlayerNumber()
 
 -- The increase offset for when we move with postive.
@@ -40,12 +40,12 @@ local XOffset = 5
 -- We parse the Songs also so we can get the amount of songs.
 local function MoveSelection(self, offset, Songs)
 	-- Curent Song + Offset.
-	CurSong = CurSong + offset
+	TF_WHEEL.CurSong = TF_WHEEL.CurSong + offset
 
 	-- Check if curent song is further than Songs if so, reset to 1.
-	if CurSong > #Songs then CurSong = 1 end
+	if TF_WHEEL.CurSong > #Songs then TF_WHEEL.CurSong = 1 end
 	-- Check if curent song is lower than 1 if so, grab last song.
-	if CurSong < 1 then CurSong = #Songs end
+	if TF_WHEEL.CurSong < 1 then TF_WHEEL.CurSong = #Songs end
 
 	-- Set the offsets for increase and decrease.
 	DecOffset = DecOffset + offset
@@ -69,10 +69,10 @@ local function MoveSelection(self, offset, Songs)
 		-- For every part on the wheel do.
 		for i = 1, 10 do
 			-- Calculate current position based on song with a value to get center.
-			local pos = CurSong + (4 * offset)
+			local pos = TF_WHEEL.CurSong + (4 * offset)
 
 			if offset == 1 then
-				pos = CurSong + (5 * offset)
+				pos = TF_WHEEL.CurSong + (5 * offset)
 			end
 
 			-- Keep it within reasonable values.
@@ -119,36 +119,36 @@ local function MoveSelection(self, offset, Songs)
 		end
 
 		-- Check if its a song.
-		if type(Songs[CurSong]) ~= "string" then
+		if type(Songs[TF_WHEEL.CurSong]) ~= "string" then
 			-- Set the Centered Banner.
-			self:GetChild("Banner"):visible(true):Load(Songs[CurSong][1]:GetBannerPath())
+			self:GetChild("Banner"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
 
-			if Songs[CurSong][1]:HasBanner() then
+			if Songs[TF_WHEEL.CurSong][1]:HasBanner() then
 				self:GetChild("BannerInfo"):visible(false)
 			else
 				self:GetChild("BannerInfo"):visible(true):diffuse(math.random() + .5, math.random() + .5,
 					math.random() + .5, 1):
 					zoomy(0):linear(.08):zoomy(1)
-				self:GetChild("BannerInfo"):GetChild("Title"):settext(ToUpper(Songs[CurSong][1]:GetDisplayMainTitle()))
-				self:GetChild("BannerInfo"):GetChild("SubTitle"):settext(ToUpper(Songs[CurSong][1]:GetDisplaySubTitle()))
-				self:GetChild("BannerInfo"):GetChild("Artist"):settext(ToUpper(Songs[CurSong][1]:GetDisplayArtist()))
+				self:GetChild("BannerInfo"):GetChild("Title"):settext(ToUpper(Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle()))
+				self:GetChild("BannerInfo"):GetChild("SubTitle"):settext(ToUpper(Songs[TF_WHEEL.CurSong][1]:GetDisplaySubTitle()))
+				self:GetChild("BannerInfo"):GetChild("Artist"):settext(ToUpper(Songs[TF_WHEEL.CurSong][1]:GetDisplayArtist()))
 			end
 
 			self:GetChild("Info"):GetChild("BPM"):visible(true):settext("BPM " ..
-				string.format("%.0f", Songs[CurSong][1]:GetDisplayBpms()[2]))
+				string.format("%.0f", Songs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[2]))
 
 			-- Its a group.
 		else
 			-- Set banner.
-			if SONGMAN:GetSongGroupBannerPath(Songs[CurSong]) ~= "" then
-				self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[CurSong]))
+			if SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]) ~= "" then
+				self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
 				self:GetChild("BannerInfo"):visible(false)
 			else
 				self:GetChild("Banner"):visible(false)
 				self:GetChild("BannerInfo"):visible(true):diffuse(math.random() + .5, math.random() + .5,
 					math.random() + .5, 1):
 					zoomy(0):linear(.08):zoomy(1)
-				self:GetChild("BannerInfo"):GetChild("Title"):settext(ToUpper(Songs[CurSong]))
+				self:GetChild("BannerInfo"):GetChild("Title"):settext(ToUpper(Songs[TF_WHEEL.CurSong]))
 				self:GetChild("BannerInfo"):GetChild("SubTitle"):settext("")
 				self:GetChild("BannerInfo"):GetChild("Artist"):settext("")
 			end
@@ -174,11 +174,11 @@ local function MoveSelection(self, offset, Songs)
 			while off < 1 do off = off + 10 end
 
 			-- Get center position.
-			local pos = CurSong + i
+			local pos = TF_WHEEL.CurSong + i
 
 			-- If item is above 5 then we do a -10 to fix the display.
 			if i > 5 then
-				pos = CurSong + i - 10
+				pos = TF_WHEEL.CurSong + i - 10
 			end
 
 			-- Keep pos withing limits.
@@ -228,7 +228,7 @@ end
 -- Move the Difficulty (or change selection in this case).
 local function MoveDifficulty(self, offset, Songs)
 	-- Check if its a group
-	if type(Songs[CurSong]) == "string" then
+	if type(Songs[TF_WHEEL.CurSong]) == "string" then
 		-- If it is a group hide the diffs
 		self:GetChild("DiffStars"):visible(false)
 		self:GetChild("Info"):GetChild("ChartArtist"):visible(false)
@@ -236,11 +236,11 @@ local function MoveDifficulty(self, offset, Songs)
 		-- Not a group
 	else
 		-- Move the current difficulty + offset.
-		DiffPos[DiffPlayer] = DiffPos[DiffPlayer] + offset
+		TF_WHEEL.DiffPos[DiffPlayer] = TF_WHEEL.DiffPos[DiffPlayer] + offset
 
 		-- Stay withing limits, But ignoring the first selection because its the entire song.
-		if DiffPos[DiffPlayer] > #Songs[CurSong] - 1 then DiffPos[DiffPlayer] = 1 end
-		if DiffPos[DiffPlayer] < 1 then DiffPos[DiffPlayer] = #Songs[CurSong] - 1 end
+		if TF_WHEEL.DiffPos[DiffPlayer] > #Songs[TF_WHEEL.CurSong] - 1 then TF_WHEEL.DiffPos[DiffPlayer] = 1 end
+		if TF_WHEEL.DiffPos[DiffPlayer] < 1 then TF_WHEEL.DiffPos[DiffPlayer] = #Songs[TF_WHEEL.CurSong] - 1 end
 
 		self:GetChild("DiffStars"):visible(true)
 
@@ -249,7 +249,7 @@ local function MoveDifficulty(self, offset, Songs)
 		end
 
 		-- We get the Meter from the game, And make it so it stays between 8 which is the Max feets we support.
-		local DiffCount = Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetMeter()
+		local DiffCount = Songs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetMeter()
 		if DiffCount > 7 then DiffCount = 7 end
 
 		-- For every Meter value we got for the game, We show the amount of feets for the difficulty, And center them.
@@ -258,10 +258,10 @@ local function MoveDifficulty(self, offset, Songs)
 		end
 
 		self:GetChild("DiffDisplay"):GetChild("BG"):diffuse(DiffColors[
-		TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
+		TF_WHEEL.DiffTab[Songs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
 		self:GetChild("DiffDisplay"):GetChild("Text"):settext(DiffNames[
-		TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
-		self:GetChild("Info"):GetChild("ChartArtist"):visible(true):settext(Songs[CurSong][DiffPos[DiffPlayer] + 1]
+		TF_WHEEL.DiffTab[Songs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
+		self:GetChild("Info"):GetChild("ChartArtist"):visible(true):settext(Songs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]
 		:GetAuthorCredit())
 	end
 end
@@ -272,7 +272,7 @@ return function(Style)
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
 
 	-- Sort the Songs and Group.
-	local GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, CurGroup)
+	local GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, TF_WHEEL.CurGroup)
 
 	-- We define here is we load the Options menu when people double press,
 	-- Because they need to double press it starts at false.
@@ -285,7 +285,7 @@ return function(Style)
 
 	for i = 1, 10 do
 		-- Position of current song, We want the cd in the front, So its the one we change.
-		local pos = CurSong + i - 5
+		local pos = TF_WHEEL.CurSong + i - 5
 
 		-- Stay within limits.
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
@@ -389,14 +389,14 @@ return function(Style)
 		Def.ActorFrame {
 			Name = "MusicCon",
 			PlayCurrentSongCommand = function(self)
-				if type(GroupsAndSongs[CurSong]) ~= "string" then
-					TF_WHEEL.BG:Load(GroupsAndSongs[CurSong][1]:GetBackgroundPath()):FullScreen()
-					if GroupsAndSongs[CurSong][1].PlayPreviewMusic then
-						GroupsAndSongs[CurSong][1]:PlayPreviewMusic()
-					elseif GroupsAndSongs[CurSong][1]:GetMusicPath() then
-						SOUND:PlayMusicPart(GroupsAndSongs[CurSong][1]:GetMusicPath(),
-							GroupsAndSongs[CurSong][1]:GetSampleStart(),
-							GroupsAndSongs[CurSong][1]:GetSampleLength(), 0, 0, true)
+				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+					TF_WHEEL.BG:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath()):FullScreen()
+					if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
+						GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
+					elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
+						SOUND:PlayMusicPart(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath(),
+							GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleStart(),
+							GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(), 0, 0, true)
 					end
 				else
 					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
@@ -456,30 +456,30 @@ return function(Style)
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
 				-- Check if we are on a group.
-				if type(GroupsAndSongs[CurSong]) == "string" then
+				if type(GroupsAndSongs[TF_WHEEL.CurSong]) == "string" then
 					-- Check if we are on the same group thats currently open,
 					-- If not we set the curent group to our new selection.
-					if CurGroup ~= GroupsAndSongs[CurSong] then
-						CurGroup = GroupsAndSongs[CurSong]
+					if TF_WHEEL.CurGroup ~= GroupsAndSongs[TF_WHEEL.CurSong] then
+						TF_WHEEL.CurGroup = GroupsAndSongs[TF_WHEEL.CurSong]
 
 						-- Same group, Close it.
 					else
-						CurGroup = ""
+						TF_WHEEL.CurGroup = ""
 					end
 
 					-- Reset the groups location so we dont bug.
 					GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, "")
 					MoveSelection(self, 0, GroupsAndSongs)
 
-					-- Set CurSong to the right group.
+					-- Set TF_WHEEL.CurSong to the right group.
 					for i, v in ipairs(GroupsAndSongs) do
-						if v == CurGroup then
-							CurSong = i
+						if v == TF_WHEEL.CurGroup then
+							TF_WHEEL.CurSong = i
 						end
 					end
 
 					-- Set the current group.
-					GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, CurGroup)
+					GroupsAndSongs = LoadModule("Group.Sort.lua")(Songs, TF_WHEEL.CurGroup)
 					MoveSelection(self, 0, GroupsAndSongs)
 
 					-- Not on a group, Start song.
@@ -488,7 +488,7 @@ return function(Style)
 					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
 					--Set the song we want to play.
-					GAMESTATE:SetCurrentSong(GroupsAndSongs[CurSong][1])
+					GAMESTATE:SetCurrentSong(GroupsAndSongs[TF_WHEEL.CurSong][1])
 
 					-- Check if 2 players are joined.
 					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
@@ -500,8 +500,8 @@ return function(Style)
 						PROFILEMAN:SaveProfile(PLAYER_2)
 
 						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
-						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1])
 					else
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
@@ -510,7 +510,7 @@ return function(Style)
 						PROFILEMAN:SaveProfile(self.pn)
 
 						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
+						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1])
 					end
 
 					-- We want to go to player options when people doublepress, So we set the StartOptions to true,
@@ -644,9 +644,9 @@ return function(Style)
 			Def.Quad {
 				Name = "BG",
 				OnCommand = function(self)
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
 						self:zoomto(148, 38):diffuse(DiffColors
-							[TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
+							[TF_WHEEL.DiffTab[GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
 					else
 						self:zoomto(148, 38):diffuse(DiffColors[2])
 					end
@@ -664,8 +664,8 @@ return function(Style)
 				OnCommand = function(self)
 					self:zoom(.6):diffuse(1, 1, 1, 1):maxwidth(320)
 						:strokecolor(1, 1, 1, 1)
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext(DiffNames[TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext(DiffNames[TF_WHEEL.DiffTab[GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
 					else
 						self:settext(DiffNames[2])
 					end
@@ -679,13 +679,13 @@ return function(Style)
 			Texture = THEME:GetPathG("", "white.png"),
 			OnCommand = function(self)
 				-- Check if we are on song
-				if type(GroupsAndSongs[CurSong]) ~= "string" then
-					self:Load(GroupsAndSongs[CurSong][1]:GetBannerPath())
+				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+					self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
 
 					-- Not on song, Show group banner.
 				else
-					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) ~= "" then
-						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]))
+					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
+						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
 					else
 						self:visible(false)
 					end
@@ -699,12 +699,12 @@ return function(Style)
 			Name = "BannerInfo",
 			OnCommand = function(self)
 				self:x(-160):y(-30):diffuse(math.random() + .5, math.random() + .5, math.random() + .5, 1)
-				if type(GroupsAndSongs[CurSong]) ~= "string" then
-					if GroupsAndSongs[CurSong][1]:HasBanner() then
+				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
 						self:visible(false)
 					end
 				else
-					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[CurSong]) ~= "" then
+					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						self:visible(false)
 					end
 				end
@@ -722,10 +722,10 @@ return function(Style)
 						:y(-30)
 						:maxwidth(320)
 					-- Check if we are on song
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext(ToUpper(GroupsAndSongs[CurSong][1]:GetDisplayMainTitle()))
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext(ToUpper(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle()))
 					else
-						self:settext(ToUpper(GroupsAndSongs[CurSong]))
+						self:settext(ToUpper(GroupsAndSongs[TF_WHEEL.CurSong]))
 					end
 				end
 			},
@@ -738,8 +738,8 @@ return function(Style)
 						:maxwidth(1600)
 
 					-- Check if we are on song
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext(ToUpper(GroupsAndSongs[CurSong][1]:GetDisplaySubTitle()))
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext(ToUpper(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplaySubTitle()))
 					end
 				end
 			},
@@ -752,8 +752,8 @@ return function(Style)
 						:maxwidth(400)
 
 					-- Check if we are on song
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext(ToUpper(GroupsAndSongs[CurSong][1]:GetDisplayArtist()))
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext(ToUpper(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayArtist()))
 					end
 				end
 			}
@@ -828,8 +828,8 @@ return function(Style)
 						:maxwidth(260)
 
 					-- Check if we are on song
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext("BPM " .. string.format("%.0f", GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext("BPM " .. string.format("%.0f", GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[2]))
 					end
 				end
 			},
@@ -842,8 +842,8 @@ return function(Style)
 						:maxwidth(260)
 
 					-- Check if we are on song
-					if type(GroupsAndSongs[CurSong]) ~= "string" then
-						self:settext(GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1]:GetAuthorCredit())
+					if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+						self:settext(GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[DiffPlayer] + 1]:GetAuthorCredit())
 					end
 				end
 			}
