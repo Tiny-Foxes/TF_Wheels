@@ -1,6 +1,7 @@
 -- The Evals we support/have.
 local Evals = {
-	"DDR1st1.5Eval"
+	"DDR1st1.5Eval",
+	"DDR1stEval"
 }
 
 -- The last defined eval, Its like smart shuffle, We dont want to get the same eval twice.
@@ -18,7 +19,7 @@ local function RandButNotLast(Amount)
 end
 
 --Return the Def table that contains all the stuff, Check the module folder for the evals.
---return LoadModule("Eval."..evals[RandButNotLast(#Evals)]..".lua")()
+return LoadModule("Eval."..evals[RandButNotLast(#Evals)]..".lua")()
 
 --Debugging.
-return LoadModule("Eval.DDR1st1.5Eval.lua")()
+--return LoadModule("Eval.DDR1st1.5Eval.lua")()

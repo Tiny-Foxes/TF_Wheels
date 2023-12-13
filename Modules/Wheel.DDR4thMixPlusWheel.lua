@@ -16,7 +16,7 @@ local DiffNames = {
 	"TRICK", -- Difficulty_Medium
 	"MANIAC ", -- Difficulty_Hard
 	"EXTRA", -- Difficulty_Challenge
-	"EDIT" -- Difficulty_Edit
+	"EDIT"   -- Difficulty_Edit
 }
 
 -- Song Position.
@@ -32,7 +32,7 @@ if not CurGroup then GurGroup = "" end
 local CurRow = 1
 
 -- Position on the difficulty select that shows up after we picked a song.
-local DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 }
+if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
 
 -- Check if we're allowed to move on the wheel.
 local UnlockedInput = true
@@ -42,7 +42,6 @@ local DiffSelection = false
 
 -- Change the selection on the wheel.
 local function ChangeSelection(self, offset, Songs)
-
 	-- Set old row which is the current displaying row as current row which is the new row before we do math on them.
 	local OldRow = CurRow
 
@@ -55,7 +54,6 @@ local function ChangeSelection(self, offset, Songs)
 
 	-- For 7 items on the row do.
 	for i = 1, 7 do
-
 		-- Set the sleep value to i, This is used for the delay between items.
 		local sleep = i
 
@@ -74,54 +72,64 @@ local function ChangeSelection(self, offset, Songs)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-
 			-- For every banner on current row load the next banner.
-			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(Songs[
+			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(
+				Songs[
 				pos][1]:GetBannerPath())
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				-- For every banner on current row load the next banner.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(SONGMAN
-					:GetSongGroupBannerPath(Songs[pos]))
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1)
+					:Load(SONGMAN
+						:GetSongGroupBannerPath(Songs[pos]))
 			else
 				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(0)
 			end
 		end
 
 		-- Do the zoom on the banners, We set them to w128 h40.
-		self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):zoom(TF_WHEEL.Resize(self:
+		self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):zoom(TF_WHEEL.Resize(
+			self:
 			GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):GetWidth(),
 			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):GetHeight(), 128, 40))
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-
 			-- Check if song has a banner.
 			if Songs[pos][1]:HasBanner() then
 				-- If they do, hide the fallback banner, And text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(0):zoom(0)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0)
+					:zoom(0)
 			else
 				-- If they dont, Show the fallback banner, And set the text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(1):
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(1):
 					zoomto(128, 40)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1):zoom(.5)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(Songs[pos][1]:
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1)
+					:zoom(.5)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(
+					Songs[pos][1]:
 					GetDisplayMainTitle())
 			end
 		else
-
 			-- Check if song has a banner.
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				-- If they do, hide the fallback banner, And text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(0):zoom(0)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0)
+					:zoom(0)
 			else
 				-- If they dont, Show the fallback banner, And set the text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(1):
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(1):
 					zoomto(128, 40)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1):zoom(.5)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(Songs[pos])
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1)
+					:zoom(.5)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(
+					Songs[pos])
 			end
 		end
 
@@ -132,25 +140,27 @@ local function ChangeSelection(self, offset, Songs)
 		self:GetChild("Banners"):GetChild(OldRow .. i):GetChild("BannerCon"):sleep((sleep / 8) + .4):x(1280)
 
 		-- Grab the slider thats above the wheel and move it ofscreen.
-		self:GetChild("SliderCon"):GetChild("Slider" .. i):linear(0.2):x((1280 * (offset * -1))):sleep(0.00001):diffusealpha(0)
+		self:GetChild("SliderCon"):GetChild("Slider" .. i):linear(0.2):x((1280 * (offset * -1))):sleep(0.00001)
+			:diffusealpha(0)
 			:x((1280 * offset)):diffusealpha(1)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
 			-- Make the slider load the current row banners.
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(Songs[pos][1]:
-				GetBannerPath())
+			GetBannerPath())
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(SONGMAN:
-					GetSongGroupBannerPath(Songs[pos]))
+				GetSongGroupBannerPath(Songs[pos]))
 			else
 				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(0)
 			end
 		end
 
 		-- Resize the banners to w256 h80.
-		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):zoom(TF_WHEEL.Resize(self:GetChild("SliderCon"):
+		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):zoom(TF_WHEEL.Resize(
+			self:GetChild("SliderCon"):
 			GetChild("Slider" .. i):GetChild("Banner"):GetWidth(),
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):GetHeight(), 256, 80))
 
@@ -159,25 +169,28 @@ local function ChangeSelection(self, offset, Songs)
 
 		-- Feet Meter.
 		for i3 = 1, 6 do
-
 			-- Grab all the feet and hide them.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("Feet")
+			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+				:GetChild("Feet")
 				:diffusealpha(0)
 
 			-- do the same for all the lvl text.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("level")
+			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+				:GetChild("level")
 				:diffusealpha(0)
 
 			-- Check if difficulty exists.
 			if #Songs[pos] > i3 and type(Songs[pos]) ~= "string" then
-
 				-- Color the feet to the difficulties.
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("Feet")
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+					:GetChild("Feet")
 					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]])
 
 				-- Color the level display to the difficulties.
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("level")
-					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]]):settext(Songs[pos][i3 + 1]:GetMeter())
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+					:GetChild("level")
+					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]]):settext(Songs[pos]
+					[i3 + 1]:GetMeter())
 			end
 		end
 	end
@@ -189,7 +202,6 @@ end
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
 local function MoveSelection(self, offset, Songs)
-
 	-- Set unlocked input to false.
 	UnlockedInput = false
 
@@ -202,8 +214,14 @@ local function MoveSelection(self, offset, Songs)
 	SongPos = SongPos + offset
 
 	-- Check if song position is between limits, If it goes outside of it, Load next selection of banners.
-	if SongPos < -2 then SongPos = 4 ChangeSelection(self, -1, Songs) end
-	if SongPos > 4 then SongPos = -2 ChangeSelection(self, 1, Songs) end
+	if SongPos < -2 then
+		SongPos = 4
+		ChangeSelection(self, -1, Songs)
+	end
+	if SongPos > 4 then
+		SongPos = -2
+		ChangeSelection(self, 1, Songs)
+	end
 
 	-- Curent Song + Offset.
 	CurSong = CurSong + offset
@@ -253,7 +271,6 @@ end
 
 -- We use this function to do an effect on the content of the music wheel when we open a group.
 local function UpdateSelection(self, Songs)
-
 	-- Set unlocked input to false.
 	UnlockedInput = false
 
@@ -268,7 +285,6 @@ local function UpdateSelection(self, Songs)
 	if CurRow < 1 then CurRow = 2 end
 
 	for i = 1, 7 do
-
 		-- Set the sleep value to i, This is used for the delay between items.
 		local sleep = i
 
@@ -281,54 +297,64 @@ local function UpdateSelection(self, Songs)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-
 			-- For every banner on current row load the next banner.
-			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(Songs[
+			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(
+				Songs[
 				pos][1]:GetBannerPath())
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				-- For every banner on current row load the next banner.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(SONGMAN
-					:GetSongGroupBannerPath(Songs[pos]))
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1)
+					:Load(SONGMAN
+						:GetSongGroupBannerPath(Songs[pos]))
 			else
 				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(0)
 			end
 		end
 
 		-- Do the zoom on the banners, We set them to w128 h40.
-		self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):zoom(TF_WHEEL.Resize(self:
+		self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):zoom(TF_WHEEL.Resize(
+			self:
 			GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):GetWidth(),
 			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):GetHeight(), 128, 40))
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-
 			-- Check if song has a banner.
 			if Songs[pos][1]:HasBanner() then
 				-- If they do, hide the fallback banner, And text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(0):zoom(0)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0)
+					:zoom(0)
 			else
 				-- If they dont, Show the fallback banner, And set the text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(1):
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(1):
 					zoomto(128, 40)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1):zoom(.5)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(Songs[pos][1]:
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1)
+					:zoom(.5)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(
+					Songs[pos][1]:
 					GetDisplayMainTitle())
 			end
 		else
-
 			-- Check if song has a banner.
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				-- If they do, hide the fallback banner, And text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(0):zoom(0)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(0):zoom(0)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(0)
+					:zoom(0)
 			else
 				-- If they dont, Show the fallback banner, And set the text.
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner"):diffusealpha(1):
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("FallbackBanner")
+					:diffusealpha(1):
 					zoomto(128, 40)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1):zoom(.5)
-				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(Songs[pos])
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):diffusealpha(1)
+					:zoom(.5)
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("BannerText"):settext(
+					Songs[pos])
 			end
 		end
 
@@ -346,18 +372,19 @@ local function UpdateSelection(self, Songs)
 		if type(Songs[pos]) ~= "string" then
 			-- Make the slider load the current row banners.
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(Songs[pos][1]:
-				GetBannerPath())
+			GetBannerPath())
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(SONGMAN:
-					GetSongGroupBannerPath(Songs[pos]))
+				GetSongGroupBannerPath(Songs[pos]))
 			else
 				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(0)
 			end
 		end
 
 		-- Resize the banners to w256 h80.
-		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):zoom(TF_WHEEL.Resize(self:GetChild("SliderCon"):
+		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):zoom(TF_WHEEL.Resize(
+			self:GetChild("SliderCon"):
 			GetChild("Slider" .. i):GetChild("Banner"):GetWidth(),
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):GetHeight(), 256, 80))
 
@@ -366,25 +393,28 @@ local function UpdateSelection(self, Songs)
 
 		-- Feet Meter.
 		for i3 = 1, 6 do
-
 			-- Grab all the feet and hide them.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("Feet")
+			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+				:GetChild("Feet")
 				:diffusealpha(0)
 
 			-- do the same for all the lvl text.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("level")
+			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+				:GetChild("level")
 				:diffusealpha(0)
 
 			-- Check if difficulty exists.
 			if #Songs[pos] > i3 and type(Songs[pos]) ~= "string" then
-
 				-- Color the feet to the difficulties.
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("Feet")
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+					:GetChild("Feet")
 					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]])
 
 				-- Color the level display to the difficulties.
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3):GetChild("level")
-					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]]):settext(Songs[pos][i3 + 1]:GetMeter())
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("DiffCon"):GetChild("DiffDisplay" .. i3)
+					:GetChild("level")
+					:diffuse(DiffColors[TF_WHEEL.DiffTab[Songs[pos][i3 + 1]:GetDifficulty()]]):settext(Songs[pos]
+					[i3 + 1]:GetMeter())
 			end
 		end
 	end
@@ -408,7 +438,6 @@ end
 
 -- We use this function to do an effect on the content of the music wheel when we switch to next screen.
 local function StartSelection(self, Songs)
-
 	-- Set unlocked input to false.
 	UnlockedInput = false
 
@@ -440,7 +469,7 @@ local function StartSelection(self, Songs)
 		-- For all the allowed meter feets set their colour and diffuse them.
 		for i2 = 1, 9 do
 			self:GetChild("Diffs"):GetChild("Feet" .. i .. i2):sleep(.5):linear(.5):diffuse(DiffColors[
-				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):diffusealpha(.5)
+			TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):diffusealpha(.5)
 		end
 
 		-- Loop till the value of the meter.
@@ -454,28 +483,30 @@ local function StartSelection(self, Songs)
 
 		-- If player 1 is joined.
 		if GAMESTATE:IsSideJoined(PLAYER_1) then
-
 			-- Show the difficulty border on the left side of the selector.
-			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "1"):GetChild("DiffCon"):sleep(.5):linear(.5):diffuse(DiffColors
+			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "1"):GetChild("DiffCon"):sleep(.5):linear(.5):diffuse(
+				DiffColors
 				[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 
 			-- Set the difficulty name on the left side of the selector.
-			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "1"):GetChild("DiffName"):sleep(.5):linear(.5):diffuse(DiffColors
-				[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):settext(DiffNames[
-				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "1"):GetChild("DiffName"):sleep(.5):linear(.5)
+				:diffuse(DiffColors
+					[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):settext(DiffNames[
+			TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 		end
 
 		-- If player 2 is joined
 		if GAMESTATE:IsSideJoined(PLAYER_2) then
-
 			-- Show the difficulty border on the right side of the selector.
-			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "2"):GetChild("DiffCon"):sleep(.5):linear(.5):diffuse(DiffColors
+			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "2"):GetChild("DiffCon"):sleep(.5):linear(.5):diffuse(
+				DiffColors
 				[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 
 			-- Set the difficulty name on the right side of the selector.
-			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "2"):GetChild("DiffName"):sleep(.5):linear(.5):diffuse(DiffColors
-				[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):settext(DiffNames[
-				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. "2"):GetChild("DiffName"):sleep(.5):linear(.5)
+				:diffuse(DiffColors
+					[TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):settext(DiffNames[
+			TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 		end
 	end
 
@@ -485,7 +516,6 @@ end
 
 -- The move difficulty function.
 local function MoveDifficulty(self, offset, Songs)
-
 	-- Set player number to 1.
 	local pn = 1
 
@@ -494,7 +524,6 @@ local function MoveDifficulty(self, offset, Songs)
 
 	-- If player is joined, let them change the difficulty.
 	if GAMESTATE:IsSideJoined(self.pn) then
-
 		-- For all difficulties that are used stop the blink.
 		for i = 1, 6 do
 			self:GetChild("Diffs"):GetChild("DiffSelector" .. i .. pn):stopeffect()
@@ -514,7 +543,6 @@ end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
-
 	-- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
 
@@ -536,7 +564,6 @@ return function(Style)
 
 	-- Here we generate all the banners for the wheel and slider.
 	for i = 1, 7 do
-
 		-- Position of current song, We want the middle banner at start.
 		local pos = CurSong + i - 4
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
@@ -577,7 +604,6 @@ return function(Style)
 					Name = "level",
 					Font = "_noto sans 40px",
 					OnCommand = function(self)
-
 						-- Zoom the text to the right size.
 						self:zoom(.125):x(-49 + (15 * i2))
 
@@ -586,7 +612,8 @@ return function(Style)
 							-- If difficulty exists.
 							if #GroupsAndSongs[pos] > i2 then
 								-- Then diffuse to difficulties colour and set text to meter level.
-								self:diffuse(DiffColors[TF_WHEEL.DiffTab[GroupsAndSongs[pos][i2 + 1]:GetDifficulty()]]):settext(GroupsAndSongs[
+								self:diffuse(DiffColors[TF_WHEEL.DiffTab[GroupsAndSongs[pos][i2 + 1]:GetDifficulty()]])
+									:settext(GroupsAndSongs[
 									pos][i2 + 1]:GetMeter())
 							end
 						end
@@ -607,14 +634,14 @@ return function(Style)
 				OnCommand = function(self)
 					-- Check if its a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
-
 						-- If the banner exist, Load Banner.png.
 						if GroupsAndSongs[pos][1]:HasBanner() then self:Load(GroupsAndSongs[pos][1]:GetBannerPath()) end
 					else
-
 						-- IF group banner exist, Load banner.png
-						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
-							[pos])) end
+						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then
+							self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
+								[pos]))
+						end
 					end
 
 					self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 256, 80))
@@ -672,14 +699,17 @@ return function(Style)
 						OnCommand = function(self)
 							-- Check if its a song.
 							if type(GroupsAndSongs[pos]) ~= "string" then
-
 								-- If the banner exist, Load Banner.png.
-								if GroupsAndSongs[pos][1]:HasBanner() then self:Load(GroupsAndSongs[pos][1]:GetBannerPath()) end
+								if GroupsAndSongs[pos][1]:HasBanner() then
+									self:Load(GroupsAndSongs[pos][1]
+										:GetBannerPath())
+								end
 							else
-
 								-- IF group banner exist, Load banner.png
-								if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
-									[pos])) end
+								if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then
+									self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
+										[pos]))
+								end
 							end
 
 							self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 128, 40))
@@ -800,7 +830,6 @@ return function(Style)
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
 		MenuLeftCommand = function(self)
-
 			-- If input is unlocked change selected song.
 			if UnlockedInput then MoveSelection(self, -1, GroupsAndSongs) end
 
@@ -810,7 +839,6 @@ return function(Style)
 
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
 		MenuRightCommand = function(self)
-
 			-- If input is unlocked change selected song.
 			if UnlockedInput then MoveSelection(self, 1, GroupsAndSongs) end
 
@@ -820,14 +848,12 @@ return function(Style)
 
 		-- Do stuff when a user presses Up on Pad or Menu buttons.
 		MenuUpCommand = function(self)
-
 			-- If we are on difficulty selector change the difficulty.
 			if DiffSelection then MoveDifficulty(self, -1, GroupsAndSongs) end
 		end,
 
 		-- Do stuff when a user presses Doiwn on Pad or Menu buttons.
 		MenuDownCommand = function(self)
-
 			-- If we are on difficulty selector change the difficulty.
 			if DiffSelection then MoveDifficulty(self, 1, GroupsAndSongs) end
 		end,
@@ -841,7 +867,8 @@ return function(Style)
 					GAMESTATE:UnjoinPlayer(self.pn)
 				else
 					-- Go to the previous screen.
-					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen")
+					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName())
+						:StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 		end,
@@ -849,16 +876,15 @@ return function(Style)
 
 		-- Do stuff when a user presses the Start on Pad or Menu buttons.
 		StartCommand = function(self)
-
 			-- Check if we are on difficulty select menu.
 			if DiffSelection then
 				-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 				if StartOptions then
-					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
+					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
+						"SM_GoToNextScreen")
 				end
 				-- Check if player is joined.
 				if GAMESTATE:IsSideJoined(self.pn) then
-
 					--We use PlayMode_Regular for now.
 					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
@@ -867,7 +893,6 @@ return function(Style)
 
 					-- Check if 2 players are joined.
 					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
-
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDBVersus[Style])
 
@@ -879,7 +904,6 @@ return function(Style)
 						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][DiffPos[PLAYER_1] + 1])
 						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][DiffPos[PLAYER_2] + 1])
 					else
-
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 
@@ -898,16 +922,12 @@ return function(Style)
 					self:sleep(1):queuecommand("StartSong")
 				end
 			else
-
 				-- If we are not changing row.
 				if UnlockedInput then
-
 					-- Check if player is joined.
 					if GAMESTATE:IsSideJoined(self.pn) then
-
 						-- Check if we are on a group.
 						if type(GroupsAndSongs[CurSong]) == "string" then
-
 							-- Check if we are on the same group thats currently open,
 							-- If not we set the curent group to our new selection.
 							if CurGroup ~= GroupsAndSongs[CurSong] then
@@ -936,7 +956,6 @@ return function(Style)
 
 							-- Not on a group, Go to next step.
 						else
-
 							-- Go to next step.
 							StartSelection(self, GroupsAndSongs)
 						end
@@ -953,7 +972,8 @@ return function(Style)
 
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
+				"SM_GoToNextScreen")
 		end,
 
 		-- The command to unlock input.
@@ -964,10 +984,14 @@ return function(Style)
 			DiffSelection = true
 
 			-- Set the first value in the difficulty selector active.
-			if GAMESTATE:IsSideJoined(PLAYER_1) then self:GetChild("Diffs"):GetChild("DiffSelector11"):effectclock("Beat"):
-				glowshift() end
-			if GAMESTATE:IsSideJoined(PLAYER_2) then self:GetChild("Diffs"):GetChild("DiffSelector12"):effectclock("Beat"):
-				glowshift() end
+			if GAMESTATE:IsSideJoined(PLAYER_1) then
+				self:GetChild("Diffs"):GetChild("DiffSelector11"):effectclock("Beat"):
+					glowshift()
+			end
+			if GAMESTATE:IsSideJoined(PLAYER_2) then
+				self:GetChild("Diffs"):GetChild("DiffSelector12"):effectclock("Beat"):
+					glowshift()
+			end
 		end,
 
 		Slider, -- Load the sliders
@@ -1006,5 +1030,4 @@ return function(Style)
 			end
 		}
 	}
-
 end

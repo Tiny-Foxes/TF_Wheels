@@ -22,7 +22,7 @@ local DiffNames = {
 	"TRICK", -- Difficulty_Medium
 	"MANIAC ", -- Difficulty_Hard
 	"EXTRA", -- Difficulty_Challenge
-	"EDIT" -- Difficulty_Edit
+	"EDIT"   -- Difficulty_Edit
 }
 
 -- We define the curent song if no song is selected.
@@ -32,7 +32,7 @@ if not CurSong then CurSong = 1 end
 if not CurGroup then GurGroup = "" end
 
 -- Position on the difficulty select that shows up after we picked a song.
-local DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 }
+if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
 
 -- The increase offset for when we move with postive.
 local IncOffset = 1
@@ -46,7 +46,6 @@ local XOffset = 7
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
 local function MoveSelection(self, offset, Songs)
-
 	-- Curent Song + Offset.
 	CurSong = CurSong + offset
 
@@ -72,10 +71,8 @@ local function MoveSelection(self, offset, Songs)
 
 	-- If we are calling this command with an offset that is not 0 then do stuff.
 	if offset ~= 0 then
-
 		-- For every part on the wheel do.
 		for i = 1, 13 do
-
 			-- Make a transform command that changes the location of the part.
 			local transform = ((i - XOffset) * (i - XOffset)) * 3
 
@@ -102,14 +99,14 @@ local function MoveSelection(self, offset, Songs)
 			-- Here we define what the wheel does if it is outside the values.
 			-- So that when a part is at the bottom it will move to the top.
 			if (i == IncOffset and offset == -1) or (i == DecOffset and offset == 1) then
-
 				-- Move wheelpart instantly to new location.
 				self:GetChild("Wheel"):GetChild("Container" .. i):sleep(0):addy((offset * -45) * -13)
 
 				-- Check if it's a song.
 				if type(Songs[pos]) ~= "string" then
 					-- It's a song, Display song title.
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]
+					:GetDisplayMainTitle())
 				else
 					-- It is not a song, Display group name instead.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos])
@@ -127,8 +124,10 @@ local function MoveSelection(self, offset, Songs)
 					end
 
 					-- Set subtitle and artist to the values it has.
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]:GetDisplaySubTitle())
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" .. Songs[pos][1]:GetDisplayArtist())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]
+					:GetDisplaySubTitle())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" ..
+					Songs[pos][1]:GetDisplayArtist())
 				else
 					-- It is not a song so we set it to empty, Because groups dont have subtitles or atists.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext("")
@@ -159,17 +158,16 @@ local function MoveSelection(self, offset, Songs)
 			self:GetChild("BannerUnderlay"):GetHeight(), 224, 70))
 
 		-- Load the top banner, This one shows when its done transitioning.
-		self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1):diffusealpha(0):sleep(0):queuecommand("Load"):diffusealpha(1)
+		self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1):diffusealpha(0):sleep(0):queuecommand("Load")
+			:diffusealpha(1)
 
 		-- Load the CDTitle command to do funky animation.
 		self:GetChild("CDTitle"):linear(.05):zoomy(0):sleep(0):queuecommand("Load")
 
 		-- We are on an offset of 0.
 	else
-
 		-- For every part of the wheel do.
 		for i = 1, 13 do
-
 			-- Offset for the wheel items.
 			local off = i + XOffset
 
@@ -192,7 +190,8 @@ local function MoveSelection(self, offset, Songs)
 			-- Check if it's a song.
 			if type(Songs[pos]) ~= "string" then
 				-- It's a song, Display song title.
-				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]
+				:GetDisplayMainTitle())
 			else
 				-- It is not a song, Display group name instead.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos])
@@ -210,7 +209,8 @@ local function MoveSelection(self, offset, Songs)
 				end
 
 				-- Set subtitle and artist to the values it has.
-				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]:GetDisplaySubTitle())
+				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]
+				:GetDisplaySubTitle())
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Artist"):settext("/" ..
 					Songs[pos][1]:GetDisplayArtist())
 			else
@@ -245,40 +245,36 @@ local function MoveSelection(self, offset, Songs)
 
 	-- Check if it's a song.
 	if type(Songs[CurSong]) ~= "string" then
-
 		-- For every difficulty do.
 		for i = 1, #Songs[CurSong] - 1 do
-
 			if i > 6 then break end
 
 			-- Check if P1 is active.
 			if GAMESTATE:IsSideJoined(PLAYER_1) then
-
 				-- Diffuse the background of the difficulty selector.
 				self:GetChild("Diffs"):GetChild("DiffName1P" .. i):GetChild("DiffBG"):diffuse(DiffColors[
-					TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 
 				-- Diffuse the text.
 				self:GetChild("Diffs"):GetChild("DiffName1P" .. i):GetChild("DiffText"):settext(DiffNames[
-					TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 			end
 
 			-- Check if P2 is active.
 			if GAMESTATE:IsSideJoined(PLAYER_2) then
-
 				-- Diffuse the background of the difficulty selector.
 				self:GetChild("Diffs"):GetChild("DiffName2P" .. i):GetChild("DiffBG"):diffuse(DiffColors[
-					TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 
 				-- Diffuse the text.
 				self:GetChild("Diffs"):GetChild("DiffName2P" .. i):GetChild("DiffText"):settext(DiffNames[
-					TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]])
 			end
 
 			-- Diffuse the feet.
 			for i2 = 1, 9 do
 				self:GetChild("Diffs"):GetChild("FeetCon" .. i):GetChild("Feet" .. i2):diffuse(DiffColors[
-					TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):diffusealpha(.5)
+				TF_WHEEL.DiffTab[Songs[CurSong][i + 1]:GetDifficulty()]]):diffusealpha(.5)
 			end
 
 			-- We check the meter and see if every feet needs to be active.
@@ -368,7 +364,6 @@ local function MoveSelection(self, offset, Songs)
 
 	-- Check if offset is not 0.
 	if offset ~= 0 then
-
 		self:GetChild("Slider"):linear(.1):y(-176 + (350 * (CurSong / #Songs)))
 
 		-- Stop all the music playing, Which is the Song Music
@@ -383,10 +378,8 @@ end
 
 -- Change the cursor of Player on the difficulty selector.
 local function MoveDifficulty(self, offset, Songs)
-
 	-- check if player is joined.
 	if GAMESTATE:IsSideJoined(self.pn) then
-
 		-- Move cursor.
 		DiffPos[self.pn] = DiffPos[self.pn] + offset
 
@@ -401,7 +394,6 @@ end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
-
 	-- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
 
@@ -459,10 +451,8 @@ return function(Style)
 
 					-- Check if it's a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
-
 						-- Check if song subtitle is empty.
 						if GroupsAndSongs[pos][1]:GetDisplaySubTitle() == "" then
-
 							-- Its empty, Make title full size.
 							self:zoom(.7):y(-10):maxwidth(400)
 						end
@@ -511,7 +501,6 @@ return function(Style)
 
 	-- For every difficulty do.
 	for i = 1, 6 do
-
 		-- Let the feet difficulty meter contain the feet.
 		local Feet = Def.ActorFrame { Name = "FeetCon" .. i }
 
@@ -640,7 +629,8 @@ return function(Style)
 					MoveSelection(self, 0, GroupsAndSongs)
 				else
 					-- Go to the previous screen.
-					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen")
+					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName())
+						:StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 		end,
@@ -649,14 +639,13 @@ return function(Style)
 		StartCommand = function(self)
 			-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 			if StartOptions then
-				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
+				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
+				"SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
-
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
-
 					-- Check if we are on the same group thats currently open,
 					-- If not we set the curent group to our new selection.
 					if CurGroup ~= GroupsAndSongs[CurSong] then
@@ -684,7 +673,6 @@ return function(Style)
 
 					-- Not on a group, Start song.
 				else
-
 					--We use PlayMode_Regular for now.
 					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
@@ -693,7 +681,6 @@ return function(Style)
 
 					-- Check if 2 players are joined.
 					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
-
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDBVersus[Style])
 
@@ -705,7 +692,6 @@ return function(Style)
 						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][DiffPos[PLAYER_1] + 1])
 						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][DiffPos[PLAYER_2] + 1])
 					else
-
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 
@@ -736,14 +722,15 @@ return function(Style)
 
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
+			"SM_GoToNextScreen")
 		end,
 
 		-- The Info display container.
 		Def.Sprite {
 			Texture = THEME:GetPathG("DDR/Info", "Display"),
 			OnCommand = function(self)
-				self:zoom(.45):xy(-(SCREEN_CENTER_X*OffsetMath), -60):halign(0)
+				self:zoom(.45):xy(-(SCREEN_CENTER_X * OffsetMath), -60):halign(0)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -752,7 +739,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 180, -162):zoom(.05)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 180, -162):zoom(.05)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -762,7 +749,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "BPM",
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 178, -162):zoom(.2):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 178, -162):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -779,7 +766,7 @@ return function(Style)
 					self:settext(string.format("%.0f", GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2]))
 				end
 
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 190, -134)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 190, -134)
 					:zoomy(.6):diffusebottomedge(1, .5, 0, 1)
 					:diffusetopedge(1, 1, 0, 1):skewx(-.2)
 			end
@@ -789,7 +776,7 @@ return function(Style)
 			Text = "bpm",
 			Font = "_noto sans 40px",
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 238, -130):zoom(.2)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 238, -130):zoom(.2)
 					:diffuse(1, 1, 0, 1):skewx(-.3)
 			end
 		},
@@ -798,7 +785,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 70, -154):zoom(.05):zoomx(.07)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 70, -154):zoom(.05):zoomx(.07)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -808,7 +795,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "STAGE",
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 68, -154):zoom(.2):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 68, -154):zoom(.2):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
@@ -819,7 +806,7 @@ return function(Style)
 			Font = "_noto sans 40px",
 			OnCommand = function(self)
 				self:diffuse(0, .5, 0, 1):strokecolor(0, .5, 0, 1):zoom(.3)
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 68, -136):skewx(-.2)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 68, -136):skewx(-.2)
 			end
 		},
 
@@ -828,7 +815,7 @@ return function(Style)
 			Name = "Dance",
 			Texture = THEME:GetPathG("", "DDR/Dance"),
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 272, -140):zoom(.14)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 272, -140):zoom(.14)
 			end
 		},
 
@@ -837,7 +824,7 @@ return function(Style)
 			Name = "BannerUnderlay",
 			InitCommand = function(self)
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 224, 70))
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 150, -84)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 150, -84)
 			end
 		},
 
@@ -858,7 +845,7 @@ return function(Style)
 				end
 
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 224, 70))
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 150, -84)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 150, -84)
 			end,
 			LoadCommand = function(self)
 				-- Check if its a song.
@@ -890,7 +877,7 @@ return function(Style)
 				end
 
 				self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 50, 50))
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 240, -102)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 240, -102)
 			end,
 			LoadCommand = function(self)
 				-- Check if its a song.
@@ -911,7 +898,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 120, -42):zoom(.033):zoomx(-.08)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 120, -42):zoom(.033):zoomx(-.08)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -920,7 +907,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/DiffSel"),
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 174, -42):zoom(.033):zoomx(.08)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 174, -42):zoom(.033):zoomx(.08)
 					:diffuse(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
 			end
 		},
@@ -932,7 +919,7 @@ return function(Style)
 			OnCommand = function(self)
 				self:diffuse(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
 					:strokecolor(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 36, -40):zoomy(.23):zoomx(.33):skewx(-.25)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 36, -40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 
@@ -942,7 +929,7 @@ return function(Style)
 			OnCommand = function(self)
 				self:diffuse(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
 					:strokecolor(DisplayColor[1] / 4, DisplayColor[2] / 4, DisplayColor[3] / 4, DisplayColor[4])
-					:xy(-(SCREEN_CENTER_X*OffsetMath) + 260, -40):zoomy(.23):zoomx(.33):skewx(-.25)
+					:xy(-(SCREEN_CENTER_X * OffsetMath) + 260, -40):zoomy(.23):zoomx(.33):skewx(-.25)
 			end
 		},
 
@@ -951,24 +938,24 @@ return function(Style)
 			Font = "_noto sans 40px",
 			Text = "DIFFICULTY",
 			OnCommand = function(self)
-				self:xy(-(SCREEN_CENTER_X*OffsetMath) + 148, -42):zoom(.18):zoomx(.3)
+				self:xy(-(SCREEN_CENTER_X * OffsetMath) + 148, -42):zoom(.18):zoomx(.3)
 					:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 			end
 		},
 
 		-- Load the difficulties selector.
-		Diffs .. { OnCommand = function(self) self:x(-(SCREEN_CENTER_X*OffsetMath) + 78):valign(0) end },
+		Diffs .. { OnCommand = function(self) self:x(-(SCREEN_CENTER_X * OffsetMath) + 78):valign(0) end },
 
 		-- Load the wheel.
 		Wheel .. {
-			OnCommand = function(self) self:x((SCREEN_CENTER_X*OffsetMath) - 320) end
+			OnCommand = function(self) self:x((SCREEN_CENTER_X * OffsetMath) - 320) end
 		},
 
 		-- Add the glowing selector part on the top of the wheel.
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/Selector"),
 			OnCommand = function(self)
-				self:zoom(.65):xy((SCREEN_CENTER_X*OffsetMath) - 180, -2):faderight(1)
+				self:zoom(.65):xy((SCREEN_CENTER_X * OffsetMath) - 180, -2):faderight(1)
 					:diffuseshift():effectcolor1(1, 1, 1, .9)
 					:effectcolor2(DisplayColor[1], DisplayColor[2], DisplayColor[3], .5)
 			end
@@ -977,7 +964,7 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/Slider"),
 			OnCommand = function(self)
-				self:zoom(.35):diffuse(.8, .8, 0, 1):x((SCREEN_CENTER_X*OffsetMath) - 20)
+				self:zoom(.35):diffuse(.8, .8, 0, 1):x((SCREEN_CENTER_X * OffsetMath) - 20)
 			end
 		},
 
@@ -985,7 +972,8 @@ return function(Style)
 			Name = "Slider",
 			Texture = THEME:GetPathG("", "DDR/SlidSelect"),
 			OnCommand = function(self)
-				self:zoom(.35):diffuse(1, 0, 0, 1):xy((SCREEN_CENTER_X*OffsetMath) - 20, -176 + (350 * (CurSong / #GroupsAndSongs)))
+				self:zoom(.35):diffuse(1, 0, 0, 1):xy((SCREEN_CENTER_X * OffsetMath) - 20,
+					-176 + (350 * (CurSong / #GroupsAndSongs)))
 			end
 		}
 	}

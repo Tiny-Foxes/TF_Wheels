@@ -25,7 +25,7 @@ if not CurSong then CurSong = 1 end
 if not CurGroup then GurGroup = "" end
 
 -- Position on the difficulty select that shows up after we picked a song.
-local DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 }
+if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
 
 local CurConfirm = 1
 

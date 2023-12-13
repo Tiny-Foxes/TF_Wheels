@@ -28,8 +28,8 @@ local DiffNames = {
 	"LIGHT", -- Difficulty_Easy
 	"STANDARD", -- Difficulty_Medium
 	"HEAVY ", -- Difficulty_Hard
-	"ONI", -- Difficulty_Challenge
-	"EDIT" -- Difficulty_Edit
+	"ONI",   -- Difficulty_Challenge
+	"EDIT"   -- Difficulty_Edit
 }
 local DiffImage = {
 	-- 習/楽/踊/激/鬼/創 -- Thanks paraph.
@@ -63,7 +63,7 @@ if not CurSong then CurSong = 1 end
 if not CurGroup then GurGroup = "" end
 
 -- Position on the difficulty select that shows up after we picked a song.
-local DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 }
+if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
 
 -- The increase offset for when we move with postive.
 local IncOffset = 1
@@ -77,7 +77,6 @@ local XOffset = 7
 -- Move the wheel, We define the Offset using +1 or -1.
 -- We parse the Songs also so we can get the amount of songs.
 local function MoveSelection(self, offset, Songs)
-
 	-- Curent Song + Offset.
 	CurSong = CurSong + offset
 
@@ -103,10 +102,8 @@ local function MoveSelection(self, offset, Songs)
 
 	-- If we are calling this command with an offset that is not 0 then do stuff.
 	if offset ~= 0 then
-
 		-- For every part on the wheel do.
 		for i = 1, 13 do
-
 			-- Make a transform command that changes the location of the part.
 			local transform = ((i - XOffset) * (i - XOffset)) * 3
 
@@ -133,14 +130,14 @@ local function MoveSelection(self, offset, Songs)
 			-- Here we define what the wheel does if it is outside the values.
 			-- So that when a part is at the bottom it will move to the top.
 			if (i == IncOffset and offset == -1) or (i == DecOffset and offset == 1) then
-
 				-- Move wheelpart instantly to new location.
 				self:GetChild("Wheel"):GetChild("Container" .. i):sleep(0):addy((offset * -45) * -13)
 
 				-- Check if it's a song.
 				if type(Songs[pos]) ~= "string" then
 					-- It's a song, Display song title.
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]
+					:GetDisplayMainTitle())
 				else
 					-- It is not a song, Display group name instead.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos])
@@ -158,8 +155,10 @@ local function MoveSelection(self, offset, Songs)
 					end
 
 					-- Set subtitle and artist to the values it has.
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]:GetDisplaySubTitle())
-					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" .. Songs[pos][1]:GetDisplayArtist())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]
+					:GetDisplaySubTitle())
+					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" ..
+					Songs[pos][1]:GetDisplayArtist())
 				else
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):y(0)
 
@@ -192,17 +191,16 @@ local function MoveSelection(self, offset, Songs)
 			self:GetChild("BannerUnderlay"):GetHeight(), 256, 80))
 
 		-- Load the top banner, This one shows when its done transitioning.
-		self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1):diffusealpha(0):sleep(0):queuecommand("Load"):diffusealpha(1)
+		self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1):diffusealpha(0):sleep(0):queuecommand("Load")
+			:diffusealpha(1)
 
 		-- Change CDTitle.
 		self:GetChild("CDTitle"):queuecommand("Load")
 
 		-- We are on an offset of 0.
 	else
-
 		-- For every part of the wheel do.
 		for i = 1, 13 do
-
 			-- Offset for the wheel items.
 			local off = i + XOffset
 
@@ -225,7 +223,8 @@ local function MoveSelection(self, offset, Songs)
 			-- Check if it's a song.
 			if type(Songs[pos]) ~= "string" then
 				-- It's a song, Display song title.
-				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]
+				:GetDisplayMainTitle())
 			else
 				-- It is not a song, Display group name instead.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos])
@@ -243,7 +242,8 @@ local function MoveSelection(self, offset, Songs)
 				end
 
 				-- Set subtitle and artist to the values it has.
-				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]:GetDisplaySubTitle())
+				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]
+				:GetDisplaySubTitle())
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Artist"):settext("/" ..
 					Songs[pos][1]:GetDisplayArtist())
 			else
@@ -266,7 +266,7 @@ local function MoveSelection(self, offset, Songs)
 
 		-- Stop all the music playing, Which is the Song Music
 		SOUND:StopMusic()
-	
+
 		-- Play Current selected Song Music.
 		self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
 	end
@@ -274,10 +274,9 @@ end
 
 -- Change the cursor of Player on the difficulty selector.
 local function MoveDifficulty(self, offset, Songs)
-
 	-- check if player is joined.
 	if offset == 0 then
-		for _,v in pairs(GAMESTATE:GetHumanPlayers()) do
+		for _, v in pairs(GAMESTATE:GetHumanPlayers()) do
 			if DiffPos[v] < 1 then DiffPos[v] = 1 end
 			if DiffPos[v] > #Songs[CurSong] - 1 then DiffPos[v] = #Songs[CurSong] - 1 end
 		end
@@ -285,7 +284,6 @@ local function MoveDifficulty(self, offset, Songs)
 		-- Call the move selecton command to update the graphical location of cursor.
 		MoveSelection(self, 0, Songs)
 	elseif self.pn and GAMESTATE:IsSideJoined(self.pn) then
-
 		-- Move cursor.
 		DiffPos[self.pn] = DiffPos[self.pn] + offset
 
@@ -306,9 +304,9 @@ local function MoveDifficulty(self, offset, Songs)
 					{ .1, 1, false, i == 1, DiffPos, Songs })
 				self:GetChild("Diffs"):GetChild("DiffCon" .. i):visible(true)
 				self:GetChild("Diffs"):GetChild("DiffCon" .. i):GetChild("DiffText"):settext(DiffImage[
-					TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[(i == 1) and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[(i == 1) and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
 				self:GetChild("Diffs"):GetChild("DiffCon" .. i):GetChild("DiffBG"):diffuse(DiffColors[
-					TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[(i == 1) and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
+				TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[(i == 1) and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
 			else
 				self:GetChild("Diffs"):GetChild("DiffCon" .. i):visible(false)
 				self:GetChild("Diffs"):GetChild("Radar" .. i):GetChild("GrooveBG"):diffusealpha(0)
@@ -326,7 +324,6 @@ end
 
 -- This is the main function, Its the function that contains the wheel.
 return function(Style)
-
 	-- Load the songs from the Songs.Loader module.
 	local Songs = LoadModule("Songs.Loader.lua")(Style)
 
@@ -391,14 +388,13 @@ return function(Style)
 					-- Set the size of the text and the location.
 					self:zoom(.4):halign(0):y(-10):maxwidth(640):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
-						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
+						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
+						[4])
 
 					-- Check if it's a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
-
 						-- Check if song subtitle is empty.
 						if GroupsAndSongs[pos][1]:GetDisplaySubTitle() == "" then
-
 							-- Its empty, Make title full size.
 							self:zoom(.6):y(-8):maxwidth(400)
 						end
@@ -423,7 +419,8 @@ return function(Style)
 					-- Set size and colour.
 					self:zoom(.3):halign(0):maxwidth(650):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
-						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
+						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
+						[4])
 				end
 			},
 			Def.BitmapText {
@@ -439,7 +436,8 @@ return function(Style)
 					-- Set size and colour.
 					self:zoom(.3):halign(0):y(10):maxwidth(650):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
-						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor[4])
+						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
+						[4])
 				end
 			}
 		}
@@ -454,10 +452,12 @@ return function(Style)
 			local Val = {}
 			colour = param[3] and
 				DiffColorsInside[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
-				 or DiffColors[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
+				or DiffColors
+				[TF_WHEEL.DiffTab[param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
 			zero = { { 0, 0, 0 }, colour }
 			for i = 0, 4 do
-				local temp = param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetRadarValues(param[4] and PLAYER_1
+				local temp = param[6][CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetRadarValues(param[4] and
+					PLAYER_1
 					or PLAYER_2):GetValue(i)
 				Val[#Val + 1] = (temp < 1) and temp or 1
 			end
@@ -466,20 +466,20 @@ return function(Style)
 				self:linear(param[1])
 					:SetVertices({
 						{ { -80 * Val[2], -25 * Val[2], 0 }, colour }, zero,
-						{ { 0, -85 * Val[1], 0 }, colour }, { { 0, -85 * Val[1], 0 }, colour }, zero,
+						{ { 0, -85 * Val[1], 0 },            colour }, { { 0, -85 * Val[1], 0 }, colour }, zero,
 						{ { 80 * Val[5], -25 * Val[5], 0 }, colour }, { { 80 * Val[5], -25 * Val[5], 0 }, colour }, zero,
-						{ { 45 * Val[4], 70 * Val[4], 0 }, colour }, { { 45 * Val[4], 70 * Val[4], 0 }, colour }, zero,
-						{ { -45 * Val[3], 70 * Val[3], 0 }, colour }, { { -45 * Val[3], 70 * Val[3], 0 }, colour }, zero,
+						{ { 45 * Val[4], 70 * Val[4], 0 },  colour }, { { 45 * Val[4], 70 * Val[4], 0 }, colour }, zero,
+						{ { -45 * Val[3], 70 * Val[3], 0 },  colour }, { { -45 * Val[3], 70 * Val[3], 0 }, colour }, zero,
 						{ { -80 * Val[2], -25 * Val[2], 0 }, colour }
 					})
 			else
 				self:linear(param[1])
 					:SetVertices({
 						{ { -80 * Val[2], -25 * Val[2], 0 }, colour },
-						{ { 0, -85 * Val[1], 0 }, colour },
-						{ { 80 * Val[5], -25 * Val[5], 0 }, colour },
-						{ { 45 * Val[4], 70 * Val[4], 0 }, colour },
-						{ { -45 * Val[3], 70 * Val[3], 0 }, colour },
+						{ { 0, -85 * Val[1], 0 },            colour },
+						{ { 80 * Val[5], -25 * Val[5], 0 },  colour },
+						{ { 45 * Val[4], 70 * Val[4], 0 },   colour },
+						{ { -45 * Val[3], 70 * Val[3], 0 },  colour },
 						{ { -80 * Val[2], -25 * Val[2], 0 }, colour }
 					})
 			end
@@ -520,7 +520,7 @@ return function(Style)
 					self:zoomto(80, 80):xy(-60, 0)
 					if type(GroupsAndSongs[CurSong]) ~= "string" then
 						self:diffuse(DiffColors[
-							TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[i == 0 and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
+						TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[i == 0 and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
 					end
 				end
 			},
@@ -531,7 +531,7 @@ return function(Style)
 					self:zoom(2):xy(-60, 0):maxwidth(40)
 					if type(GroupsAndSongs[CurSong]) ~= "string" then
 						self:settext(DiffImage[
-							TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[i == 0 and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
+						TF_WHEEL.DiffTab[GroupsAndSongs[CurSong][DiffPos[i == 0 and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]])
 					end
 				end
 			},
@@ -568,14 +568,13 @@ return function(Style)
 				MoveCommand = MoveFunction
 			}
 		}
-
 	end
 
 	local GRLocation = {
-		{ 0, -105 },
-		{ 110, -35 },
-		{ 85, 80 },
-		{ -85, 80 },
+		{ 0,    -105 },
+		{ 110,  -35 },
+		{ 85,   80 },
+		{ -85,  80 },
 		{ -110, -35 }
 	}
 
@@ -625,10 +624,16 @@ return function(Style)
 		},
 
 		-- Do stuff when a user presses left on Pad or Menu buttons.
-		MenuLeftCommand = function(self) MoveSelection(self, -1, GroupsAndSongs) MoveDifficulty(self, 0, GroupsAndSongs) end,
+		MenuLeftCommand = function(self)
+			MoveSelection(self, -1, GroupsAndSongs)
+			MoveDifficulty(self, 0, GroupsAndSongs)
+		end,
 
 		-- Do stuff when a user presses Right on Pad or Menu buttons.
-		MenuRightCommand = function(self) MoveSelection(self, 1, GroupsAndSongs) MoveDifficulty(self, 0, GroupsAndSongs) end,
+		MenuRightCommand = function(self)
+			MoveSelection(self, 1, GroupsAndSongs)
+			MoveDifficulty(self, 0, GroupsAndSongs)
+		end,
 
 		-- Do stuff when a user presses the Down on Pad or Menu buttons.
 		MenuDownCommand = function(self) MoveDifficulty(self, 1, GroupsAndSongs) end,
@@ -648,7 +653,8 @@ return function(Style)
 					MoveDifficulty(self, 0, GroupsAndSongs)
 				else
 					-- Go to the previous screen.
-					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):StartTransitioningScreen("SM_GoToNextScreen")
+					SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName())
+						:StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 		end,
@@ -657,14 +663,13 @@ return function(Style)
 		StartCommand = function(self)
 			-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 			if StartOptions then
-				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
+				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
+				"SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
-
 				-- Check if we are on a group.
 				if type(GroupsAndSongs[CurSong]) == "string" then
-
 					-- Check if we are on the same group thats currently open,
 					-- If not we set the curent group to our new selection.
 					if CurGroup ~= GroupsAndSongs[CurSong] then
@@ -692,7 +697,6 @@ return function(Style)
 
 					-- Not on a group, Start song.
 				else
-
 					--We use PlayMode_Regular for now.
 					GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
@@ -701,7 +705,6 @@ return function(Style)
 
 					-- Check if 2 players are joined.
 					if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
-
 						-- If they are, We will use Versus.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDBVersus[Style])
 
@@ -713,7 +716,6 @@ return function(Style)
 						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][DiffPos[PLAYER_1] + 1])
 						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][DiffPos[PLAYER_2] + 1])
 					else
-
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
 
@@ -745,7 +747,8 @@ return function(Style)
 
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
-			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
+			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
+			"SM_GoToNextScreen")
 		end,
 
 		Def.Quad {
@@ -867,11 +870,13 @@ return function(Style)
 					end
 				end,
 				BPMOneCommand = function(self)
-					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[CurSong][1]:GetDisplayBpms()[1], .4, "%03.0f")
+					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[CurSong][1]:GetDisplayBpms()[1], .4,
+						"%03.0f")
 					self:sleep(.8):queuecommand("BPMTwo")
 				end,
 				BPMTwoCommand = function(self)
-					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2], .4, "%03.0f")
+					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[CurSong][1]:GetDisplayBpms()[2], .4,
+						"%03.0f")
 					self:sleep(.8):queuecommand("BPMOne")
 				end
 			},
@@ -981,7 +986,8 @@ return function(Style)
 					if type(GroupsAndSongs[CurSong]) ~= "string" then
 						-- It is, Get CDTitle.
 						self:GetChild("")[i]:visible(true):Load(GroupsAndSongs[CurSong][1]:GetCDTitlePath())
-							:zoom(TF_WHEEL.Resize(self:GetChild("")[i]:GetWidth(), self:GetChild("")[i]:GetHeight(), 60, 60))
+							:zoom(TF_WHEEL.Resize(self:GetChild("")[i]:GetWidth(), self:GetChild("")[i]:GetHeight(), 60,
+								60))
 					else
 						self:GetChild("")[i]:visible(false)
 					end
@@ -1065,7 +1071,8 @@ return function(Style)
 		Def.Sprite {
 			Texture = THEME:GetPathG("", "DDR/Radar"),
 			OnCommand = function(self)
-				self:zoom(.35):xy(-SCREEN_CENTER_X + 140, 120):diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], 1)
+				self:zoom(.35):xy(-SCREEN_CENTER_X + 140, 120):diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3],
+					1)
 			end
 		},
 

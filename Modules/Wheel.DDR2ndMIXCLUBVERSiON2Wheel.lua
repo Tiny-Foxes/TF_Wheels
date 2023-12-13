@@ -41,6 +41,10 @@ if not CurSong then CurSong = 1 end
 -- We define the current group to be empty if no group is defined.
 if not CurGroup then GurGroup = "" end
 
+-- Position on the difficulty select that shows up after we picked a song.
+if not DiffPos then DiffPos = { [PLAYER_1] = 1, [PLAYER_2] = 1 } end
+local DiffPlayer = GAMESTATE:GetMasterPlayerNumber()
+
 -- The Offset we use for the CD wheel.
 local CDOffset = 1
 
@@ -302,11 +306,6 @@ local function StartSelection(self, Songs)
 	end
 end
 
--- Define the start difficulty to be the 2nd selection,
--- Because the first selection is the entire Song,
--- And the second and plus versions are all difficulties.
-local CurDiff = 2
-
 local function MoveDifficulty(self, offset, Songs)
 	-- Check if its a group
 	if type(Songs[CurSong]) == "string" then
@@ -317,20 +316,20 @@ local function MoveDifficulty(self, offset, Songs)
 	else
 		self:GetChild("Diffs"):visible(true)
 		-- Move the current difficulty + offset
-		CurDiff = CurDiff + offset
+		DiffPos[DiffPlayer] = DiffPos[DiffPlayer] + offset
 
 		-- Stay withing limits, But ignoring the first selection because its the entire song.
-		if CurDiff > #Songs[CurSong] then CurDiff = 2 end
-		if CurDiff < 2 then CurDiff = #Songs[CurSong] end
+		if DiffPos[DiffPlayer] > #Songs[CurSong] - 1 then DiffPos[DiffPlayer] = 1 end
+		if DiffPos[DiffPlayer] < 1 then DiffPos[DiffPlayer] = #Songs[CurSong] - 1 end
 
 		-- Run on every feet, A feet is a part of the Difficulty, We got a max of 9 feets.
 		for i = 1, 9 do
 			self:GetChild("Diffs"):GetChild("Feet" .. i):diffuse(DiffColors[
-			TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]]):diffusealpha(0)
+			TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]]):diffusealpha(0)
 		end
 
 		-- We get the Meter from the game, And make it so it stays between 8 which is the Max feets we support.
-		local DiffCount = Songs[CurSong][CurDiff]:GetMeter()
+		local DiffCount = Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetMeter()
 		if DiffCount > 9 then DiffCount = 9 end
 
 		-- For every Meter value we got for the game, We show the amount of feets for the difficulty, And center them.
@@ -340,7 +339,7 @@ local function MoveDifficulty(self, offset, Songs)
 
 		-- Set the name of the Chart Difficulty.
 		self:GetChild("DiffChart"):settext(DiffChartNames[DiffCount]):diffuse(DiffColors[
-		TF_WHEEL.DiffTab[Songs[CurSong][CurDiff]:GetDifficulty()]])
+		TF_WHEEL.DiffTab[Songs[CurSong][DiffPos[DiffPlayer] + 1]:GetDifficulty()]])
 	end
 end
 
@@ -531,6 +530,7 @@ return function(Style)
 			self:GetChild("MusicCon"):sleep(0):queuecommand("PlayCurrentSong")
 
 			-- Initalize the Difficulties.
+			if not DiffPlayer then DiffPlayer = PLAYER_1 end
 			MoveDifficulty(self, 0, GroupsAndSongs)
 		end,
 
@@ -653,8 +653,8 @@ return function(Style)
 						PROFILEMAN:SaveProfile(PLAYER_2)
 
 						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][CurDiff])
-						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][CurDiff])
+						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
 					else
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
@@ -663,7 +663,7 @@ return function(Style)
 						PROFILEMAN:SaveProfile(self.pn)
 
 						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[CurSong][CurDiff])
+						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[CurSong][DiffPos[DiffPlayer] + 1])
 					end
 
 					-- We want to go to player options when people doublepress, So we set the StartOptions to true,
@@ -682,6 +682,9 @@ return function(Style)
 
 				-- Load the profles.
 				GAMESTATE:LoadProfiles()
+
+				-- Set DiffPlayer to current master player
+				DiffPlayer = GAMESTATE:GetMasterPlayerNumber()
 
 				-- Set Style Text to VERSUS when 2 Players.
 				if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
