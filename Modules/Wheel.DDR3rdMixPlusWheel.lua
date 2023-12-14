@@ -1,5 +1,5 @@
 -- Use masks for CD's instead of multiple Banners.
-if not MaskMode then MaskMode = false end
+if not TF_WHEEL.MaskMode then TF_WHEEL.MaskMode = false end
 
 -- Difficulty Colours
 local DiffColors = {
@@ -147,7 +147,7 @@ local function MoveSelection(self, offset, Songs)
 	if type(Songs[pos]) ~= "string" then
 		-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 		if Songs[pos][1]:HasBanner() then
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild(
 						"CDPicture"):Load(Songs[pos]
@@ -156,7 +156,7 @@ local function MoveSelection(self, offset, Songs)
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(Songs[pos][1]:GetBannerPath())
 			end
 		else
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild(
 						"CDPicture"):Load(THEME
@@ -166,7 +166,7 @@ local function MoveSelection(self, offset, Songs)
 			end
 		end
 
-		if MaskMode then
+		if TF_WHEEL.MaskMode then
 			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder"):GetChild(
 				"CDPicture")
 				:setsize(-120, -120)
@@ -200,7 +200,7 @@ local function MoveSelection(self, offset, Songs)
 			if type(Songs[pos]) ~= "string" then
 				-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
 				if Songs[pos][1]:HasBanner() then
-					if MaskMode then
+					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(Songs[pos]
@@ -209,7 +209,7 @@ local function MoveSelection(self, offset, Songs)
 						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(Songs[pos][1]:GetBannerPath())
 					end
 				else
-					if MaskMode then
+					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(THEME
@@ -221,7 +221,7 @@ local function MoveSelection(self, offset, Songs)
 			else
 				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-					if MaskMode then
+					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(SONGMAN:GetSongGroupBannerPath(
@@ -231,7 +231,7 @@ local function MoveSelection(self, offset, Songs)
 							Songs[pos]))
 					end
 				else
-					if MaskMode then
+					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(THEME
@@ -242,7 +242,7 @@ local function MoveSelection(self, offset, Songs)
 				end
 			end
 
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild("CDPicture")
 					:setsize(-120, -120)
@@ -259,7 +259,7 @@ local function MoveSelection(self, offset, Songs)
 	else
 		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
 		if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild("CDPicture"):Load(
 					SONGMAN:GetSongGroupBannerPath(Songs[pos]))
@@ -267,7 +267,7 @@ local function MoveSelection(self, offset, Songs)
 				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 			end
 		else
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild("CDPicture"):Load(
 					THEME:GetPathG("",
@@ -277,7 +277,7 @@ local function MoveSelection(self, offset, Songs)
 			end
 		end
 
-		if MaskMode then
+		if TF_WHEEL.MaskMode then
 			self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder"):GetChild(
 				"CDPicture"):setsize(
 				-120, -120)
@@ -352,7 +352,7 @@ local function StartSelection(self, Songs)
 	for i = 1, 21 do
 		-- Check if its the front most CD.
 		if i == CDSwitch then
-			if MaskMode then
+			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. i):GetChild("Container"):GetChild("CDHolder"):linear(.8)
 					:diffusealpha(0)
 			else
@@ -433,7 +433,7 @@ return function(Style)
 		while pos > #GroupsAndSongs do pos = pos - #GroupsAndSongs end
 		while pos < 1 do pos = #GroupsAndSongs + pos end
 
-		if MaskMode then
+		if TF_WHEEL.MaskMode then
 			CDs[#CDs + 1] = Def.ActorFrame {
 				Name = "CD" .. i,
 				OnCommand = function(self)
@@ -587,7 +587,7 @@ return function(Style)
 					self:SetTarget(self:ForParent(3):GetChild("CDCon"):GetChild("CD" .. 11)
 						:GetChild("Container")
 						:GetChild("CDHolder"))
-					if MaskMode then
+					if TF_WHEEL.MaskMode then
 						self:zoom(-1)
 					end
 				end

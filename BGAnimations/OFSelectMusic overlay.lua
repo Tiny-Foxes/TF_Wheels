@@ -52,7 +52,7 @@ local function RandButNotLast(Amount)
 	return Now
 end
 
-MaskMode = true;
+TF_WHEEL.MaskMode = true;
 
 --Return the Def table that contains all the stuff, Check the module folder for the wheels.
 return LoadModule("Wheel." .. Wheels[RandButNotLast(#Wheels)] .. ".lua")(GameModeStyles[GAMESTATE:GetCurrentGame():GetName()] or "dance_single")
