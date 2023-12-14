@@ -39,16 +39,16 @@ local GameModeStyles = {
 }
 
 -- The last defined wheel, Its like smart shuffle, We dont want to get the same wheel twice.
-if not Last then Last = 0 end
+if not TF_WHEEL.LastW then TF_WHEEL.LastW = 0 end
 
 -- Our random suffle function.
 local function RandButNotLast(Amount)
 	local Now
 	while true do
 		Now = math.random(1, Amount)
-		if Now ~= Last then break end
+		if Now ~= TF_WHEEL.LastW then break end
 	end
-	Last = Now
+	TF_WHEEL.LastW = Now
 	return Now
 end
 

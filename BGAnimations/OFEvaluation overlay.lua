@@ -5,16 +5,16 @@ local Evals = {
 }
 
 -- The last defined eval, Its like smart shuffle, We dont want to get the same eval twice.
-if not Last then Last = 0 end
+if not TF_WHEEL.LastE then TF_WHEEL.LastE = 0 end
 
 -- Our random suffle function.
 local function RandButNotLast(Amount)
 	local Now
 	while true do
 		Now = math.random(1,Amount)
-		if Now ~= Last then break end
+		if Now ~= TF_WHEEL.LastE then break end
 	end
-	Last = Now
+	TF_WHEEL.LastE = Now
 	return Now
 end
 
