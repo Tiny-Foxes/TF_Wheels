@@ -145,7 +145,7 @@ local function MoveSelection(self, offset, Songs)
 
 	--Do a string check, If its a string, Its a group.
 	if type(Songs[pos]) ~= "string" then
-		-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
+		-- We check if the song has a banner, We use this for the CDs, If there is no banner, use fallback banner.png
 		if Songs[pos][1]:HasBanner() then
 			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
@@ -160,9 +160,9 @@ local function MoveSelection(self, offset, Songs)
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild(
 						"CDPicture"):Load(THEME
-					:GetPathG("", "white.png"))
+					:GetPathG("Common", "fallback banner.png"))
 			else
-				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("Common", "fallback banner.png"))
 			end
 		end
 
@@ -198,7 +198,7 @@ local function MoveSelection(self, offset, Songs)
 
 			--Check if it is a song.
 			if type(Songs[pos]) ~= "string" then
-				-- We check if the song has a banner, We use this for the CDs, If there is no banner, use white.png
+				-- We check if the song has a banner, We use this for the CDs, If there is no banner, use fallback banenr.png
 				if Songs[pos][1]:HasBanner() then
 					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
@@ -213,13 +213,13 @@ local function MoveSelection(self, offset, Songs)
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(THEME
-							:GetPathG("", "white.png"))
+							:GetPathG("Common", "fallback banner.png"))
 					else
-						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("Common", "fallback banner.png"))
 					end
 				end
 			else
-				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
+				-- Its a song group, Set it to group banner, If it doesnt have a banner, Use fallback banner.png
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 					if TF_WHEEL.MaskMode then
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
@@ -235,9 +235,9 @@ local function MoveSelection(self, offset, Songs)
 						self:GetChild("CDCon"):GetChild("CD" .. CDSliceOffset):GetChild("Container"):GetChild("CDHolder")
 							:GetChild(
 								"CDPicture"):Load(THEME
-							:GetPathG("", "white.png"))
+							:GetPathG("Common", "fallback banner.png"))
 					else
-						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("", "white.png"))
+						self:GetChild("Con"):GetChild("CDSlice" .. CDSliceOffset):Load(THEME:GetPathG("Common", "fallback banner.png"))
 					end
 				end
 			end
@@ -257,7 +257,7 @@ local function MoveSelection(self, offset, Songs)
 			end
 		end
 	else
-		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use white.png
+		-- Its a song group, Set it to group banner, If it doesnt have a banner, Use fallback banner.png
 		if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
@@ -270,10 +270,9 @@ local function MoveSelection(self, offset, Songs)
 			if TF_WHEEL.MaskMode then
 				self:GetChild("CDCon"):GetChild("CD" .. ChangeOffset):GetChild("Container"):GetChild("CDHolder")
 					:GetChild("CDPicture"):Load(
-					THEME:GetPathG("",
-						"white.png"))
+					THEME:GetPathG("Common", "fallback banner.png"))
 			else
-				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("", "white.png"))
+				self:GetChild("Con"):GetChild("CDSlice" .. ChangeOffset):Load(THEME:GetPathG("Common", "fallback banner.png"))
 			end
 		end
 
@@ -300,25 +299,30 @@ local function MoveSelection(self, offset, Songs)
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[TF_WHEEL.CurSong][1]:HasBanner() then
 			self:GetChild("BannerText"):settext(Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
+
+			self:GetChild("Banner"):Load(THEME:GetPathG("Common", "fallback banner.png"))
 		else
 			self:GetChild("BannerText"):settext("")
+
+			self:GetChild("Banner"):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
 		end
 
-		-- Set the Centered Banner.
-		self:GetChild("Banner"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
-
 		-- This is the same as Centered Banner, But for CDTitles.
-		self:GetChild("CDTitle"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetCDTitlePath())
+		if Songs[TF_WHEEL.CurSong][1]:HasCDTitle() then
+			self:GetChild("CDTitle"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetCDTitlePath())
+		else
+			self:GetChild("CDTitle"):visible(false)
+		end
 
 		-- Its a group.
 	else
 		-- Set banner and hide cdtitle.
 		if SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]) ~= "" then
-			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
+			self:GetChild("Banner"):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
 
 			self:GetChild("BannerText"):settext("")
 		else
-			self:GetChild("Banner"):visible(false)
+			self:GetChild("Banner"):Load(THEME:GetPathG("Common", "fallback banner.png"))
 
 			-- Set name to group.
 			self:GetChild("BannerText"):settext(Songs[TF_WHEEL.CurSong])
@@ -369,6 +373,9 @@ local function MoveDifficulty(self, offset, Songs)
 	if type(Songs[TF_WHEEL.CurSong]) == "string" then
 		-- If it is a group hide the diffs
 		self:GetChild("Diffs"):visible(false)
+
+		self:GetChild("DiffChart"):settext("")
+		self:GetChild("DiffChartShadow"):settext("")
 
 		-- Not a group
 	else
@@ -469,8 +476,8 @@ return function(Style)
 						},
 						Def.Sprite {
 							Name = "CDPicture",
-							-- Load white as fallback.
-							Texture = THEME:GetPathG("", "white.png"),
+							-- Load fallback.
+							Texture = THEME:GetPathG("Common", "fallback banner.png"),
 							OnCommand = function(self)
 								-- Check if its a song.
 								if type(GroupsAndSongs[pos]) ~= "string" then
@@ -500,8 +507,8 @@ return function(Style)
 			-- We load a Banner once, We use ActorProxy to copy it, This is lighter than loading the Banner for every Slice.
 			CDslice[#CDslice + 1] = Def.Sprite {
 				Name = "CDSlice" .. i,
-				-- Load white as fallback.
-				Texture = THEME:GetPathG("", "white.png"),
+				-- Load fallback.
+				Texture = THEME:GetPathG("Common", "fallback banner.png"),
 				OnCommand = function(self)
 					-- Check if its a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -838,18 +845,17 @@ return function(Style)
 		-- Load the Global Centered Banner.
 		Def.Sprite {
 			Name = "Banner",
-			Texture = THEME:GetPathG("", "white.png"),
+			Texture = THEME:GetPathG("Common", "fallback banner.png"),
 			OnCommand = function(self)
 				-- Check if we are on song
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-					self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
-
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+						self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					end
 					-- Not on song, Show group banner.
 				else
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
-					else
-						self:visible(false)
 					end
 				end
 
@@ -876,7 +882,7 @@ return function(Style)
 					end
 				end
 
-				self:y(-60):diffuse(1, 1, 0, 1):strokecolor(0, 0, 1, 1):zoom(.5)
+				self:y(-60):diffuse(1, 1, 0, 1):strokecolor(0, 0, 1, 1):zoom(.5):maxwidth(600)
 			end
 		},
 
@@ -886,10 +892,10 @@ return function(Style)
 			Texture = THEME:GetPathG("", "white.png"),
 			OnCommand = function(self)
 				-- Check if its a song.
-				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" and GroupsAndSongs[TF_WHEEL.CurSong][1]:HasCDTitle() then
 					self:visible(true):Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetCDTitlePath())
 
-					-- Not song, Hide CDTitle.
+					-- Not song or not found, Hide CDTitle.
 				else
 					self:visible(false)
 				end

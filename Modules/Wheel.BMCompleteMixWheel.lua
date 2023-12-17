@@ -86,7 +86,7 @@ local function MoveSelection(self, offset, Songs)
 							:Load(Songs[pos][1]:GetBannerPath())
 					else
 						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture")
-							:Load(THEME:GetPathG("", "white.png"))
+							:Load(THEME:GetPathG("Common", "fallback banner.png"))
 					end
 				else
 					if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
@@ -94,7 +94,7 @@ local function MoveSelection(self, offset, Songs)
 							SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 					else
 						self:GetChild("LPCon"):GetChild("LP" .. i):GetChild("Container"):GetChild("LPPicture"):Load(
-							THEME:GetPathG("", "white.png"))
+							THEME:GetPathG("Common", "fallback banner.png"))
 					end
 				end
 
@@ -132,7 +132,7 @@ local function MoveSelection(self, offset, Songs)
 						:Load(Songs[pos][1]:GetBannerPath())
 				else
 					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture")
-						:Load(THEME:GetPathG("", "white.png"))
+						:Load(THEME:GetPathG("Common", "fallback banner.png"))
 				end
 			else
 				if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
@@ -140,7 +140,7 @@ local function MoveSelection(self, offset, Songs)
 						SONGMAN:GetSongGroupBannerPath(Songs[pos]))
 				else
 					self:GetChild("LPCon"):GetChild("LP" .. off):GetChild("Container"):GetChild("LPPicture"):Load(
-						THEME:GetPathG("", "white.png"))
+						THEME:GetPathG("Common", "fallback banner.png"))
 				end
 			end
 
@@ -156,12 +156,12 @@ local function MoveSelection(self, offset, Songs)
 	if type(Songs[TF_WHEEL.CurSong]) ~= "string" then
 		-- Check if a song has a banner, If it doesnt show song title.
 		if not Songs[TF_WHEEL.CurSong][1]:HasBanner() then
-			self:GetChild("Banner"):visible(false)
+			self:GetChild("Banner"):Load(THEME:GetPathG("Common", "fallback banner.png"))
 
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle()):maxwidth(280)
 				:maxheight(120):Regen()
 		else
-			self:GetChild("Banner"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
+			self:GetChild("Banner"):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
 
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(120):Regen()
 		end
@@ -177,11 +177,11 @@ local function MoveSelection(self, offset, Songs)
 	else
 		-- Set banner.
 		if SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]) ~= "" then
-			self:GetChild("Banner"):visible(true):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
+			self:GetChild("Banner"):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
 
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(""):maxwidth(280):maxheight(120):Regen()
 		else
-			self:GetChild("Banner"):visible(false)
+			self:GetChild("Banner"):Load(THEME:GetPathG("Common", "fallback banner.png"))
 
 			-- Set name to group.
 			self:GetChild("BannerAFT"):GetChild("BannerText"):settext(Songs[TF_WHEEL.CurSong]):maxwidth(280):maxheight(120):Regen()
@@ -303,8 +303,8 @@ return function(Style)
 				},
 				Def.Sprite {
 					Name = "LPPicture",
-					-- Load white as fallback.
-					Texture = THEME:GetPathG("", "white.png"),
+					-- Load fallback.
+					Texture = THEME:GetPathG("Common", "fallback banner.png"),
 					OnCommand = function(self)
 						-- Check if its a song.
 						if type(GroupsAndSongs[pos]) ~= "string" then
@@ -583,7 +583,7 @@ return function(Style)
 		-- Load the Global Centered Banner.
 		Def.Sprite {
 			Name = "Banner",
-			Texture = THEME:GetPathG("", "white.png"),
+			Texture = THEME:GetPathG("Common", "fallback banner.png"),
 			OnCommand = function(self)
 				-- Check if we are on song
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
@@ -593,8 +593,6 @@ return function(Style)
 				else
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
-					else
-						self:visible(false)
 					end
 				end
 
@@ -623,17 +621,17 @@ return function(Style)
 					if type(GroupsAndSongs[TF_WHEEL.CurSong]) == "string" then
 						-- Check if group has banner, If so, Set text to empty
 						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) == "" then
-							self:settext(GroupsAndSongs[TF_WHEEL.CurSong]):maxwidth(280):maxheight(120):Regen()
+							self:settext(GroupsAndSongs[TF_WHEEL.CurSong])
 						end
 						-- not group.
 					else
 						-- Check if we have banner, if not, set text to song title.
 						if not GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
-							self:settext(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle()):maxwidth(280):maxheight(120)
-								:Regen()
+							self:settext(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
 						end
 					end
 
+					self:maxwidth(280):maxheight(120):Regen()
 					self:MainActor():xy(140, 60)
 					self:StrokeActor():diffusealpha(0)
 				end

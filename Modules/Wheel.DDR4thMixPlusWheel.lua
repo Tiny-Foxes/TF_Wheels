@@ -146,15 +146,21 @@ local function ChangeSelection(self, offset, Songs)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-			-- Make the slider load the current row banners.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(Songs[pos][1]:
-			GetBannerPath())
+			if Songs[pos][1]:HasBanner() then
+				-- Make the slider load the current row banners.
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(Songs[pos][1]
+					:GetBannerPath())
+			else
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(THEME:GetPathG("Common",
+					"fallback banner"))
+			end
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(SONGMAN:
 				GetSongGroupBannerPath(Songs[pos]))
 			else
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(0)
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(THEME:GetPathG("Common",
+					"fallback banner"))
 			end
 		end
 
@@ -165,7 +171,7 @@ local function ChangeSelection(self, offset, Songs)
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):GetHeight(), 256, 80))
 
 		-- Get the amount of songs text that displays the current song we're on.
-		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("TF_WHEEL.CurSong"):settext(pos .. "/" .. #Songs)
+		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("CurSong"):settext(pos .. "/" .. #Songs)
 
 		-- Feet Meter.
 		for i3 = 1, 6 do
@@ -297,10 +303,13 @@ local function UpdateSelection(self, Songs)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-			-- For every banner on current row load the next banner.
-			self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1):Load(
-				Songs[
-				pos][1]:GetBannerPath())
+			if Songs[pos][1]:HasBanner() then
+				-- For every banner on current row load the next banner.
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(1)
+					:Load(Songs[pos][1]:GetBannerPath())
+			else
+				self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon"):GetChild("Banner"):diffusealpha(0)
+			end
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
 				-- For every banner on current row load the next banner.
@@ -370,15 +379,22 @@ local function UpdateSelection(self, Songs)
 
 		-- Check if its a song.
 		if type(Songs[pos]) ~= "string" then
-			-- Make the slider load the current row banners.
-			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(Songs[pos][1]:
-			GetBannerPath())
+			if Songs[pos][1]:HasBanner() then
+				-- For every banner on current row load the next banner.
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(
+					Songs[
+					pos][1]:GetBannerPath())
+			else
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(THEME:GetPathG("Common",
+					"fallback banner"))
+			end
 		else
 			if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(1):Load(SONGMAN:
-				GetSongGroupBannerPath(Songs[pos]))
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(SONGMAN
+					:GetSongGroupBannerPath(Songs[pos]))
 			else
-				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):diffusealpha(0)
+				self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):Load(THEME:GetPathG("Common",
+					"fallback banner"))
 			end
 		end
 
@@ -389,7 +405,7 @@ local function UpdateSelection(self, Songs)
 			self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("Banner"):GetHeight(), 256, 80))
 
 		-- Get the amount of songs text that displays the current song we're on.
-		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("TF_WHEEL.CurSong"):settext(pos .. "/" .. #Songs)
+		self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("CurSong"):settext(pos .. "/" .. #Songs)
 
 		-- Feet Meter.
 		for i3 = 1, 6 do
@@ -635,12 +651,18 @@ return function(Style)
 					-- Check if its a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
 						-- If the banner exist, Load Banner.png.
-						if GroupsAndSongs[pos][1]:HasBanner() then self:Load(GroupsAndSongs[pos][1]:GetBannerPath()) end
+						if GroupsAndSongs[pos][1]:HasBanner() then
+							self:Load(GroupsAndSongs[pos][1]:GetBannerPath())
+						else
+							self:Load(THEME:GetPathG("Common", "fallback banner"))
+						end
 					else
 						-- IF group banner exist, Load banner.png
 						if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[pos]) ~= "" then
 							self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs
 								[pos]))
+						else
+							self:Load(THEME:GetPathG("Common", "fallback banner"))
 						end
 					end
 
@@ -659,7 +681,7 @@ return function(Style)
 			-- The current song and amount of songs text.
 			Def.BitmapText {
 				Font = "_noto sans 40px",
-				Name = "TF_WHEEL.CurSong",
+				Name = "CurSong",
 				Text = pos .. "/" .. #GroupsAndSongs,
 				OnCommand = function(self)
 					self:zoom(.2):y(44):x(96):strokecolor(0, 0, 0, 1)
@@ -720,7 +742,7 @@ return function(Style)
 					Def.Quad {
 						Name = "FallbackBanner",
 						OnCommand = function(self)
-							self:zoomto(128, 40):diffuse(.5, .5, .5, 1)
+							self:zoomto(128, 40):diffuse(.2, .2, .2, 1)
 							-- Check if its a song.
 							if type(GroupsAndSongs[pos]) ~= "string" then
 								if GroupsAndSongs[pos][1]:HasBanner() then
@@ -901,8 +923,10 @@ return function(Style)
 						PROFILEMAN:SaveProfile(PLAYER_2)
 
 						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
-						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_1,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_2,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
 					else
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
@@ -911,7 +935,8 @@ return function(Style)
 						PROFILEMAN:SaveProfile(self.pn)
 
 						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
+						GAMESTATE:SetCurrentSteps(self.pn,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
 					end
 
 					-- We want to go to player options when people doublepress, So we set the StartOptions to true,

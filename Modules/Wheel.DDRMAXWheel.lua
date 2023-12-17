@@ -137,7 +137,7 @@ local function MoveSelection(self, offset, Songs)
 				if type(Songs[pos]) ~= "string" then
 					-- It's a song, Display song title.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]
-					:GetDisplayMainTitle())
+						:GetDisplayMainTitle())
 				else
 					-- It is not a song, Display group name instead.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos])
@@ -156,9 +156,9 @@ local function MoveSelection(self, offset, Songs)
 
 					-- Set subtitle and artist to the values it has.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]
-					:GetDisplaySubTitle())
+						:GetDisplaySubTitle())
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" ..
-					Songs[pos][1]:GetDisplayArtist())
+						Songs[pos][1]:GetDisplayArtist())
 				else
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):y(0)
 
@@ -173,16 +173,22 @@ local function MoveSelection(self, offset, Songs)
 
 		-- Check if it's a song.
 		if type(Songs[TF_WHEEL.CurSong]) ~= "string" then
-			-- It is a song, so we load the under banner.
-			self:GetChild("BannerUnderlay"):visible(1):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
+			-- It is, Check if it has banner.
+			if Songs[TF_WHEEL.CurSong][1]:HasBanner() then
+				-- It does, Load it.
+				self:GetChild("BannerUnderlay"):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
+			else
+				-- It doesnt, Hide the banner.
+				self:GetChild("BannerUnderlay"):Load(THEME:GetPathG("Common", "fallback banner"))
+			end
 		else
 			-- It is not a song, Do an extra check to see if group has banner.
 			if SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]) ~= "" then
 				-- It does, Display it.
-				self:GetChild("BannerUnderlay"):visible(1):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
+				self:GetChild("BannerUnderlay"):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
 			else
 				-- It doesnt, Hide it.
-				self:GetChild("BannerUnderlay"):visible(0)
+				self:GetChild("BannerUnderlay"):Load(THEME:GetPathG("Common", "fallback banner"))
 			end
 		end
 
@@ -224,7 +230,7 @@ local function MoveSelection(self, offset, Songs)
 			if type(Songs[pos]) ~= "string" then
 				-- It's a song, Display song title.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]
-				:GetDisplayMainTitle())
+					:GetDisplayMainTitle())
 			else
 				-- It is not a song, Display group name instead.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos])
@@ -243,7 +249,7 @@ local function MoveSelection(self, offset, Songs)
 
 				-- Set subtitle and artist to the values it has.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]
-				:GetDisplaySubTitle())
+					:GetDisplaySubTitle())
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Artist"):settext("/" ..
 					Songs[pos][1]:GetDisplayArtist())
 			else
@@ -289,7 +295,10 @@ local function MoveDifficulty(self, offset, Songs)
 
 		-- Keep within boundaries.
 		if TF_WHEEL.DiffPos[self.pn] < 1 then TF_WHEEL.DiffPos[self.pn] = 1 end
-		if TF_WHEEL.DiffPos[self.pn] > #Songs[TF_WHEEL.CurSong] - 1 then TF_WHEEL.DiffPos[self.pn] = #Songs[TF_WHEEL.CurSong] - 1 end
+		if TF_WHEEL.DiffPos[self.pn] > #Songs[TF_WHEEL.CurSong] - 1 then
+			TF_WHEEL.DiffPos[self.pn] = #Songs
+				[TF_WHEEL.CurSong] - 1
+		end
 
 		-- Call the move selecton command to update the graphical location of cursor.
 		MoveSelection(self, 0, Songs)
@@ -389,7 +398,7 @@ return function(Style)
 					self:zoom(.4):halign(0):y(-10):maxwidth(640):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
-						[4])
+							[4])
 
 					-- Check if it's a song.
 					if type(GroupsAndSongs[pos]) ~= "string" then
@@ -420,7 +429,7 @@ return function(Style)
 					self:zoom(.3):halign(0):maxwidth(650):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
-						[4])
+							[4])
 				end
 			},
 			Def.BitmapText {
@@ -437,7 +446,7 @@ return function(Style)
 					self:zoom(.3):halign(0):y(10):maxwidth(650):skewx(-.2)
 						:diffuse(DisplayColor[1], DisplayColor[2], DisplayColor[3], DisplayColor[4])
 						:strokecolor(DisplayColor[1] / 1.5, DisplayColor[2] / 1.5, DisplayColor[3] / 1.5, DisplayColor
-						[4])
+							[4])
 				end
 			}
 		}
@@ -451,12 +460,14 @@ return function(Style)
 		if type(param[6][TF_WHEEL.CurSong]) ~= "string" then
 			local Val = {}
 			colour = param[3] and
-				DiffColorsInside[TF_WHEEL.DiffTab[param[6][TF_WHEEL.CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
+				DiffColorsInside
+				[TF_WHEEL.DiffTab[param[6][TF_WHEEL.CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
 				or DiffColors
 				[TF_WHEEL.DiffTab[param[6][TF_WHEEL.CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetDifficulty()]]
 			zero = { { 0, 0, 0 }, colour }
 			for i = 0, 4 do
-				local temp = param[6][TF_WHEEL.CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetRadarValues(param[4] and
+				local temp = param[6][TF_WHEEL.CurSong][param[5][param[4] and PLAYER_1 or PLAYER_2] + 1]:GetRadarValues(
+					param[4] and
 					PLAYER_1
 					or PLAYER_2):GetValue(i)
 				Val[#Val + 1] = (temp < 1) and temp or 1
@@ -465,11 +476,20 @@ return function(Style)
 			if param[3] then
 				self:linear(param[1])
 					:SetVertices({
-						{ { -80 * Val[2], -25 * Val[2], 0 }, colour }, zero,
-						{ { 0, -85 * Val[1], 0 },            colour }, { { 0, -85 * Val[1], 0 }, colour }, zero,
-						{ { 80 * Val[5], -25 * Val[5], 0 }, colour }, { { 80 * Val[5], -25 * Val[5], 0 }, colour }, zero,
-						{ { 45 * Val[4], 70 * Val[4], 0 },  colour }, { { 45 * Val[4], 70 * Val[4], 0 }, colour }, zero,
-						{ { -45 * Val[3], 70 * Val[3], 0 },  colour }, { { -45 * Val[3], 70 * Val[3], 0 }, colour }, zero,
+						{ { -80 * Val[2], -25 * Val[2], 0 }, colour },
+						zero,
+						{ { 0, -85 * Val[1], 0 },            colour },
+						{ { 0, -85 * Val[1], 0 },            colour },
+						zero,
+						{ { 80 * Val[5], -25 * Val[5], 0 }, colour },
+						{ { 80 * Val[5], -25 * Val[5], 0 }, colour },
+						zero,
+						{ { 45 * Val[4], 70 * Val[4], 0 }, colour },
+						{ { 45 * Val[4], 70 * Val[4], 0 }, colour },
+						zero,
+						{ { -45 * Val[3], 70 * Val[3], 0 }, colour },
+						{ { -45 * Val[3], 70 * Val[3], 0 }, colour },
+						zero,
 						{ { -80 * Val[2], -25 * Val[2], 0 }, colour }
 					})
 			else
@@ -664,7 +684,7 @@ return function(Style)
 			-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 			if StartOptions then
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
-				"SM_GoToNextScreen")
+					"SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
@@ -713,8 +733,10 @@ return function(Style)
 						PROFILEMAN:SaveProfile(PLAYER_2)
 
 						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
-						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_1,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_2,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
 					else
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
@@ -723,7 +745,8 @@ return function(Style)
 						PROFILEMAN:SaveProfile(self.pn)
 
 						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
+						GAMESTATE:SetCurrentSteps(self.pn,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
 					end
 
 					-- We want to go to player options when people doublepress, So we set the StartOptions to true,
@@ -748,7 +771,7 @@ return function(Style)
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
 			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
-			"SM_GoToNextScreen")
+				"SM_GoToNextScreen")
 		end,
 
 		Def.Quad {
@@ -773,13 +796,20 @@ return function(Style)
 			InitCommand = function(self)
 				-- Check if its a song.
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-					-- It is, Load banner.
-					self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					-- It is, Check if it has banner.
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+						-- It does, Load it.
+						self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					else
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
+					end
 				else
 					-- It's a group, Check if it has a banner.
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						-- It does, Load it.
 						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+					else
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
 					end
 				end
 
@@ -789,16 +819,22 @@ return function(Style)
 			LoadCommand = function(self)
 				-- Check if its a song.
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-					-- It is, Load banner.
-					self:visible(1):Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					-- It is, Check if it has banner.
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+						-- It does, Load it.
+						self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					else
+						-- It doesnt, Load Fallback.
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
+					end
 				else
 					-- It's a group, Check if it has a banner.
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						-- It does, Load it.
-						self:visible(1):Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
 					else
-						-- It doesnt, Hide the banner.
-						self:visible(0)
+						-- It doesnt, Load Fallback;
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
 					end
 				end
 
@@ -847,7 +883,7 @@ return function(Style)
 			Def.BitmapText {
 				Name = "Num",
 				Font = "_noto sans 40px",
-				Text = "ーーー",
+				Text = "- - -",
 				OnCommand = function(self)
 					self:zoomy(.6):zoomx(.8):diffuse(1, 1, 0, 1):halign(0)
 						:queuecommand("BPMChange")
@@ -866,16 +902,18 @@ return function(Style)
 						end
 					else
 						self:diffuse(0, 1, 0, 1)
-							:settext("ーーー")
+							:settext("- - -")
 					end
 				end,
 				BPMOneCommand = function(self)
-					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[1], .4,
+					TF_WHEEL.CountingNumbers(self, self:GetText(),
+						GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[1], .4,
 						"%03.0f")
 					self:sleep(.8):queuecommand("BPMTwo")
 				end,
 				BPMTwoCommand = function(self)
-					TF_WHEEL.CountingNumbers(self, self:GetText(), GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[2], .4,
+					TF_WHEEL.CountingNumbers(self, self:GetText(),
+						GroupsAndSongs[TF_WHEEL.CurSong][1]:GetDisplayBpms()[2], .4,
 						"%03.0f")
 					self:sleep(.8):queuecommand("BPMOne")
 				end
@@ -912,7 +950,7 @@ return function(Style)
 			Def.BitmapText {
 				Name = "Num",
 				Font = "_noto sans 40px",
-				Text = "ーーー",
+				Text = "- - -",
 				OnCommand = function(self)
 					self:zoomy(.6):zoomx(.8):diffuse(1, 1, 0, 1):halign(0)
 						:queuecommand("BPMChange")
@@ -929,7 +967,7 @@ return function(Style)
 						self:settext(string.format("%03.0f", BPMS[1]))
 					else
 						self:diffuse(0, 1, 0, 1)
-						self:settext("ーーー")
+						self:settext("- - -")
 					end
 				end
 			},

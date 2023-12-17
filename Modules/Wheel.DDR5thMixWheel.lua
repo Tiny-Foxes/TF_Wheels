@@ -106,7 +106,7 @@ local function MoveSelection(self, offset, Songs)
 				if type(Songs[pos]) ~= "string" then
 					-- It's a song, Display song title.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos][1]
-					:GetDisplayMainTitle())
+						:GetDisplayMainTitle())
 				else
 					-- It is not a song, Display group name instead.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Title"):settext(Songs[pos])
@@ -125,9 +125,9 @@ local function MoveSelection(self, offset, Songs)
 
 					-- Set subtitle and artist to the values it has.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext(Songs[pos][1]
-					:GetDisplaySubTitle())
+						:GetDisplaySubTitle())
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("Artist"):settext("/" ..
-					Songs[pos][1]:GetDisplayArtist())
+						Songs[pos][1]:GetDisplayArtist())
 				else
 					-- It is not a song so we set it to empty, Because groups dont have subtitles or atists.
 					self:GetChild("Wheel"):GetChild("Container" .. i):GetChild("SubTitle"):settext("")
@@ -140,16 +140,22 @@ local function MoveSelection(self, offset, Songs)
 
 		-- Check if it's a song.
 		if type(Songs[TF_WHEEL.CurSong]) ~= "string" then
-			-- It is a song, so we load the under banner.
-			self:GetChild("BannerUnderlay"):visible(1):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
+			-- It is, Check if it has banner.
+			if Songs[TF_WHEEL.CurSong][1]:HasBanner() then
+				-- It does, Load it.
+				self:GetChild("BannerUnderlay"):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath())
+			else
+				-- It doesnt, Hide the banner.
+				self:GetChild("BannerUnderlay"):Load(THEME:GetPathG("Common", "fallback banner"))
+			end
 		else
 			-- It is not a song, Do an extra check to see if group has banner.
 			if SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]) ~= "" then
 				-- It does, Display it.
-				self:GetChild("BannerUnderlay"):visible(1):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
+				self:GetChild("BannerUnderlay"):Load(SONGMAN:GetSongGroupBannerPath(Songs[TF_WHEEL.CurSong]))
 			else
 				-- It doesnt, Hide it.
-				self:GetChild("BannerUnderlay"):visible(0)
+				self:GetChild("BannerUnderlay"):Load(THEME:GetPathG("Common", "fallback banner"))
 			end
 		end
 
@@ -191,7 +197,7 @@ local function MoveSelection(self, offset, Songs)
 			if type(Songs[pos]) ~= "string" then
 				-- It's a song, Display song title.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos][1]
-				:GetDisplayMainTitle())
+					:GetDisplayMainTitle())
 			else
 				-- It is not a song, Display group name instead.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Title"):settext(Songs[pos])
@@ -210,7 +216,7 @@ local function MoveSelection(self, offset, Songs)
 
 				-- Set subtitle and artist to the values it has.
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("SubTitle"):settext(Songs[pos][1]
-				:GetDisplaySubTitle())
+					:GetDisplaySubTitle())
 				self:GetChild("Wheel"):GetChild("Container" .. off):GetChild("Artist"):settext("/" ..
 					Songs[pos][1]:GetDisplayArtist())
 			else
@@ -385,7 +391,8 @@ local function MoveDifficulty(self, offset, Songs)
 
 		-- Keep within boundaries.
 		if TF_WHEEL.DiffPos[self.pn] < 1 then TF_WHEEL.DiffPos[self.pn] = 1 end
-		if TF_WHEEL.DiffPos[self.pn] > #Songs[TF_WHEEL.CurSong] - 1 then TF_WHEEL.DiffPos[self.pn] = #Songs[TF_WHEEL.CurSong] - 1 end
+		if TF_WHEEL.DiffPos[self.pn] > #Songs[TF_WHEEL.CurSong] - 1 then TF_WHEEL.DiffPos[self.pn] = #Songs
+			[TF_WHEEL.CurSong] - 1 end
 
 		-- Call the move selecton command to update the graphical location of cursor.
 		MoveSelection(self, 0, Songs)
@@ -640,7 +647,7 @@ return function(Style)
 			-- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
 			if StartOptions then
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen(
-				"SM_GoToNextScreen")
+					"SM_GoToNextScreen")
 			end
 			-- Check if player is joined.
 			if GAMESTATE:IsSideJoined(self.pn) then
@@ -689,8 +696,10 @@ return function(Style)
 						PROFILEMAN:SaveProfile(PLAYER_2)
 
 						-- Set the Current Steps to use.
-						GAMESTATE:SetCurrentSteps(PLAYER_1, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
-						GAMESTATE:SetCurrentSteps(PLAYER_2, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_1,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_1] + 1])
+						GAMESTATE:SetCurrentSteps(PLAYER_2,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[PLAYER_2] + 1])
 					else
 						-- If we are single player, Use Single.
 						GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDB[Style])
@@ -699,7 +708,8 @@ return function(Style)
 						PROFILEMAN:SaveProfile(self.pn)
 
 						-- Set the Current Step to use.
-						GAMESTATE:SetCurrentSteps(self.pn, GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
+						GAMESTATE:SetCurrentSteps(self.pn,
+							GroupsAndSongs[TF_WHEEL.CurSong][TF_WHEEL.DiffPos[self.pn] + 1])
 					end
 
 					-- We want to go to player options when people doublepress, So we set the StartOptions to true,
@@ -723,7 +733,7 @@ return function(Style)
 		-- Change to ScreenGameplay.
 		StartSongCommand = function(self)
 			SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen(
-			"SM_GoToNextScreen")
+				"SM_GoToNextScreen")
 		end,
 
 		-- The Info display container.
@@ -834,13 +844,20 @@ return function(Style)
 			InitCommand = function(self)
 				-- Check if its a song.
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-					-- It is, Load banner.
-					self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					-- It is, Check if it has banner.
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+						-- It does, Load it.
+						self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					else
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
+					end
 				else
 					-- It's a group, Check if it has a banner.
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						-- It does, Load it.
 						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+					else
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
 					end
 				end
 
@@ -850,16 +867,22 @@ return function(Style)
 			LoadCommand = function(self)
 				-- Check if its a song.
 				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-					-- It is, Load banner.
-					self:visible(1):Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					-- It is, Check if it has banner.
+					if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+						-- It does, Load it.
+						self:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+					else
+						-- It doesnt, Load Fallback.
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
+					end
 				else
 					-- It's a group, Check if it has a banner.
 					if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
 						-- It does, Load it.
-						self:visible(1):Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+						self:Load(SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
 					else
 						-- It doesnt, Hide the banner.
-						self:visible(0)
+						self:Load(THEME:GetPathG("Common", "fallback banner"))
 					end
 				end
 
