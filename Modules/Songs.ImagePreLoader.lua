@@ -1,7 +1,7 @@
 local Songs = TF_WHEEL.Songs
 local Modes = TF_WHEEL.Modes
 
-local Images = Def.ActorFrame { Name = "PreLoad" }
+local Images = Def.ActorFrame {Name = "PreLoad"}
 
 for i = 1, #Songs do
     if type(Songs[i]) ~= "string" then
@@ -21,7 +21,8 @@ for i = 1, #Songs do
         if SONGMAN:GetSongGroupBannerPath(Songs[i]) ~= "" then
             Images[#Images + 1] = Def.Sprite {
                 Name = SONGMAN:GetSongGroupBannerPath(Songs[i]),
-                Texture = "../../../../" .. SONGMAN:GetSongGroupBannerPath(Songs[i])
+                Texture = "../../../../" ..
+                    SONGMAN:GetSongGroupBannerPath(Songs[i])
             }
         end
     end

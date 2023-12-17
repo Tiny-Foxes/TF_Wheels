@@ -9,21 +9,19 @@ local DiffTab = {
 
 return function(Songs, CurGroup)
     local DiffSongs = {}
-    for i = 1, 4 do
-        DiffSongs[i] = {}
-    end
+    for i = 1, 4 do DiffSongs[i] = {} end
 
     for _, song in pairs(Songs) do
 
-        if CurGroup == "" then
-            CurGroup = song[1]:GetGroupName()
-        end
+        if CurGroup == "" then CurGroup = song[1]:GetGroupName() end
 
         if CurGroup == song[1]:GetGroupName() then
             for _, diffs in pairs(song) do
                 if diffs ~= song[1] then
                     local curdiff = DiffTab[diffs:GetDifficulty()]
-                    DiffSongs[curdiff][#DiffSongs[curdiff] + 1] = { song[1], diffs }
+                    DiffSongs[curdiff][#DiffSongs[curdiff] + 1] = {
+                        song[1], diffs
+                    }
                 end
             end
         end

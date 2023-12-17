@@ -228,14 +228,6 @@ TF_WHEEL.StyleDBVersus = {
 
 TF_WHEEL.MPath = THEME:GetCurrentThemeDirectory() .. "Modules/"
 
-function Actor:ForParent(Amount)
-	local CurSelf = self
-	for i = 1, Amount do
-		CurSelf = CurSelf:GetParent()
-	end
-	return CurSelf
-end
-
 -- Change Difficulties to numbers.
 TF_WHEEL.DiffTab = {
 	["Difficulty_Beginner"] = 1,
@@ -330,5 +322,38 @@ function TF_WHEEL.Input(self)
 		if ToEnumShortString(event.type) == "Release" then
 			self:playcommand(event.GameButton .. "Release")
 		end
+	end
+end
+
+-- Actor Appended functions.
+function Actor:ForParent(Amount)
+	local CurSelf = self
+	for i = 1, Amount do
+		CurSelf = CurSelf:GetParent()
+	end
+	return CurSelf
+end
+
+function Sprite:LoadCachedBanner(Banner)
+	if TF_WHEEL.BannerLite then
+		return self:LoadFromCached("Banner", Banner)
+	else
+		return self:Load(Banner)
+	end
+end
+
+function Sprite:LoadCachedBackground(Background)
+	if TF_WHEEL.BackgroundLite then
+		return self:LoadFromCached("Background", Background)
+	else
+		return self:Load(Background)
+	end
+end
+
+function Sprite:LoadCachedJacket(Jacket)
+	if TF_WHEEL.JacketLite then
+		return self:LoadFromCached("Jacket", Jacket)
+	else
+		return self:Load(Jacket)
 	end
 end

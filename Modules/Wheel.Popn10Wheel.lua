@@ -90,41 +90,46 @@ local function MoveSelection(self, offset, Songs)
         -- Calculate current position based on song with a value to get center.
         local pos = TF_WHEEL.CurSong + (4 * offset)
 
-        if offset == 1 then
-            pos = TF_WHEEL.CurSong + (5 * offset)
-        end
+        if offset == 1 then pos = TF_WHEEL.CurSong + (5 * offset) end
 
         if i == XOffMin or i == XOffPlus then
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):linear(.1):x(-200):zoom(.4)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+                :linear(.1):x(-200):zoom(.4)
         elseif i == XOffset then
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):linear(.1):x(-220):zoom(.5)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+                :linear(.1):x(-220):zoom(.5)
         end
 
         -- Keep it within reasonable values.
         while pos > #Songs do pos = pos - #Songs end
         while pos < 1 do pos = #Songs + pos end
 
-        self:GetChild("SongWheel"):GetChild("Song" .. i):linear(.1):addx(11 * offset * -1):addy(40 * offset * -1)
+        self:GetChild("SongWheel"):GetChild("Song" .. i):linear(.1):addx(11 *
+                                                                             offset *
+                                                                             -1)
+            :addy(40 * offset * -1)
 
         if (i == IncOffset and offset == -1) or (i == DecOffset and offset == 1) then
 
             -- Move wheelpart instantly to new location.
-            self:GetChild("SongWheel"):GetChild("Song" .. i):sleep(0):addy((offset * -40) * -10):addx((offset * -11) *
-                -10)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):sleep(0):addy(
+                (offset * -40) * -10):addx((offset * -11) * -10)
 
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Title")
+                :settext(Songs[pos][1]:GetDisplayMainTitle())
 
-
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):GetChild("Diff"):settext(Songs[pos][2]:
-                GetMeter())
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+                :GetChild("Diff"):settext(Songs[pos][2]:GetMeter())
 
             if Songs[pos][1]:HasBanner() then
-                self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):visible(true):Load(Songs[pos][1]:
-                    GetBannerPath())
+                self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild(
+                    "Banner"):visible(true):Load(Songs[pos][1]:GetBannerPath())
             else
-                self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):visible(false)
+                self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild(
+                    "Banner"):visible(false)
             end
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):zoomto(380, 128)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner")
+                :zoomto(380, 128)
         end
     end
 
@@ -149,26 +154,41 @@ local function MoveSelection(self, offset, Songs)
         while pos > #Songs do pos = pos - #Songs end
         while pos < 1 do pos = #Songs + pos end
 
-        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):linear(.1):addy(128 * offset * -1)
-        if (i == BanIncOffset and offset == -1) or (i == BanDecOffset and offset == 1) then
-            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):sleep(0):addy((128 * 3) * offset)
+        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" ..
+                                                                        i)
+            :linear(.1):addy(128 * offset * -1)
+        if (i == BanIncOffset and offset == -1) or
+            (i == BanDecOffset and offset == 1) then
+            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                "Banner" .. i):sleep(0):addy((128 * 3) * offset)
 
             if Songs[pos][1]:HasBanner() then
-                self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):visible(true):Load(Songs[pos]
-                    [1]:GetBannerPath())
+                self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                    "Banner" .. i):visible(true):Load(
+                    Songs[pos][1]:GetBannerPath())
             else
-                self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):visible(false)
+                self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                    "Banner" .. i):visible(false)
             end
-            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):zoomto(380, 128)
+            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                "Banner" .. i):zoomto(380, 128)
 
         end
     end
 
-    self:GetChild("BannerCon"):GetChild("Title"):settext(Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
+    self:GetChild("BannerCon"):GetChild("Title"):settext(
+        Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
 
     if Songs[TF_WHEEL.CurSong][1]:HasBanner() then
-        self:GetChild("Banner"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath()):zoom(TF_WHEEL.Resize(self:GetChild("Banner")
-            :GetWidth(), self:GetChild("Banner"):GetHeight(), 210, 54))
+        self:GetChild("Banner"):visible(true):Load(
+            Songs[TF_WHEEL.CurSong][1]:GetBannerPath()):zoom(TF_WHEEL.Resize(
+                                                                 self:GetChild(
+                                                                     "Banner")
+                                                                     :GetWidth(),
+                                                                 self:GetChild(
+                                                                     "Banner")
+                                                                     :GetHeight(),
+                                                                 210, 54))
     else
         self:GetChild("Banner"):visible(false)
     end
@@ -177,7 +197,8 @@ local function MoveSelection(self, offset, Songs)
     SOUND:StopMusic()
 
     -- Play Current selected Song Music.
-    self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand("PlayCurrentSong")
+    self:GetChild("MusicCon"):stoptweening():sleep(0.4):queuecommand(
+        "PlayCurrentSong")
 end
 
 local function MoveGroup(self, offset, Group)
@@ -207,33 +228,41 @@ local function MoveGroup(self, offset, Group)
     for i = 1, 14 do
         local pos = TF_WHEEL.CurGroupNum + (5 * offset)
 
-        if offset == 1 then
-            pos = TF_WHEEL.CurGroupNum + (8 * offset)
-        end
+        if offset == 1 then pos = TF_WHEEL.CurGroupNum + (8 * offset) end
 
         -- Keep it within reasonable values.
         while pos > #Group do pos = pos - #Group end
         while pos < 1 do pos = #Group + pos end
 
-        self:GetChild("GroupWheel"):GetChild("Group" .. i):linear(.1):addx(90 * -1 * offset)
-        if (i == GroupIncOffset and offset == -1) or (i == GroupDecOffset and offset == 1) then
-            self:GetChild("GroupWheel"):GetChild("Group" .. i):sleep(0):addx((90 * 14) * offset)
+        self:GetChild("GroupWheel"):GetChild("Group" .. i):linear(.1):addx(90 *
+                                                                               -1 *
+                                                                               offset)
+        if (i == GroupIncOffset and offset == -1) or
+            (i == GroupDecOffset and offset == 1) then
+            self:GetChild("GroupWheel"):GetChild("Group" .. i):sleep(0):addx(
+                (90 * 14) * offset)
 
             if SONGMAN:GetSongGroupBannerPath(Group[pos]) ~= "" then
-                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner"):Load(SONGMAN:
-                    GetSongGroupBannerPath(Group[pos]))
-                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Title"):visible(false)
+                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild(
+                    "Banner"):Load(SONGMAN:GetSongGroupBannerPath(Group[pos]))
+                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild(
+                    "Title"):visible(false)
             else
-                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner"):Load(THEME:GetPathG("", "white.png"))
-                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Title"):visible(true):settext(Group[pos])
+                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild(
+                    "Banner"):Load(THEME:GetPathG("", "white.png"))
+                self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild(
+                    "Title"):visible(true):settext(Group[pos])
             end
-            self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner"):zoomto(512, 160)
+            self:GetChild("GroupWheel"):GetChild("Group" .. i)
+                :GetChild("Banner"):zoomto(512, 160)
         end
 
-        self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner"):diffuse(.5, .5, .5, 1)
+        self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner")
+            :diffuse(.5, .5, .5, 1)
 
         if GroupOffset == i then
-            self:GetChild("GroupWheel"):GetChild("Group" .. i):GetChild("Banner"):diffuse(1, 1, 1, 1)
+            self:GetChild("GroupWheel"):GetChild("Group" .. i)
+                :GetChild("Banner"):diffuse(1, 1, 1, 1)
         end
 
     end
@@ -268,25 +297,31 @@ local function ChangeDiff(self, Songs)
 
         self:GetChild("SongWheel"):GetChild("Song" .. i):xy(11 * i, 40 * i)
 
-        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):zoom(.4):x(-200)
+        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+            :zoom(.4):x(-200)
 
         if i == 5 then
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):x(-220):zoom(.5)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+                :x(-220):zoom(.5)
         end
 
         if Songs[pos][1]:HasBanner() then
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):visible(true):Load(Songs[pos][1]:
-                GetBannerPath())
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner")
+                :visible(true):Load(Songs[pos][1]:GetBannerPath())
         else
-            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):visible(false)
+            self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner")
+                :visible(false)
         end
-        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner"):zoomto(380, 128)
+        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Banner")
+            :zoomto(380, 128)
 
-        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):GetChild("Diff"):settext(Songs[pos][2]:
-            GetMeter())
-        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon"):GetChild("BG"):diffuse(DiffColors[TF_WHEEL.CurDiff])
+        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+            :GetChild("Diff"):settext(Songs[pos][2]:GetMeter())
+        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("DiffCon")
+            :GetChild("BG"):diffuse(DiffColors[TF_WHEEL.CurDiff])
 
-        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Title"):settext(Songs[pos][1]:GetDisplayMainTitle())
+        self:GetChild("SongWheel"):GetChild("Song" .. i):GetChild("Title")
+            :settext(Songs[pos][1]:GetDisplayMainTitle())
     end
 
     for i = 1, 3 do
@@ -296,22 +331,35 @@ local function ChangeDiff(self, Songs)
         while pos > #Songs do pos = pos - #Songs end
         while pos < 1 do pos = #Songs + pos end
 
-        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):xy(60, 128 * (i - 2))
+        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" ..
+                                                                        i):xy(
+            60, 128 * (i - 2))
 
         if Songs[pos][1]:HasBanner() then
-            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):visible(true):Load(Songs[pos][1]:
-                GetBannerPath())
+            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                "Banner" .. i):visible(true):Load(Songs[pos][1]:GetBannerPath())
         else
-            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):visible(false)
+            self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild(
+                "Banner" .. i):visible(false)
         end
-        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" .. i):zoomto(380, 128)
+        self:GetChild("BannerCon"):GetChild("BannerWheel"):GetChild("Banner" ..
+                                                                        i)
+            :zoomto(380, 128)
 
-        self:GetChild("BannerCon"):GetChild("Title"):settext(Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
+        self:GetChild("BannerCon"):GetChild("Title"):settext(
+            Songs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle())
     end
 
     if Songs[TF_WHEEL.CurSong][1]:HasBanner() then
-        self:GetChild("Banner"):visible(true):Load(Songs[TF_WHEEL.CurSong][1]:GetBannerPath()):zoom(TF_WHEEL.Resize(self:GetChild("Banner")
-            :GetWidth(), self:GetChild("Banner"):GetHeight(), 210, 54))
+        self:GetChild("Banner"):visible(true):Load(
+            Songs[TF_WHEEL.CurSong][1]:GetBannerPath()):zoom(TF_WHEEL.Resize(
+                                                                 self:GetChild(
+                                                                     "Banner")
+                                                                     :GetWidth(),
+                                                                 self:GetChild(
+                                                                     "Banner")
+                                                                     :GetHeight(),
+                                                                 210, 54))
     else
         self:GetChild("Banner"):visible(false)
     end
@@ -321,8 +369,10 @@ local function ChangeDiff(self, Songs)
 
     -- Play Current selected Song Music.
     if Songs[TF_WHEEL.CurSong][1]:GetMusicPath() then
-        SOUND:PlayMusicPart(Songs[TF_WHEEL.CurSong][1]:GetMusicPath(), Songs[TF_WHEEL.CurSong][1]:GetSampleStart(),
-            Songs[TF_WHEEL.CurSong][1]:GetSampleLength(), 0, 0, true)
+        SOUND:PlayMusicPart(Songs[TF_WHEEL.CurSong][1]:GetMusicPath(),
+                            Songs[TF_WHEEL.CurSong][1]:GetSampleStart(),
+                            Songs[TF_WHEEL.CurSong][1]:GetSampleLength(), 0, 0,
+                            true)
     end
 end
 
@@ -338,7 +388,8 @@ return function(Style)
     if TF_WHEEL.CurGroup == "" then TF_WHEEL.CurGroup = Groups[1] end
 
     -- Load the Difficulty songs system.
-    local DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs, TF_WHEEL.CurGroup)
+    local DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs,
+                                                                TF_WHEEL.CurGroup)
     local DiffSongs = DiffLoader[TF_WHEEL.CurDiff]
 
     while #DiffSongs < 1 do
@@ -353,9 +404,7 @@ return function(Style)
         DiffSongs = DiffLoader[TF_WHEEL.CurDiff]
     end
 
-    local function compare(a, b)
-        return a[2]:GetMeter() < b[2]:GetMeter()
-    end
+    local function compare(a, b) return a[2]:GetMeter() < b[2]:GetMeter() end
 
     table.sort(DiffSongs, compare)
 
@@ -364,13 +413,13 @@ return function(Style)
     local StartOptions = false
 
     -- The main songwheel that contains all the songs.
-    local SongWheel = Def.ActorFrame { Name = "SongWheel" }
+    local SongWheel = Def.ActorFrame {Name = "SongWheel"}
 
     -- The secondary bannerwheel for ontop of the songwheel.
-    local BannerWheel = Def.ActorFrame { Name = "BannerWheel" }
+    local BannerWheel = Def.ActorFrame {Name = "BannerWheel"}
 
     -- The groupwheel to select group.
-    local GroupWheel = Def.ActorFrame { Name = "GroupWheel" }
+    local GroupWheel = Def.ActorFrame {Name = "GroupWheel"}
 
     for i = 1, 10 do
 
@@ -388,9 +437,7 @@ return function(Style)
 
             Def.Sprite {
                 Texture = THEME:GetPathG("", "POPN/POPNmask.png"),
-                OnCommand = function(self)
-                    self:MaskSource()
-                end
+                OnCommand = function(self) self:MaskSource() end
             },
 
             Def.Quad {
@@ -406,7 +453,8 @@ return function(Style)
                 OnCommand = function(self)
                     -- If the banner exist, Load Banner.png.
                     if DiffSongs[pos][1]:HasBanner() then
-                        self:visible(true):Load(DiffSongs[pos][1]:GetBannerPath())
+                        self:visible(true):Load(
+                            DiffSongs[pos][1]:GetBannerPath())
                     else
                         self:visible(false)
                     end
@@ -425,7 +473,10 @@ return function(Style)
                 Font = "_noto sans 40px",
                 Text = DiffSongs[pos][1]:GetDisplayMainTitle(),
                 OnCommand = function(self)
-                    self:diffuse(0, 0, 0, 1):maxwidth(320):x(60):strokecolor(0, 0, 0, 1)
+                    self:diffuse(0, 0, 0, 1):maxwidth(320):x(60):strokecolor(0,
+                                                                             0,
+                                                                             0,
+                                                                             1)
                 end
             },
 
@@ -433,9 +484,7 @@ return function(Style)
                 Name = "DiffCon",
                 OnCommand = function(self)
                     self:zoom(.4):x(-200)
-                    if i == 5 then
-                        self:x(-220):zoom(.5)
-                    end
+                    if i == 5 then self:x(-220):zoom(.5) end
                 end,
                 Def.Sprite {
                     Name = "BG",
@@ -449,7 +498,8 @@ return function(Style)
                     Font = "_noto sans 40px",
                     Text = DiffSongs[pos][2]:GetMeter(),
                     OnCommand = function(self)
-                        self:diffuse(0, 0, 0, 1):strokecolor(0, 0, 0, 1):zoom(4):zoomy(3)
+                        self:diffuse(0, 0, 0, 1):strokecolor(0, 0, 0, 1):zoom(4)
+                            :zoomy(3)
                     end
                 }
             }
@@ -470,7 +520,8 @@ return function(Style)
             OnCommand = function(self)
                 -- If the banner exist, Load Banner.png.
                 if DiffSongs[pos][1]:HasBanner() then
-                    self:visible(true):Load(DiffSongs[pos][1]:GetBannerPath()):zoomto(380, 128)
+                    self:visible(true):Load(DiffSongs[pos][1]:GetBannerPath())
+                        :zoomto(380, 128)
                 else
                     self:visible(false):zoomto(0, 0)
                 end
@@ -511,7 +562,8 @@ return function(Style)
                 Text = Groups[pos],
                 Font = "_noto sans 40px",
                 OnCommand = function(self)
-                    self:diffuse(0, 0, 0, 1):maxwidth(420):strokecolor(0, 0, 0, 1)
+                    self:diffuse(0, 0, 0, 1):maxwidth(420):strokecolor(0, 0, 0,
+                                                                       1)
 
                     if SONGMAN:GetSongGroupBannerPath(Groups[pos]) ~= "" then
                         self:visible(false)
@@ -532,32 +584,40 @@ return function(Style)
             SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
             -- Sleep for 0.2 sec, And then load the current song music.
-            self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand("PlayCurrentSong")
+            self:GetChild("MusicCon"):stoptweening():sleep(0):queuecommand(
+                "PlayCurrentSong")
         end,
 
         -- Play Music at start of screen,.
-		Def.ActorFrame {
-			Name = "MusicCon",
-			PlayCurrentSongCommand = function(self)
-				if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-                    TF_WHEEL.BG:Load(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath()):FullScreen()
-					if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
-						GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
-					elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
-						SOUND:PlayMusicPart(GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath(),
-							GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleStart(),
-							GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(), 0, 0, true)
-					end
+        Def.ActorFrame {
+            Name = "MusicCon",
+            PlayCurrentSongCommand = function(self)
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+                    TF_WHEEL.BG:Load(
+                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
+                        :FullScreen()
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
+                        GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
+                    elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
+                        SOUND:PlayMusicPart(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath(),
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleStart(),
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(),
+                            0, 0, true)
+                    end
                 else
-					TF_WHEEL.BG:Load(THEME:GetPathG("Common", "fallback background")):FullScreen()
-				end
-			end
-		},
+                    TF_WHEEL.BG:Load(THEME:GetPathG("Common",
+                                                    "fallback background"))
+                        :FullScreen()
+                end
+            end
+        },
 
         -- Do stuff when a user presses left on Pad or Menu buttons.
         MenuLeftCommand = function(self)
             MoveGroup(self, -1, Groups)
-            DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs, TF_WHEEL.CurGroup)
+            DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs,
+                                                                  TF_WHEEL.CurGroup)
             DiffSongs = DiffLoader[TF_WHEEL.CurDiff]
 
             while #DiffSongs < 1 do
@@ -574,7 +634,8 @@ return function(Style)
         -- Do stuff when a user presses Right on Pad or Menu buttons.
         MenuRightCommand = function(self)
             MoveGroup(self, 1, Groups)
-            DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs, TF_WHEEL.CurGroup)
+            DiffLoader = LoadModule("Songs.DifficultyLoader.lua")(Songs,
+                                                                  TF_WHEEL.CurGroup)
             DiffSongs = DiffLoader[TF_WHEEL.CurDiff]
 
             while #DiffSongs < 1 do
@@ -589,7 +650,9 @@ return function(Style)
         end,
 
         -- Do stuff when a user presses the Down on Pad or Menu buttons.
-        MenuDownCommand = function(self) MoveSelection(self, 1, DiffSongs) end,
+        MenuDownCommand = function(self)
+            MoveSelection(self, 1, DiffSongs)
+        end,
 
         -- Do stuff when a user presses the Down on Pad or Menu buttons.
         MenuUpCommand = function(self) MoveSelection(self, -1, DiffSongs) end,
@@ -615,13 +678,15 @@ return function(Style)
         BackCommand = function(self)
             -- Check if User is joined.
             if GAMESTATE:IsSideJoined(self.pn) then
-                if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
+                if GAMESTATE:IsSideJoined(PLAYER_1) and
+                    GAMESTATE:IsSideJoined(PLAYER_2) then
                     -- If both players are joined, We want to unjoin the player that pressed back.
                     GAMESTATE:UnjoinPlayer(self.pn)
                 else
                     -- Go to the previous screen.
-                    SCREENMAN:GetTopScreen():SetNextScreenName(SCREENMAN:GetTopScreen():GetPrevScreenName()):
-                        StartTransitioningScreen("SM_GoToNextScreen")
+                    SCREENMAN:GetTopScreen():SetNextScreenName(
+                        SCREENMAN:GetTopScreen():GetPrevScreenName())
+                        :StartTransitioningScreen("SM_GoToNextScreen")
                 end
             end
         end,
@@ -630,19 +695,22 @@ return function(Style)
         StartCommand = function(self)
             -- Check if we want to go to ScreenPlayerOptions instead of ScreenGameplay.
             if StartOptions then
-                SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPlayerOptions"):StartTransitioningScreen("SM_GoToNextScreen")
+                SCREENMAN:GetTopScreen()
+                    :SetNextScreenName("ScreenPlayerOptions")
+                    :StartTransitioningScreen("SM_GoToNextScreen")
             end
             -- Check if player is joined.
             if GAMESTATE:IsSideJoined(self.pn) then
 
-                --We use PlayMode_Regular for now.
+                -- We use PlayMode_Regular for now.
                 GAMESTATE:SetCurrentPlayMode("PlayMode_Regular")
 
-                --Set the song we want to play.
+                -- Set the song we want to play.
                 GAMESTATE:SetCurrentSong(DiffSongs[TF_WHEEL.CurSong][1])
 
                 -- Check if 2 players are joined.
-                if GAMESTATE:IsSideJoined(PLAYER_1) and GAMESTATE:IsSideJoined(PLAYER_2) then
+                if GAMESTATE:IsSideJoined(PLAYER_1) and
+                    GAMESTATE:IsSideJoined(PLAYER_2) then
 
                     -- If they are, We will use Versus.
                     GAMESTATE:SetCurrentStyle(TF_WHEEL.StyleDBVersus[Style])
@@ -652,8 +720,10 @@ return function(Style)
                     PROFILEMAN:SaveProfile(PLAYER_2)
 
                     -- Set the Current Steps to use.
-                    GAMESTATE:SetCurrentSteps(PLAYER_1, DiffSongs[TF_WHEEL.CurSong][2])
-                    GAMESTATE:SetCurrentSteps(PLAYER_2, DiffSongs[TF_WHEEL.CurSong][2])
+                    GAMESTATE:SetCurrentSteps(PLAYER_1,
+                                              DiffSongs[TF_WHEEL.CurSong][2])
+                    GAMESTATE:SetCurrentSteps(PLAYER_2,
+                                              DiffSongs[TF_WHEEL.CurSong][2])
                 else
 
                     -- If we are single player, Use Single.
@@ -663,7 +733,8 @@ return function(Style)
                     PROFILEMAN:SaveProfile(self.pn)
 
                     -- Set the Current Step to use.
-                    GAMESTATE:SetCurrentSteps(self.pn, DiffSongs[TF_WHEEL.CurSong][2])
+                    GAMESTATE:SetCurrentSteps(self.pn,
+                                              DiffSongs[TF_WHEEL.CurSong][2])
                 end
 
                 -- We want to go to player options when people doublepress, So we set the StartOptions to true,
@@ -683,14 +754,12 @@ return function(Style)
 
         -- Change to ScreenGameplay.
         StartSongCommand = function(self)
-            SCREENMAN:GetTopScreen():SetNextScreenName("ScreenLoadGameplayElements"):StartTransitioningScreen("SM_GoToNextScreen")
+            SCREENMAN:GetTopScreen():SetNextScreenName(
+                "ScreenLoadGameplayElements"):StartTransitioningScreen(
+                "SM_GoToNextScreen")
         end,
 
-        GroupWheel .. {
-            OnCommand = function(self)
-                self:x(-700)
-            end
-        },
+        GroupWheel .. {OnCommand = function(self) self:x(-700) end},
 
         Def.Sprite {
             Name = "Frame",
@@ -701,45 +770,47 @@ return function(Style)
         },
         Def.Quad {
             OnCommand = function(self)
-                self:zoomto(256, 256):diffuse(0, 0, 0, 1):xy(100, -232):MaskSource()
+                self:zoomto(256, 256):diffuse(0, 0, 0, 1):xy(100, -232)
+                    :MaskSource()
             end
         },
-        SongWheel .. {
-            OnCommand = function(self)
-                self:xy(54, -190):z(-200):MaskDest()
-            end
-        },
+        SongWheel ..
+            {
+                OnCommand = function(self)
+                    self:xy(54, -190):z(-200):MaskDest()
+                end
+            },
 
         Def.ActorFrame {
             Name = "BannerCon",
-            OnCommand = function(self)
-                self:zoom(.35):xy(110, 10)
-            end,
+            OnCommand = function(self) self:zoom(.35):xy(110, 10) end,
             Def.Quad {
                 OnCommand = function(self)
-                    self:xy(60, -1560):zoomto(3000, 3000):diffuse(0, 0, 0, 1):MaskSource()
+                    self:xy(60, -1560):zoomto(3000, 3000):diffuse(0, 0, 0, 1)
+                        :MaskSource()
                 end
             },
             Def.Quad {
                 OnCommand = function(self)
-                    self:xy(60, 1560):zoomto(3000, 3000):diffuse(0, 0, 0, 1):MaskSource()
+                    self:xy(60, 1560):zoomto(3000, 3000):diffuse(0, 0, 0, 1)
+                        :MaskSource()
                 end
             },
             Def.Quad {
                 OnCommand = function(self)
-                    self:xy(-1630, 0):zoomto(3000, 3000):diffuse(0, 0, 0, 1):MaskSource()
+                    self:xy(-1630, 0):zoomto(3000, 3000):diffuse(0, 0, 0, 1)
+                        :MaskSource()
                 end
             },
             Def.Quad {
                 OnCommand = function(self)
-                    self:xy(1750, 0):zoomto(3000, 3000):diffuse(0, 0, 0, 1):MaskSource()
+                    self:xy(1750, 0):zoomto(3000, 3000):diffuse(0, 0, 0, 1)
+                        :MaskSource()
                 end
             },
             Def.Sprite {
                 Texture = THEME:GetPathG("", "POPN/POPNmask.png"),
-                OnCommand = function(self)
-                    self:MaskSource()
-                end
+                OnCommand = function(self) self:MaskSource() end
             },
             Def.Quad {
                 OnCommand = function(self)
@@ -760,7 +831,10 @@ return function(Style)
                 Font = "_noto sans 40px",
                 Text = DiffSongs[TF_WHEEL.CurSong][1]:GetDisplayMainTitle(),
                 OnCommand = function(self)
-                    self:diffuse(0, 0, 0, 1):maxwidth(320):x(60):strokecolor(0, 0, 0, 1)
+                    self:diffuse(0, 0, 0, 1):maxwidth(320):x(60):strokecolor(0,
+                                                                             0,
+                                                                             0,
+                                                                             1)
                 end
             }
         },
@@ -769,7 +843,8 @@ return function(Style)
             Name = "Selector",
             Texture = THEME:GetPathG("", "POPN/POPNSel.png"),
             OnCommand = function(self)
-                self:zoom(.35):xy(110, 10):diffuse(DiffFrameColors[TF_WHEEL.CurDiff])
+                self:zoom(.35):xy(110, 10):diffuse(
+                    DiffFrameColors[TF_WHEEL.CurDiff])
             end
         },
 
@@ -777,11 +852,12 @@ return function(Style)
             Name = "Highlight",
             Texture = THEME:GetPathG("", "POPN/POPNSel.png"),
             OnCommand = function(self)
-                self:zoom(.35):xy(110, 10):diffuse(DiffFrameColors[TF_WHEEL.CurDiff])
-                    :queuecommand("Effect")
+                self:zoom(.35):xy(110, 10):diffuse(
+                    DiffFrameColors[TF_WHEEL.CurDiff]):queuecommand("Effect")
             end,
             EffectCommand = function(self)
-                self:decelerate(0.4):zoomy(.7):diffusealpha(0):sleep(1):zoomy(.35):diffusealpha(1):queuecommand("Effect")
+                self:decelerate(0.4):zoomy(.7):diffusealpha(0):sleep(1):zoomy(
+                    .35):diffusealpha(1):queuecommand("Effect")
             end
         },
 
@@ -789,7 +865,8 @@ return function(Style)
             Name = "InfoCon",
             Texture = THEME:GetPathG("", "POPN/POPNBannerCon.png"),
             OnCommand = function(self)
-                self:zoom(.6):xy(-140, -60):diffuse(DiffColors[TF_WHEEL.CurDiff])
+                self:zoom(.6):xy(-140, -60)
+                    :diffuse(DiffColors[TF_WHEEL.CurDiff])
             end
         },
 
@@ -799,11 +876,13 @@ return function(Style)
             OnCommand = function(self)
                 -- If the banner exist, Load Banner.png.
                 if DiffSongs[TF_WHEEL.CurSong][1]:HasBanner() then
-                    self:visible(true):Load(DiffSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    self:visible(true):Load(
+                        DiffSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
                 else
                     self:visible(false)
                 end
-                self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 210, 54)):xy(-134, -60)
+                self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
+                                          210, 54)):xy(-134, -60)
             end
         }
     }
