@@ -819,8 +819,6 @@ return function(Style)
                         self:LoadCachedBanner(
                             SONGMAN:GetSongGroupBannerPath(
                                 GroupsAndSongs[TF_WHEEL.CurSong]))
-                    else
-                        self:visible(false)
                     end
                 end
 
