@@ -411,9 +411,6 @@ return function(Style)
             Name = "MusicCon",
             PlayCurrentSongCommand = function(self)
                 if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-                    TF_WHEEL.BG:LoadCachedBackground(
-                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
-                        :FullScreen()
                     if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
                         GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
                     elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
@@ -423,6 +420,11 @@ return function(Style)
                             GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(),
                             0, 0, true)
                     end
+                end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" and GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBackground() then
+                    TF_WHEEL.BG:LoadCachedBackground(
+                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
+                        :FullScreen()
                 else
                     TF_WHEEL.BG:LoadCachedBackground(
                         THEME:GetPathG("Common", "fallback background"))
@@ -608,9 +610,10 @@ return function(Style)
             OnCommand = function(self)
                 -- Check if we are on song
                 if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-                    self:LoadCachedBanner(
-                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
-
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+                        self:LoadCachedBanner(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    end
                     -- Not on song, Show group banner.
                 else
                     if SONGMAN:GetSongGroupBannerPath(

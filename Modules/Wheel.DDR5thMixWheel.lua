@@ -661,9 +661,6 @@ return function(Style)
             Name = "MusicCon",
             PlayCurrentSongCommand = function(self)
                 if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-                    TF_WHEEL.BG:LoadCachedBackground(
-                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
-                        :FullScreen()
                     if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
                         GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
                     elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
@@ -673,6 +670,11 @@ return function(Style)
                             GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(),
                             0, 0, true)
                     end
+                end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" and GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBackground() then
+                    TF_WHEEL.BG:LoadCachedBackground(
+                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
+                        :FullScreen()
                 else
                     TF_WHEEL.BG:LoadCachedBackground(
                         THEME:GetPathG("Common", "fallback background"))

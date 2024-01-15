@@ -73,9 +73,27 @@ local function ChangeSelection(self, offset, Songs)
         -- Check if its a song.
         if type(Songs[pos]) ~= "string" then
             -- For every banner on current row load the next banner.
-            self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon")
-                :GetChild("Banner"):diffusealpha(1):LoadCachedBanner(
-                    Songs[pos][1]:GetBannerPath())
+            if Songs[pos][1]:HasBanner() then
+                -- If they do, hide the fallback banner, And text.
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild(
+                    "BannerCon"):GetChild("FallbackBanner"):diffusealpha(0)
+                    :zoom(0)
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild(
+                    "BannerCon"):GetChild("BannerText"):diffusealpha(0):zoom(0)
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild("BannerCon")
+                    :GetChild("Banner"):diffusealpha(1):LoadCachedBanner(
+                        Songs[pos][1]:GetBannerPath())    
+            else
+                -- If they dont, Show the fallback banner, And set the text.
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild(
+                    "BannerCon"):GetChild("FallbackBanner"):diffusealpha(1)
+                    :zoomto(128, 40)
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild(
+                    "BannerCon"):GetChild("BannerText"):diffusealpha(1):zoom(.5)
+                self:GetChild("Banners"):GetChild(CurRow .. i):GetChild(
+                    "BannerCon"):GetChild("BannerText"):settext(
+                    Songs[pos][1]:GetDisplayMainTitle())
+            end
         else
             if SONGMAN:GetSongGroupBannerPath(Songs[pos]) ~= "" then
                 -- For every banner on current row load the next banner.
@@ -921,9 +939,6 @@ return function(Style)
             Name = "MusicCon",
             PlayCurrentSongCommand = function(self)
                 if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
-                    TF_WHEEL.BG:LoadCachedBackground(
-                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
-                        :FullScreen()
                     if GroupsAndSongs[TF_WHEEL.CurSong][1].PlayPreviewMusic then
                         GroupsAndSongs[TF_WHEEL.CurSong][1]:PlayPreviewMusic()
                     elseif GroupsAndSongs[TF_WHEEL.CurSong][1]:GetMusicPath() then
@@ -933,6 +948,11 @@ return function(Style)
                             GroupsAndSongs[TF_WHEEL.CurSong][1]:GetSampleLength(),
                             0, 0, true)
                     end
+                end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" and GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBackground() then
+                    TF_WHEEL.BG:LoadCachedBackground(
+                        GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBackgroundPath())
+                        :FullScreen()
                 else
                     TF_WHEEL.BG:LoadCachedBackground(
                         THEME:GetPathG("Common", "fallback background"))

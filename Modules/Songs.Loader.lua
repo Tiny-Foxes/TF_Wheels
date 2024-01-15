@@ -18,16 +18,16 @@ return function(Style)
         for i, CurStep in ipairs(CurSong:GetAllSteps()) do
             -- Find if Steps supports current selected Style.
 
-            if string.find(CurStep:GetStepsType():lower(), Style) then
+            if string.find(CurStep:GetChartType():lower(), Style) then
 
                 -- Check the type of Steps
                 local Type = 1
 
                 -- Check if its HalfDoubles.
-                if string.find(CurStep:GetStepsType():lower(), "half") then
+                if string.find(CurStep:GetChartType():lower(), "half") then
                     Type = 2
                     -- Check if its Doubles.
-                elseif string.find(CurStep:GetStepsType():lower(), "double") then
+                elseif string.find(CurStep:GetChartType():lower(), "double") then
                     Type = 3
                 end
 
