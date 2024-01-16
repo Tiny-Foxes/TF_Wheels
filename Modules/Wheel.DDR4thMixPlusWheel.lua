@@ -1143,6 +1143,8 @@ return function(Style)
         DiffSelectionCommand = function(self)
             DiffSelection = true
 
+            TF_WHEEL.DiffPos = {[PLAYER_1] = 1, [PLAYER_2] = 1}
+
             -- Set the first value in the difficulty selector active.
             if GAMESTATE:IsSideJoined(PLAYER_1) then
                 self:GetChild("Diffs"):GetChild("DiffSelector11"):effectclock(
