@@ -248,7 +248,7 @@ TF_WHEEL.DiffTab = {
 }
 
 -- Resize function, We use this to resize images to size while keeping aspect ratio.
-function TF_WHEEL.Resize(width, height, setwidth, sethight, preserve)
+function TF_WHEEL.Resize(width, height, setwidth, sethight, preserve, resize)
 	if height >= sethight and width >= setwidth then
 		if height * (setwidth / sethight) >= width then
 			return preserve and setwidth / width or sethight / height
@@ -260,8 +260,15 @@ function TF_WHEEL.Resize(width, height, setwidth, sethight, preserve)
 	elseif width >= setwidth then
 		return setwidth / width
 	else
-		return 1
+		if resize then
+			if (height*sethight) * (setwidth / sethight) >= (width*sethight) then
+				return preserve and setwidth / width or sethight / height
+			else
+				return preserve and sethight / height or setwidth / width
+			end
+		end
 	end
+	return 1
 end
 
 -- TO WRITE DOC.
