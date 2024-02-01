@@ -34,7 +34,19 @@ local function MoveSelection(self, offset, Songs)
     while Change < 1 do Change = 15 + Change end
 
     if offset == 0 then
-        for i = CurPos, CurPos+8 do
+
+        self:GetChild("BannerCon"):GetChild("Text")
+            :settext(TF_WHEEL.CurGroup):Regen()
+
+        if SONGMAN:GetSongGroupBannerPath(TF_WHEEL.CurGroup) ~= "" then
+            self:GetChild("BannerCon"):GetChild("Texture"):LoadCachedBanner(
+                SONGMAN:GetSongGroupBannerPath(TF_WHEEL.CurGroup))
+        else
+            self:GetChild("BannerCon"):GetChild("Texture"):LoadCachedBanner(
+                THEME:GetPathG("Common", "fallback banner.png"))
+        end
+
+        for i = CurPos-7, CurPos+8 do
 
             -- Position of current song,
             local pos = TF_WHEEL.CurSong + i - CurPos
@@ -332,7 +344,7 @@ return function(Style)
                             self:settext(GroupsAndSongs[pos])
                         end
 
-                        self:Regen()
+                        self:Regen():StrokeActor():diffuse(0,0,0,1)
                     end
                 }
             },
@@ -358,7 +370,7 @@ return function(Style)
                             self:settext(
                                 GroupsAndSongs[pos][1]:GetDisplayArtist())
                         end
-                        self:Regen()
+                        self:Regen():StrokeActor():diffuse(0,0,0,1)
                     end
                 }
             }
@@ -553,6 +565,46 @@ return function(Style)
                 "SM_GoToNextScreen")
         end,
 
-        Wheel
+        Wheel,
+
+        Def.ActorFrame {
+            Name = "BannerCon",
+            OnCommand = function(self)
+                self:y(-SCREEN_CENTER_Y+25)
+            end,
+            Def.Quad {
+                OnCommand = function(self)
+                    self:diffuse(0, 0, 0, 1):zoomto(SCREEN_WIDTH, 50)
+                end
+            },
+            Def.Sprite {
+                Name = "Texture",
+                Texture = THEME:GetPathG("Common", "fallback banner.png"),
+                OnCommand = function(self)
+                    -- IF group banner exist, Load banner.png
+                    if SONGMAN:GetSongGroupBannerPath(
+                        TF_WHEEL.CurGroup) ~= "" then
+                        self:LoadCachedBanner(
+                            SONGMAN:GetSongGroupBannerPath(
+                                TF_WHEEL.CurGroup))
+                    end
+                    self:zoom(TF_WHEEL.Resize(self:GetWidth(),
+                                              self:GetHeight(), 160, 50,
+                                              false, true))
+                end
+            },
+            Def.Text {
+                Name = "Text",
+                Font = THEME:GetPathF("", "NotoSans-All.ttf"),
+                Size = 40,
+                StrokeSize = 2,
+                OnCommand = function(self)
+                    self:y(5):maxwidth(600):zoom(.5)
+                        :settext(TF_WHEEL.CurGroup)
+                        :Regen()
+                        :StrokeActor():diffuse(0,0,0,1)
+                end
+            }
+        }
     }
 end
