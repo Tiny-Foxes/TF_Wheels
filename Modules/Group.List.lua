@@ -13,5 +13,11 @@ return function(Songs)
         if Add then Groups[#Groups + 1] = v[1]:GetGroupName() end
     end
 
+    local function compare(a, b)
+        return ToLower(a) < ToLower(b)
+    end
+
+    table.sort(Groups, compare)
+
     return Groups
 end

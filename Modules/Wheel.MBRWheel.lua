@@ -202,10 +202,14 @@ local function MoveSelection(self, offset, Songs)
     end
 end
 
+local CurDiffPos = {4,4}
+
 -- Change the cursor of Player on the difficulty selector.
 local function MoveDifficulty(self, offset, Songs)
     -- check if player is joined.
     if self.pn and GAMESTATE:IsSideJoined(self.pn) then
+        self:GetChild("Diff"..ToEnumShortString(self.pn)):visible(true)
+
         -- Move cursor.
         TF_WHEEL.DiffPos[self.pn] = TF_WHEEL.DiffPos[self.pn] + offset
 
@@ -216,6 +220,8 @@ local function MoveDifficulty(self, offset, Songs)
         if TF_WHEEL.DiffPos[self.pn] > #Songs[TF_WHEEL.CurSong] - 1 then
             TF_WHEEL.DiffPos[self.pn] = #Songs[TF_WHEEL.CurSong] - 1
         end
+    else
+        self:GetChild("Diff"..ToEnumShortString(self.pn)):visible(false)
     end
 end
 
@@ -234,6 +240,8 @@ return function(Style)
 
     -- The main Wheel.
     local Wheel = Def.ActorFrame {Name = "Wheel"}
+
+    local Diff = Def.ActorFrame {Name = "Diff"}
 
     for i = 1, 15 do
         -- Grab center of wheel.
@@ -377,6 +385,40 @@ return function(Style)
         }
     end
 
+    for i = 1, 7 do
+        local offset = i - 3
+
+        Diff[#Diff+1] = Def.ActorFrame {
+            OnCommand = function(self)
+                self:y(-38+offset*38)
+            end,
+            Name = "Diff"..i,
+            Def.Quad{
+                Name = "Back",
+                OnCommand = function(self)
+                    self:zoomto(180, 25):diffuse(0,0,0,1)
+                end
+            },
+            Def.Quad{
+                Name = "Front",
+                OnCommand = function(self)
+                    self:zoomto(180, 25)
+                end
+            },
+            Def.Text{
+                Name = "Number",
+                Font = THEME:GetPathF("", "NotoSans-All.ttf"),
+                Size = 42,
+                StrokeSize = 2,
+                Text = tostring(i*i).." CHART EMPTY",
+                OnCommand = function(self)
+                    self:zoom(0.5):y(5):maxwidth(350):Regen()
+                    self:StrokeActor():diffuse(0,0,0,1)
+                end
+            }
+        }
+    end
+
     -- Here we return the actual Music Wheel Actor.
     return Def.ActorFrame {
         OnCommand = function(self)
@@ -387,6 +429,11 @@ return function(Style)
             SCREENMAN:GetTopScreen():AddInputCallback(TF_WHEEL.Input(self))
 
             MoveSelection(self, 0, GroupsAndSongs)
+
+            self.pn = PLAYER_1            
+            MoveDifficulty(self, 0, GroupsAndSongs)
+            
+            self.pn = PLAYER_2            
             MoveDifficulty(self, 0, GroupsAndSongs)
 
             -- Sleep for 0.2 sec, And then load the current song music.
@@ -565,7 +612,61 @@ return function(Style)
                 "SM_GoToNextScreen")
         end,
 
+        Def.Quad {
+            OnCommand = function(self)
+                self:diffuse(0, 0, 0, 1):zoomto(266, SCREEN_HEIGHT)
+            end
+        },
+        Def.Quad {
+            OnCommand = function(self)
+                self:diffuse(0, 0, 0, 1):zoomto(330, 110)
+            end
+        },
+
         Wheel,
+        Def.ActorFrame {
+            OnCommand = function(self)
+                self:xy(-225,135)
+            end,
+            Name = "DiffP1",
+            Def.Quad {
+                OnCommand=function(self)
+                    self:zoomto(190, 160):diffuse(0,0,0,1)
+                end
+            },
+            Def.Quad {
+                OnCommand=function(self)
+                    self:zoomto(180, 150):diffuse(0,0,0,1):MaskSource(true)
+                end
+            },
+            Diff..{
+                OnCommand=function(self) 
+                    self:MaskDest():ztestmode("ZTestMode_WriteOnFail") 
+                end
+            }
+        },
+
+        Def.ActorFrame {
+            OnCommand = function(self)
+                self:xy(225,135)
+            end,
+            Name = "DiffP2",
+            Def.Quad {
+                OnCommand=function(self)
+                    self:zoomto(190, 160):diffuse(0,0,0,1)
+                end
+            },
+            Def.Quad {
+                OnCommand=function(self)
+                    self:zoomto(180, 150):diffuse(0,0,0,1):MaskSource(true)
+                end
+            },
+            Diff..{
+                OnCommand=function(self) 
+                    self:MaskDest():ztestmode("ZTestMode_WriteOnFail") 
+                end
+            }
+        },
 
         Def.ActorFrame {
             Name = "BannerCon",
@@ -574,7 +675,7 @@ return function(Style)
             end,
             Def.Quad {
                 OnCommand = function(self)
-                    self:diffuse(0, 0, 0, 1):zoomto(SCREEN_WIDTH, 50)
+                    self:diffuse(0, 0, 0, 1):zoomto(SCREEN_WIDTH, 55):y(5)
                 end
             },
             Def.Sprite {
@@ -605,6 +706,12 @@ return function(Style)
                         :StrokeActor():diffuse(0,0,0,1)
                 end
             }
+        },
+
+        Def.Quad {
+            OnCommand = function(self)
+                self:diffuse(0, 0, 0, 1):zoomto(SCREEN_WIDTH, 25):y(SCREEN_CENTER_Y-12.5)
+            end
         }
     }
 end

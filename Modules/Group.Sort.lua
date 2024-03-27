@@ -14,7 +14,7 @@ return function(Songs, CurGroup)
         if Add then Groups[#Groups + 1] = v[1]:GetGroupName() end
     end
 
-    local function compare(a, b) return a < b end
+    local function compare(a, b) return ToLower(a) < ToLower(b) end
 
     table.sort(Groups, compare)
 
