@@ -115,7 +115,7 @@ return function(Style)
             Texture = THEME:GetPathG("", "Popila/BG.png"),
             InitCommand = function(self)
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          SCREEN_WIDTH, SCREEN_HEIGHT, true))
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, true, true))
             end
         },
 

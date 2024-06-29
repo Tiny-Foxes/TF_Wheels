@@ -133,7 +133,7 @@ return function(Style)
         BackCommand = function(self)
             -- Check if User is joined.
             if GAMESTATE:IsSideJoined(self.pn) then
-                if GAMESTATE:IsSideJoined(LAYER_1) and
+                if GAMESTATE:IsSideJoined(PLAYER_1) and
                     GAMESTATE:IsSideJoined(PLAYER_2) then
                     -- If both players are joined, We want to unjoin the player that pressed back.
                     GAMESTATE:UnjoinPlayer(self.pn)

@@ -188,7 +188,7 @@ local function MoveSelection(self, offset, Songs)
                                                                  self:GetChild(
                                                                      "Banner")
                                                                      :GetHeight(),
-                                                                 210, 54))
+                                                                 210, 54, false, true))
     else
         self:GetChild("Banner"):visible(false)
     end
@@ -359,7 +359,7 @@ local function ChangeDiff(self, Songs)
                                                                  self:GetChild(
                                                                      "Banner")
                                                                      :GetHeight(),
-                                                                 210, 54))
+                                                                 210, 54, false, true))
     else
         self:GetChild("Banner"):visible(false)
     end
@@ -884,7 +884,7 @@ return function(Style)
                     self:visible(false)
                 end
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          210, 54)):xy(-134, -60)
+                                          210, 54, false, true)):xy(-134, -60)
             end
         }
     }

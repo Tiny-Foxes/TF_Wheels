@@ -757,7 +757,7 @@ return function(Style)
             Texture = THEME:GetPathG("", "IDOL/IdolBG.png"),
             InitCommand = function(self)
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          SCREEN_WIDTH, SCREEN_HEIGHT, true))
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, true, true))
                     :glow(1, 1, 1, .5)
             end
         },

@@ -206,7 +206,7 @@ local function MoveSelection(self, offset, Songs)
         -- Now we resize the banner to the proper size we want.
         self:GetChild("BannerUnderlay"):zoom(
             TF_WHEEL.Resize(self:GetChild("BannerUnderlay"):GetWidth(),
-                            self:GetChild("BannerUnderlay"):GetHeight(), 256, 80))
+                            self:GetChild("BannerUnderlay"):GetHeight(), 256, 80, false, true))
 
         -- Load the top banner, This one shows when its done transitioning.
         self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1)
@@ -690,6 +690,27 @@ return function(Style)
                         THEME:GetPathG("Common", "fallback background"))
                         :FullScreen()
                 end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    else
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                else
+                    if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+                    else
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                end
+                self:GetParent():GetChild("BannerOverlay"):zoom(TF_WHEEL.Resize(
+                    self:GetParent():GetChild("BannerOverlay"):GetWidth(),
+                    self:GetParent():GetChild("BannerOverlay"):GetHeight(),
+                    256, 80, false, true))
             end
         },
 
@@ -719,7 +740,7 @@ return function(Style)
         BackCommand = function(self)
             -- Check if User is joined.
             if GAMESTATE:IsSideJoined(self.pn) then
-                if GAMESTATE:IsSideJoined(LAYER_1) and
+                if GAMESTATE:IsSideJoined(PLAYER_1) and
                     GAMESTATE:IsSideJoined(PLAYER_2) then
                     -- If both players are joined, We want to unjoin the player that pressed back.
                     GAMESTATE:UnjoinPlayer(self.pn)
@@ -849,7 +870,7 @@ return function(Style)
             Name = "BannerUnderlay",
             InitCommand = function(self)
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          256, 80)):xy(-SCREEN_CENTER_X + 142,
+                                          256, 80, false, true)):xy(-SCREEN_CENTER_X + 142,
                                                        -65)
             end
         },
@@ -881,7 +902,7 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          256, 80)):xy(-SCREEN_CENTER_X + 142,
+                                          256, 80, false, true)):xy(-SCREEN_CENTER_X + 142,
                                                        -65)
             end,
             LoadCommand = function(self)
@@ -910,7 +931,7 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          256, 80))
+                                          256, 80, false, true))
             end
         },
 
@@ -1106,7 +1127,7 @@ return function(Style)
                             GroupsAndSongs[TF_WHEEL.CurSong][1]:GetCDTitlePath())
                             :zoom(TF_WHEEL.Resize(self:GetChild("")[i]:GetWidth(),
                                                   self:GetChild("")[i]:GetHeight(),
-                                                  60, 60))
+                                                  60, 60, false, true))
                     else
                         self:GetChild("")[i]:visible(false)
                     end
@@ -1122,7 +1143,7 @@ return function(Style)
                     end
 
                     self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                              60, 60)):z(-1):diffuse(0, 0, 0, 1)
+                                              60, 60, false, true)):z(-1):diffuse(0, 0, 0, 1)
                         :zbuffer(true)
                 end
             },
@@ -1136,7 +1157,7 @@ return function(Style)
                     end
 
                     self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                              60, 60)):z(-.9):glow(1, 1, 1, 1)
+                                              60, 60, false, true)):z(-.9):glow(1, 1, 1, 1)
                         :zbuffer(true)
                 end
             },
@@ -1150,7 +1171,7 @@ return function(Style)
                     end
 
                     self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                              60, 60)):z(.9):glow(1, 1, 1, 1)
+                                              60, 60, false, true)):z(.9):glow(1, 1, 1, 1)
                         :zbuffer(true)
                 end
             },
@@ -1164,7 +1185,7 @@ return function(Style)
                     end
 
                     self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                              60, 60)):z(1):zbuffer(true)
+                                              60, 60, false, true)):z(1):zbuffer(true)
                 end
             }
         },

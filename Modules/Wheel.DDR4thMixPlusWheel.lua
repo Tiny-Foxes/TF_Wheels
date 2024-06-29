@@ -115,7 +115,7 @@ local function ChangeSelection(self, offset, Songs)
                                          self:GetChild("Banners")
                                              :GetChild(CurRow .. i)
                                              :GetChild("BannerCon"):GetChild(
-                                                 "Banner"):GetHeight(), 128, 40))
+                                                 "Banner"):GetHeight(), 128, 40, false, true))
 
         -- Check if its a song.
         if type(Songs[pos]) ~= "string" then
@@ -204,7 +204,7 @@ local function ChangeSelection(self, offset, Songs)
                                       :GetChild("Banner"):GetWidth(),
                                   self:GetChild("SliderCon")
                                       :GetChild("Slider" .. i)
-                                      :GetChild("Banner"):GetHeight(), 256, 80))
+                                      :GetChild("Banner"):GetHeight(), 256, 80, false, true))
 
         -- Get the amount of songs text that displays the current song we're on.
         self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("CurSong")
@@ -379,7 +379,7 @@ local function UpdateSelection(self, Songs)
                                          self:GetChild("Banners")
                                              :GetChild(CurRow .. i)
                                              :GetChild("BannerCon"):GetChild(
-                                                 "Banner"):GetHeight(), 128, 40))
+                                                 "Banner"):GetHeight(), 128, 40, false, true))
 
         -- Check if its a song.
         if type(Songs[pos]) ~= "string" then
@@ -466,7 +466,7 @@ local function UpdateSelection(self, Songs)
                                       :GetChild("Banner"):GetWidth(),
                                   self:GetChild("SliderCon")
                                       :GetChild("Slider" .. i)
-                                      :GetChild("Banner"):GetHeight(), 256, 80))
+                                      :GetChild("Banner"):GetHeight(), 256, 80, false, true))
 
         -- Get the amount of songs text that displays the current song we're on.
         self:GetChild("SliderCon"):GetChild("Slider" .. i):GetChild("CurSong")
@@ -755,7 +755,7 @@ return function(Style)
                     end
 
                     self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                              256, 80))
+                                              256, 80, false, true))
                 end
             },
 
@@ -830,7 +830,7 @@ return function(Style)
                             end
 
                             self:zoom(TF_WHEEL.Resize(self:GetWidth(),
-                                                      self:GetHeight(), 128, 40))
+                                                      self:GetHeight(), 128, 40, false, true))
                         end
                     },
 

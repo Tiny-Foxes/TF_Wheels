@@ -174,11 +174,11 @@ local function MoveSelection(self, offset, Songs)
         self:GetChild("Banner"):zoom(TF_WHEEL.Resize(
                                          self:GetChild("Banner"):GetWidth(),
                                          self:GetChild("Banner"):GetHeight(),
-                                         (512 / 10) * 5, (160 / 10) * 5)):zoomy(
+                                         (512 / 10) * 5, (160 / 10) * 5, false, true)):zoomy(
             0):linear(.08):zoom(TF_WHEEL.Resize(
                                     self:GetChild("Banner"):GetWidth(),
                                     self:GetChild("Banner"):GetHeight(),
-                                    (512 / 10) * 5, (160 / 10) * 5))
+                                    (512 / 10) * 5, (160 / 10) * 5, false, true))
     else
         -- For every part of the wheel do.
         for i = 1, 10 do
@@ -740,7 +740,7 @@ return function(Style)
                 self:xy(-160, -40):zoom(TF_WHEEL.Resize(self:GetWidth(),
                                                         self:GetHeight(),
                                                         (512 / 10) * 5,
-                                                        (160 / 10) * 5))
+                                                        (160 / 10) * 5, false, true))
             end
         },
 

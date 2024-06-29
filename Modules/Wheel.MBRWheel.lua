@@ -99,7 +99,7 @@ local function MoveSelection(self, offset, Songs)
                 "Banner" .. i):GetChild("BannerCon"):GetChild(
                 "Texture"):GetWidth(),self:GetChild("Wheel"):GetChild(
                 "Banner" .. i):GetChild("BannerCon"):GetChild(
-                "Texture"):GetHeight(), 320, 100,false, true))
+                "Texture"):GetHeight(), 320, 100, false, true))
         end
     else
         for i = 1, 15 do
@@ -155,7 +155,7 @@ local function MoveSelection(self, offset, Songs)
                     "Banner" .. i):GetChild("BannerCon"):GetChild(
                     "Texture"):GetWidth(),self:GetChild("Wheel"):GetChild(
                     "Banner" .. i):GetChild("BannerCon"):GetChild(
-                    "Texture"):GetHeight(), 320, 100,false, true))
+                    "Texture"):GetHeight(), 320, 100, false, true))
 
             elseif i == CurPos then
                 self:GetChild("Wheel"):GetChild("Banner" .. i):linear(0.1):zoom(
@@ -495,7 +495,7 @@ return function(Style)
         BackCommand = function(self)
             -- Check if User is joined.
             if GAMESTATE:IsSideJoined(self.pn) then
-                if GAMESTATE:IsSideJoined(LAYER_1) and
+                if GAMESTATE:IsSideJoined(PLAYER_1) and
                     GAMESTATE:IsSideJoined(PLAYER_2) then
                     -- If both players are joined, We want to unjoin the player that pressed back.
                     GAMESTATE:UnjoinPlayer(self.pn)

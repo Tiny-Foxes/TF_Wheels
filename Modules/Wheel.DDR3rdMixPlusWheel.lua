@@ -375,13 +375,13 @@ local function MoveSelection(self, offset, Songs)
     self:GetChild("Banner"):zoom(TF_WHEEL.Resize(
                                      self:GetChild("Banner"):GetWidth(),
                                      self:GetChild("Banner"):GetHeight(),
-                                     (512 / 8) * 5, (160 / 8) * 5))
+                                     (512 / 8) * 5, (160 / 8) * 5, false, true))
 
     -- Resize the CDTitles to be a max of w80 h80.
     self:GetChild("CDTitle"):zoom(TF_WHEEL.Resize(
                                       self:GetChild("CDTitle"):GetWidth(),
                                       self:GetChild("CDTitle"):GetHeight(), 80,
-                                      80))
+                                      80, false, true))
 end
 
 -- We use this function to do an effect on the content of the music wheel when we switch to next screen.
@@ -771,6 +771,27 @@ return function(Style)
                         THEME:GetPathG("Common", "fallback background"))
                         :FullScreen()
                 end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+                        self:GetParent():GetChild("Banner"):Load(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    else
+                        self:GetParent():GetChild("Banner"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                else
+                    if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
+                        self:GetParent():GetChild("Banner"):Load(
+                            SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+                    else
+                        self:GetParent():GetChild("Banner"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                end
+                self:GetParent():GetChild("Banner"):zoom(TF_WHEEL.Resize(
+                    self:GetParent():GetChild("Banner"):GetWidth(),
+                    self:GetParent():GetChild("Banner"):GetHeight(),
+                    (512 / 8) * 5, (160 / 8) * 5, false, true))
             end
         },
 
@@ -981,7 +1002,7 @@ return function(Style)
 
                 self:y(-60):zoom(TF_WHEEL.Resize(self:GetWidth(),
                                                  self:GetHeight(),
-                                                 (512 / 8) * 5, (160 / 8) * 5))
+                                                 (512 / 8) * 5, (160 / 8) * 5, false, true))
             end
         },
 
@@ -1028,7 +1049,7 @@ return function(Style)
                 end
 
                 self:xy(70, 30):zoom(TF_WHEEL.Resize(self:GetWidth(),
-                                                     self:GetHeight(), 80, 80))
+                                                     self:GetHeight(), 80, 80, false, true))
             end
         },
 

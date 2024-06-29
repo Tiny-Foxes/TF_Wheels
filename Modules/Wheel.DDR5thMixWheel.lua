@@ -177,7 +177,7 @@ local function MoveSelection(self, offset, Songs)
         -- Now we resize the banner to the proper size we want.
         self:GetChild("BannerUnderlay"):zoom(
             TF_WHEEL.Resize(self:GetChild("BannerUnderlay"):GetWidth(),
-                            self:GetChild("BannerUnderlay"):GetHeight(), 224, 70))
+                            self:GetChild("BannerUnderlay"):GetHeight(), 224, 70, false, true))
 
         -- Load the top banner, This one shows when its done transitioning.
         self:GetChild("BannerOverlay"):diffusealpha(1):linear(.1)
@@ -680,6 +680,27 @@ return function(Style)
                         THEME:GetPathG("Common", "fallback background"))
                         :FullScreen()
                 end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    else
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                else
+                    if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+                    else
+                        self:GetParent():GetChild("BannerOverlay"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                end
+                self:GetParent():GetChild("BannerOverlay"):zoom(TF_WHEEL.Resize(
+                    self:GetParent():GetChild("BannerOverlay"):GetWidth(),
+                    self:GetParent():GetChild("BannerOverlay"):GetHeight(),
+                    224, 70, false, true))
             end
         },
 
@@ -928,7 +949,7 @@ return function(Style)
             Name = "BannerUnderlay",
             InitCommand = function(self)
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          224, 70)):xy(
+                                          224, 70, false, true)):xy(
                     -(SCREEN_CENTER_X * OffsetMath) + 150, -84)
             end
         },
@@ -963,7 +984,7 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          224, 70)):xy(
+                                          224, 70, false, true)):xy(
                     -(SCREEN_CENTER_X * OffsetMath) + 150, -84)
             end,
             LoadCommand = function(self)
@@ -995,7 +1016,7 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(),
-                                          224, 70))
+                                          224, 70, false, true))
             end
         },
 
@@ -1010,7 +1031,7 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 50,
-                                          50)):xy(
+                                          50, false, true)):xy(
                     -(SCREEN_CENTER_X * OffsetMath) + 240, -102)
             end,
             LoadCommand = function(self)
@@ -1025,8 +1046,8 @@ return function(Style)
                 end
 
                 self:zoom(TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 60,
-                                          60)):zoomy(0):linear(.05):zoom(
-                    TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 60, 60))
+                                          60, false, true)):zoomy(0):linear(.05):zoom(
+                    TF_WHEEL.Resize(self:GetWidth(), self:GetHeight(), 60, 60, false, true))
             end
         },
 

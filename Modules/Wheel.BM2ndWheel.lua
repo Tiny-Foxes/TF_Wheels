@@ -196,7 +196,7 @@ local function MoveSelection(self, offset, Songs)
     self:GetChild("Banner"):zoom(TF_WHEEL.Resize(
                                      self:GetChild("Banner"):GetWidth(),
                                      self:GetChild("Banner"):GetHeight(),
-                                     (512 / 9) * 5, (160 / 9) * 5))
+                                     (512 / 9) * 5, (160 / 9) * 5, false, true))
 end
 
 -- Move the Difficulty (or change selection in this case).
@@ -430,6 +430,27 @@ return function(Style)
                         THEME:GetPathG("Common", "fallback background"))
                         :FullScreen()
                 end
+                if type(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "string" then
+                    if GroupsAndSongs[TF_WHEEL.CurSong][1]:HasBanner() then
+                        self:GetParent():GetChild("Banner"):Load(
+                            GroupsAndSongs[TF_WHEEL.CurSong][1]:GetBannerPath())
+                    else
+                        self:GetParent():GetChild("Banner"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                else
+                    if SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]) ~= "" then
+                        self:GetParent():GetChild("Banner"):Load(
+                            SONGMAN:GetSongGroupBannerPath(GroupsAndSongs[TF_WHEEL.CurSong]))
+                    else
+                        self:GetParent():GetChild("Banner"):Load(
+                            THEME:GetPathG("Common", "fallback banner.png"))
+                    end
+                end
+                self:GetParent():GetChild("Banner"):zoom(TF_WHEEL.Resize(
+                    self:GetParent():GetChild("Banner"):GetWidth(),
+                    self:GetParent():GetChild("Banner"):GetHeight(),
+                    (512 / 9) * 5, (160 / 9) * 5, false, true))
             end
         },
 
@@ -626,7 +647,7 @@ return function(Style)
 
                 self:y(-80):zoom(TF_WHEEL.Resize(self:GetWidth(),
                                                  self:GetHeight(),
-                                                 (512 / 9) * 5, (160 / 9) * 5))
+                                                 (512 / 9) * 5, (160 / 9) * 5, false, true))
             end
         },
 
