@@ -32,9 +32,11 @@ local GameModeStyles = {
 	["gddm"] = "gddm_new",
 	["gdgf"] = "gdgf_five",
 	["gh"] = "gh_solo",
+	["rb"] = "rb_normal",
 	["kbx"] = "kb4_single",
 	["taiko"] = "taiko",
 	["lights"] = "lights_cabinet",
+	["boxing"] = "boxing_freeStyle",
 	["kickbox"] = "kickbox_human"
 }
 

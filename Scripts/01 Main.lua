@@ -112,8 +112,8 @@ TF_WHEEL.StyleDB = {
 	["gdgf_six"] = "six-fret",
 	["gdgf_three"] = "three-fret",
 	["gdgf_bass_five"] = "five-fret",
-	["gdgf_bass_six"] = "five-fret",
-	["gdgf_bass_three"] = "five-fret",
+	["gdgf_bass_six"] = "six-fret",
+	["gdgf_bass_three"] = "three-fret",
 
 	--GH
 	["gh_solo"] = "solo",
@@ -122,6 +122,12 @@ TF_WHEEL.StyleDB = {
 	["gh_bass6"] = "bass6",
 	["gh_rhythm"] = "rhythm",
 	["gh_rhythm6"] = "rhythm6",
+
+	--RB
+	["rb_easy"] = "rb-easy",
+	["rb_normal"] = "rb-normal",
+	["rb_normal5"] = "rb-normal5",
+	["rb_pro"] = "rb-pro",
 
 	--KBX
 	["kb1_single"] = "single1",
@@ -139,12 +145,19 @@ TF_WHEEL.StyleDB = {
 	["kb13_single"] = "single13",
 	["kb14_single"] = "single14",
 	["kb15_single"] = "single15",
+	["kb16_single"] = "single16",
+	["kb17_single"] = "single17",
+	["kb18_single"] = "single18",
+	["kb19_single"] = "single19",
 
 	--Taiko
 	["taiko"] = "taiko-single",
 
 	--Lights
 	["lights_cabinet"] = "cabinet",
+
+	--Boxing
+	["boxing_freeStyle"] = "boxing-freestyle",
 
 	--Kickbox
 	["kickbox_human"] = "human",
@@ -205,8 +218,8 @@ TF_WHEEL.StyleDBVersus = {
 	["gdgf_six"] = "six-fret-versus",
 	["gdgf_three"] = "three-fret-versus",
 	["gdgf_bass_five"] = "five-fret-versus",
-	["gdgf_bass_six"] = "five-fret-versus",
-	["gdgf_bass_three"] = "five-fret-versus",
+	["gdgf_bass_six"] = "six-fret-versus",
+	["gdgf_bass_three"] = "three-fret-versus",
 
 	--GH
 	["gh_solo"] = "solo-versus",
@@ -215,6 +228,12 @@ TF_WHEEL.StyleDBVersus = {
 	["gh_bass6"] = "bass-versus6",
 	["gh_rhythm"] = "rhythm-versus",
 	["gh_rhythm6"] = "rhythm-versus6",
+
+	--RB
+	["rb_easy"] = "rb-easy-versus",
+	["rb_normal"] = "rb-normal-versus",
+	["rb_normal5"] = "rb-normal5-versus",
+	["rb_pro"] = "rb-pro-versus",
 
 	--Taiko
 	["taiko"] = "taiko-versus",
